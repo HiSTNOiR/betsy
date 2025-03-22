@@ -1,5 +1,10 @@
 # DUEL SYSTEM
 
+-   In Twitch chat, user A challenges user B to a duel: `Timmy: !duel Sammy`
+-   User B accepts (`!accept`), or duel times out
+-   XP is taken from each user and added to the Pot
+-   Winner takes all or Pot gets bigger
+
 ## Bonuses
 
 -   bonuses come from [Environmental Combat Effects](#environmental-combat-effects) based on what the user is donning/wielding and the mods they've applied
