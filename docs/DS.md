@@ -2,9 +2,7 @@
 
 ## Bonuses
 
--   user gets a bonus if they have a dye that provides camouflage in the duelling environment
-    -   green dye + jungle environ = bonus
-    -   yellow/brown dye + desert environ = bonus
+-   bonuses come from [Environmental Combat Effects](#environmental-combat-effects) based on what the user is donning/wielding and the mods they've applied
 
 ---
 
@@ -14,6 +12,31 @@
 -   XP from user A and XP from user B gets added to the Pot
 -   winner takes the Pot
 -   all XP stays in the Pot if it's a draw, adding to the next duel's winnings
+
+---
+
+## Calculating the Winner
+
+### Weighted Stats + Durability + Underdog Bonus
+
+-   Weighted Stats = Base calc + Environment
+    -   Base calculation: (Weapon Level + Weapon Mods + Armor Level + Armor Mods) × Random Factor
+    -   Environmental Boons/Busts: as per [Environmental Combat Effects](#environmental-combat-effects)
+-   Durability = Weapon durability + Armour durability
+-   Underdog Bonus = if the XP gap between the players is very large, there's a greater chance for an underdog victory
+
+```py
+# Random factor range
+MIN_RANDOM_FACTOR = 0.8
+MAX_RANDOM_FACTOR = 1.2
+
+# Underdog win chance (percentage)
+UNDERDOG_WIN_CHANCE = 5
+
+# Bonus/penalty multipliers
+ENVIRONMENT_BOOST_MULTIPLIER = 1.2
+ENVIRONMENT_PENALTY_MULTIPLIER = 0.8
+```
 
 ---
 
