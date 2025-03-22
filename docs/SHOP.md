@@ -1,84 +1,105 @@
 # SHOP
 
+-   Users start with level 1 armour and weapon, and no toys.
+-   Users can upgrade to the next armour or weapon level with: `!upgrade armour` and `!upgrade weapon` respectively
+    -   this is easier than trying to type something like `!buy armour Battleworn Cuirass` in Twitch chat
+    -   the bot then replies with the item name: `@Timmy, you've donned the Battleworn Cuirass. Congrats!`
+-   Users can apply mods to their weapons and armour with: `!modify Indigo Dye` or `!modify Poison Vial`
+    -   QUESTION: how can we handle typos, so the user doesn't have to spend all day retyping long commands?
+
 ## Armour
 
-{ name: "Tattered Cloth", level: 1, cost: 100 },
-{ name: "Worn Leather", level: 2, cost: 500 },
-{ name: "Cracked Hide", level: 3, cost: 1000 },
-{ name: "Dented Chainmail", level: 4, cost: 2000 },
-{ name: "Pitted Brigandine", level: 5, cost: 5000 },
-{ name: "Chipped Scale Mail", level: 6, cost: 10000 },
-{ name: "Rusty Plate", level: 7, cost: 20000 },
-{ name: "Old Breastplate", level: 8, cost: 40000 },
-{ name: "Battleworn Cuirass", level: 9, cost: 70000 },
-{ name: "Ironclad Hauberk", level: 10, cost: 100000 },
-{ name: "Silvered Mail", level: 11, cost: 150000 },
-{ name: "Dragonhide Vest", level: 12, cost: 200000 },
-{ name: "Phoenix Guard", level: 13, cost: 300000 },
-{ name: "Valkyrie Aegis", level: 14, cost: 400000 },
-{ name: "Shadow Plate", level: 15, cost: 500000 },
-{ name: "Obsidian Armour", level: 16, cost: 600000 },
-{ name: "Titanium Bastion", level: 17, cost: 700000 },
-{ name: "Eternal Bulwark", level: 18, cost: 800000 },
-{ name: "Celestial Plate", level: 19, cost: 900000 },
-{ name: "Armour Of The Gods", level: 20, cost: 1000000 },
+| Name               | Level | Cost      |
+| ------------------ | ----- | --------- |
+| Tattered Cloth     | 1     | 100       |
+| Worn Leather       | 2     | 500       |
+| Cracked Hide       | 3     | 1,000     |
+| Dented Chainmail   | 4     | 2,000     |
+| Pitted Brigandine  | 5     | 5,000     |
+| Chipped Scale Mail | 6     | 10,000    |
+| Rusty Plate        | 7     | 20,000    |
+| Old Breastplate    | 8     | 40,000    |
+| Battleworn Cuirass | 9     | 70,000    |
+| Ironclad Hauberk   | 10    | 100,000   |
+| Silvered Mail      | 11    | 150,000   |
+| Dragonhide Vest    | 12    | 200,000   |
+| Phoenix Guard      | 13    | 300,000   |
+| Valkyrie Aegis     | 14    | 400,000   |
+| Shadow Plate       | 15    | 500,000   |
+| Obsidian Armour    | 16    | 600,000   |
+| Titanium Bastion   | 17    | 700,000   |
+| Eternal Bulwark    | 18    | 800,000   |
+| Celestial Plate    | 19    | 900,000   |
+| Armour of The Gods | 20    | 1,000,000 |
+
+> _Note: If a user only lurks and passively gets XP, it should take them a year's worth of viewing to be able to afford Amour of the Gods._
 
 ## Armour Mods
 
-{ name: "Polish", adjective: "polished", cost: 100 },
-{ name: "Repair Kit", adjective: "repaired", cost: 100 },
-{ name: "Padding", adjective: "padded", cost: 100 },
-{ name: "Helmet Plume", adjective: "plumed", cost: 100 },
-{ name: "Heraldic Tabard", adjective: "tabbared", cost: 100 },
-{ name: "Leather Belt", adjective: "belted", cost: 100 },
-{ name: "Red Dye", adjective: "red", cost: 100 },
-{ name: "Orange Dye", adjective: "orange", cost: 100 },
-{ name: "Yellow Dye", adjective: "yellow", cost: 100 },
-{ name: "Green Dye", adjective: "green", cost: 100 },
-{ name: "Blue Dye", adjective: "blue", cost: 100 },
-{ name: "Indigo Dye", adjective: "indigo", cost: 100 },
-{ name: "Violet Dye", adjective: "violet", cost: 100 },
-{ name: "White Dye", adjective: "white", cost: 100 },
-{ name: "Black Dye", adjective: "black", cost: 100 },
+| Name            | Adjective | Cost |
+| --------------- | --------- | ---- |
+| Polish          | polished  | 100  |
+| Repair Kit      | repaired  | 100  |
+| Padding         | padded    | 100  |
+| Helmet Plume    | plumed    | 100  |
+| Heraldic Tabard | decorated | 100  |
+| Leather Belt    | belted    | 100  |
+| Red Dye         | red       | 100  |
+| Orange Dye      | orange    | 100  |
+| Yellow Dye      | yellow    | 100  |
+| Green Dye       | green     | 100  |
+| Blue Dye        | blue      | 100  |
+| Indigo Dye      | indigo    | 100  |
+| Violet Dye      | violet    | 100  |
+| White Dye       | white     | 100  |
+| Black Dye       | black     | 100  |
 
 ## Weapons
 
-{ name: "Rusty Dagger", level: 1, cost: 100 },
-{ name: "Wooden Club", level: 2, cost: 500 },
-{ name: "Bent Short Sword", level: 3, cost: 1000 },
-{ name: "Cracked Buckler", level: 4, cost: 2000 },
-{ name: "Worn Hatchet", level: 5, cost: 5000 },
-{ name: "Dented Spear", level: 6, cost: 10000 },
-{ name: "Chipped Scimitar", level: 7, cost: 20000 },
-{ name: "Old Warhammer", level: 8, cost: 40000 },
-{ name: "Tarnished Longsword", level: 9, cost: 70000 },
-{ name: "Battleworn Axe", level: 10, cost: 100000 },
-{ name: "Ironclad Mace", level: 11, cost: 150000 },
-{ name: "Serpent's Fang", level: 12, cost: 200000 },
-{ name: "Flamebrand", level: 13, cost: 300000 },
-{ name: "Direblade", level: 14, cost: 400000 },
-{ name: "Valkyrie's Wrath", level: 15, cost: 500000 },
-{ name: "Obsidian Edge", level: 16, cost: 600000 },
-{ name: "Warbringer", level: 17, cost: 700000 },
-{ name: "Eclipse Blade", level: 18, cost: 800000 },
-{ name: "Armageddon", level: 19, cost: 900000 },
-{ name: "World Ender", level: 20, cost: 1000000 }, (if I user only lurks and passively gets XP, it should take them a year's worth of viewing to be able to afford this)
+| Name                | Level | Cost      |
+| ------------------- | ----- | --------- |
+| Rusty Dagger        | 1     | 100       |
+| Wooden Club         | 2     | 500       |
+| Bent Short Sword    | 3     | 1,000     |
+| Cracked Buckler     | 4     | 2,000     |
+| Worn Hatchet        | 5     | 5,000     |
+| Dented Spear        | 6     | 10,000    |
+| Chipped Scimitar    | 7     | 20,000    |
+| Old Warhammer       | 8     | 40,000    |
+| Tarnished Longsword | 9     | 70,000    |
+| Battleworn Axe      | 10    | 100,000   |
+| Ironclad Mace       | 11    | 150,000   |
+| Serpent's Fang      | 12    | 200,000   |
+| Flamebrand          | 13    | 300,000   |
+| Direblade           | 14    | 400,000   |
+| Valkyrie's Wrath    | 15    | 500,000   |
+| Obsidian Edge       | 16    | 600,000   |
+| Warbringer          | 17    | 700,000   |
+| Eclipse Blade       | 18    | 800,000   |
+| Armageddon          | 19    | 900,000   |
+| World Ender         | 20    | 1,000,000 |
+
+> _Note: If a user only lurks and passively gets XP, it should take them a year's worth of viewing to be able to afford the World Ender._
 
 ## Weapon Mods
 
-{ name: "Weapon Oil", adjective: "oiled", cost: 100 },
-{ name: "Scabbard", adjective: "sheathed", cost: 100 },
-{ name: "Cleaning Kit", adjective: "cleaned", cost: 100 },
-{ name: "Leather Grip", adjective: "wrapped", cost: 100 },
-{ name: "Talisman", adjective: "intimidating", cost: 100 },
-{ name: "Poison Vial", adjective: "poisoned", cost: 100 },
-{ name: "Balancing Weight", adjective: "weighted", cost: 100 },
-{ name: "Whet Stone", adjective: "sharpened", cost: 100 },
+| Name             | Adjective    | Cost |
+| ---------------- | ------------ | ---- |
+| Weapon Oil       | oiled        | 100  |
+| Scabbard         | sheathed     | 100  |
+| Cleaning Kit     | cleaned      | 100  |
+| Leather Grip     | wrapped      | 100  |
+| Talisman         | intimidating | 100  |
+| Poison Vial      | poisoned     | 100  |
+| Balancing Weight | weighted     | 100  |
+| Whet Stone       | sharpened    | 100  |
 
 ## Toys
 
-{ name: "Leather Ball", cost: 100 },
-{ name: "Matrix Wand", cost: 1000 },
-{ name: "Noir Wand", cost: 1000 },
-{ name: "Sepia Wand", cost: 1000 },
-{ name: "Pepto Wand", cost: 1000 },
+| Name         | Cost  |
+| ------------ | ----- |
+| Leather Ball | 100   |
+| Matrix Wand  | 1,000 |
+| Noir Wand    | 1,000 |
+| Sepia Wand   | 1,000 |
+| Pepto Wand   | 1,000 |
