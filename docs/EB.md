@@ -2,7 +2,7 @@
 
 ## Twitch
 
-**Scenario:**
+### Scenario
 
 User, Timmy, wants to buy a 'Pepto Wand' from the shop.
 
@@ -36,7 +36,9 @@ User, Timmy, wants to buy a 'Pepto Wand' from the shop.
 2. (db) check if 'wand' exists in the toys table (result: it doesn't)
 3. Do nothing further.
 
-**Scenario:**
+---
+
+### Scenario
 
 User, Timmy, is playing silly buggers and trying to break the bot.
 
