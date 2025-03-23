@@ -101,6 +101,7 @@ _(These are custom commands, base commands are all hard-coded to reduce load on 
 -   id (PK)
 -   name
 -   cost (i.e. XP needed to buy this item)
+-   command (i.e. for the user to actually use the toy e.g. `!ball Sammy` will kick the Leather Ball to Sammy)
 -   date_added (e.g. for notifying users about newly added toys)
 
 ## duels
