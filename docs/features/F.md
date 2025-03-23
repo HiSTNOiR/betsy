@@ -117,7 +117,6 @@
 1. When 'Shield Mode' is activated in the Twitch channel, a sequence of actions fire
     - a shield wall video source is shown in OBS
     - the chat room settings are changed: can only chat if following for at least 6 months (3 months? 1 year??); TTS is disabled; a shield icon is shown in the corner of the stream (while the settings are active); sub alerts only show the Koala image and not the username or any messages; anything that can be trolled is basically disabled until Shield Mode is deactivated
-2. Visualisation and reporting tools for metrics (stream stats, viewer trends etc)
 
 ---
 
@@ -126,6 +125,13 @@
 1. Rough GUI using Kivy (just for the bot admin side of things)
 2. Web app
 3. Mobile app using Kivy
+4. Visualisation and reporting tools for metrics (stream stats, viewer trends etc)
+
+---
+
+## Version 3.0
+
+1. BitFocus Companion integration
 
 ---
 
