@@ -1,6 +1,7 @@
 # GIT
 
 What's the active branch? `git branch` (\* marks active one)
+
 What's branches are there? `git branch`
 
 What needs doing? `git status`
