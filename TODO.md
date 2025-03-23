@@ -2,9 +2,13 @@
 
 ## Now ...
 
+🟥🟥🟥🟥🟥🟥 check that function calls use BrE
+
 Current task:
 
+-   config: determine any util functions that are needed
 -   config: set up the `config.py` file
+-   extract util functions and move them to the utils folder (new or existing files can be used)
 
 Requirements:
 
@@ -14,10 +18,12 @@ Requirements:
 
 ## Next ...
 
--   bot core: connect to Twitch chat
+-   check out fuzzywuzzy library for `parsing.py`
 
 ## Then ...
 
+-   db: CRUD db queries for users table
+-   db: CRUD db queries for other tables
 -   SQLite db
     -   make it scale
     -   prevent duplicate records (old durability table went gnarly!)

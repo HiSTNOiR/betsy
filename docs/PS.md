@@ -60,7 +60,7 @@ betsy/
 │   │
 │   ├── db/                      # Database modules
 │   │   ├── __init__.py
-│   │   ├── schema.sql           # DB schema
+│   │   ├── ✅schema.sql         # DB schema
 │   │   ├── connection.py        # DB connection manager
 │   │   ├── users.py             # All CRUD operation for users
 │   │   ├── items.py             # All CRUD operation for items

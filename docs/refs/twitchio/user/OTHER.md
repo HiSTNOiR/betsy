@@ -67,13 +67,13 @@
 
     The names are case sensitive. Don’t include colons around the name e.g., :bleedPurple:
 
-    If Twitch recognizes the name, Twitch converts the name to the emote before writing the chat message to the chat room.
+    If Twitch recognises the name, Twitch converts the name to the emote before writing the chat message to the chat room.
 
     Parameters
 
             sender (str | int | PartialUser) – The ID, or PartialUser, of the user sending the message. This ID must match the user ID in the user access token.
 
-            message (str) – The message to send. The message is limited to a maximum of 500 characters. Chat messages can also include emoticons. To include emoticons, use the name of the emote. The names are case sensitive. Don’t include colons around the name e.g., :bleedPurple:. If Twitch recognizes the name, Twitch converts the name to the emote before writing the chat message to the chat room
+            message (str) – The message to send. The message is limited to a maximum of 500 characters. Chat messages can also include emoticons. To include emoticons, use the name of the emote. The names are case sensitive. Don’t include colons around the name e.g., :bleedPurple:. If Twitch recognises the name, Twitch converts the name to the emote before writing the chat message to the chat room
 
             token_for (str | PartialUser | None) – User access token that includes the user:write:chat scope. You can use an app access token which additionally requires user:bot scope from chatting user, and either channel:bot scope from broadcaster or moderator status.
 
