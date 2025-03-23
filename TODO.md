@@ -2,11 +2,19 @@
 
 ## Now ...
 
--   docs: db schema based on features
+Current task:
+
+-   config: set up the `config.py` file
+
+Requirements:
+
+-   Use the .env variables provided in the style folder
+-   KISS principle
+-   Robust error handling and logging
 
 ## Next ...
 
--   Python a basic Twitch chat connection (twitchio, python-dotenv)
+-   bot core: connect to Twitch chat
 
 ## Then ...
 

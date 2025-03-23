@@ -8,20 +8,46 @@ betsy/
 ├── requirements.txt
 ├── main.py                      # Entry point for the application
 │
-├── bot/                         # Core package
+├── bot/
 │   ├── __init__.py
-│   ├── state.py                 # Real-time state management and persistence
-│   ├── bot.py                   # Main bot class
-│   ├── connections.py           # Initialises connections to OBS, Twitch etc
-│   ├── errors.py                # Custom exception classes
-│   ├── logging.py               # Logging configuration
 │   │
-│   ├── config/                  # Configuration modules
+│   ├── core/                    # Core modules
 │   │   ├── __init__.py
-│   │   ├── config.py            # Configuration loader (reads from .env)
-│   │   ├── dev.py               # Development config values
-│   │   ├── prod.py              # Production config values
-│   │   └── default.py           # Default config values
+│   │   ├── state.py             # Real-time state management and persistence
+│   │   ├── bot.py               # Main bot class
+│   │   ├── connections.py       # Initialises connections to OBS, Twitch etc
+│   │   ├── constants.py         # Common constants and enums
+│   │   ├── errors.py            # Custom exception classes
+│   │   ├── logging.py           # Logging configuration
+│   │   │
+│   │   ├── config/              # Configuration modules
+│   │   │   ├── __init__.py
+│   │   │   ├── config.py        # Configuration loader (reads from .env)
+│   │   │   ├── dev.py           # Development config values
+│   │   │   ├── prod.py          # Production config values
+│   │   │   └── default.py       # Default config values
+│   │   │
+│   │   └── cache/
+│   │       ├── __init__.py
+│   │       ├── manager.py           # Core cache management logic (incl periodic db sync)
+│   │       ├── command_cache.py
+│   │       ├── item_cache.py        # Item and shop cache
+│   │       ├── strategies.py        # Memory, file caching etc
+│   │       └── user_cache.py
+│   │
+│   ├── utils/               # Utility functions
+│   │   ├── __init__.py
+│   │   ├── permissions.py   # User access permissions
+│   │   ├── cooldown.py      # Command CD handling
+│   │   ├── throttling.py    # Bot throttling
+│   │   ├── queue.py         # Priority-based queue
+│   │   ├── parsing.py       # Type conversion, argument parsing, sanitisation etc
+│   │   ├── sanitisation.py  # Sanitising all inputs/outputs
+│   │   ├── validation.py    # Validating all inputs/outputs
+│   │   ├── formatting.py    # Consistent formatting of user inputs
+│   │   ├── security.py      # Security utils, token handling etc
+│   │   ├── time_utils.py    # Timers, scheduling, duration calculations
+│   │   └── random_utils.py  # Random selection for duels, DOMT card drawing etc
 │   │
 │   ├── health/                  # Bot health monitoring
 │   │   ├── __init__.py
@@ -32,48 +58,15 @@ betsy/
 │   │   ├── analytics.py         # Analytics collection
 │   │   └── reporters.py         # Visualisation or reporting tools
 │   │
-│   ├── cache/
-│   │   ├── __init__.py
-│   │   ├── manager.py           # Core cache management logic (incl periodic db sync)
-│   │   ├── command_cache.py
-│   │   ├── item_cache.py        # Item and shop cache
-│   │   ├── strategies.py        # Memory, file caching etc
-│   │   └── user_cache.py
-│   │
 │   ├── db/                      # Database modules
 │   │   ├── __init__.py
+│   │   ├── schema.sql           # DB schema
 │   │   ├── connection.py        # DB connection manager
 │   │   ├── users.py             # All CRUD operation for users
 │   │   ├── items.py             # All CRUD operation for items
 │   │   ├── commands.py          # All CRUD operation for commands
 │   │   ├── duels.py             # All CRUD operation for duels
 │   │   └── domt.py              # All CRUD operation for domt
-│   │
-│   ├── core/                    # Core functionality modules
-│   │   ├── __init__.py
-│   │   ├── constants.py         # Common constants and enums
-│   │   │
-│   │   └── utils/               # Utility functions
-│   │       ├── __init__.py
-│   │       ├── permissions.py   # User access permissions
-│   │       ├── cooldown.py      # Command CD handling
-│   │       ├── throttling.py    # Bot throttling
-│   │       ├── queue.py         # Priority-based queue
-│   │       ├── parsing.py       # Type conversion, argument parsing, sanitisation etc
-│   │       ├── validation.py    # Validating all inputs/outputs
-│   │       ├── formatting.py    # Consistent formatting of user inputs
-│   │       ├── security.py      # Security utils, token handling etc
-│   │       ├── time_utils.py    # Timers, scheduling, duration calculations
-│   │       └── random_utils.py  # Random selection for duels, DOMT card drawing etc
-│   │
-│   ├── models/                  # Data models
-│   │   ├── __init__.py
-│   │   ├── user.py              # User model
-│   │   ├── item.py              # Toys, weapons, armour models
-│   │   ├── message.py           # Message model (Twitch, Discord etc)
-│   │   ├── command.py           # Command model
-│   │   ├── duel.py              # Duel system model
-│   │   └── domt.py              # Deck of Many Things model
 │   │
 │   ├── services/                # Service layers for external systems
 │   │   ├── __init__.py
