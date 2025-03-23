@@ -140,4 +140,4 @@
 -   Discord integration
 -   YouTube integration
 -   a `!dungeon` where a group of viewers get together to fight a boss for some extra-special reward (was called `!raid` but that sounds like a Twitch channel raid)
--   AI chatting (contingent upon my getting a selfhosted setup in place, because I can't stream+game+LLM on one machine)
+-   AI chatting (contingent upon my getting a self-hosted setup in place, because I can't stream+game+LLM on one machine)
