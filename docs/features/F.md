@@ -10,7 +10,9 @@
 
 ## Version 0.8
 
-Users can:
+### Users
+
+**Users can:**
 
 1. use `!commands` to see what commands they have access to (based on user permissions)
 2. interact with OBS through bot commands, Twitch channel rewards, and Twitch bits
@@ -24,16 +26,60 @@ Users can:
 6. check their available XP with `!points` or `!xp`
 7. use command aliases (e.g. `!xp` or `!points`)
 
-Users can't:
+**Users can't:**
 
 1. see commands they don't have permission to use when using `!commands`
 2. break the bot with unusual chat commands
+3. cause the bot to spam chat (i.e. messages the bot sends are throttled and queued based on priority [i.e. responding to `!points` is more important than `!hello`])
 
-The Broadcaster can:
+**The Broadcaster can:**
 
 1. `print()` the currently active Twitch Channel Reward rewards, so their IDs can be retrieved
 2. trigger any Twitch bits event through a manual broadcaster-only command (e.g. I want to trigger the event tied to a user spending 200 bits, so I use `!bits200`)
     - this ensures that bits events can be tested by the channel owner, who cannot spend bits in their own channel
+
+### Software and Platform Integrations
+
+**OBS:**
+
+1. a single source can be made visible for a specific duration, then switched off
+    - e.g. source "ball" in scene "STREAM" becomes visible for 5 seconds, then disappears.
+2. multiple sources can be made visible at the same time, then switched off at the same time
+    - e.g. sources "sub", "username" and "thanks" in scene "ALERTS" become visible for 5 seconds, then disappear together.
+3. multiple sources can be made visible in a timed sequence, then switched off either together or in sequence
+    - e.g. source "domt_video" in scene "DOMT" becomes visible for 40 seconds; "domt_video" disappears, and "pouch_top" and "pouch_bottom" become visible; 2 second later "card_01" becomes visible; 3 seconds later "pouch_top", "pouch_bottom" and "card_01" disappear together.
+4. sources (e.g. text sources) can have their settings changed (e.g. text content is replaced by what the user provides)
+5. sources can be transformed (i.e. their position or size)
+6. sources can be animated by repeatedly changing their x,y values (e.g. a bird image source quickly swoops across the screen from top left to bottom right)
+    - the speed and start/stop coordinates can be changed as needed
+7. filters can be enabled/disabled on scenes and sources
+8. a single audio input/output can be manipulated (e.g. the mic input can be muted, the music output can be muted/unmuted)
+9. multiple audio inputs and outputs can be manipulated for a specific duration
+    - e.g. the mic input and music output are muted for 30 seconds while a video source plays, when the video is finished, the mic and music are unmuted
+10. scenes can be switched to
+11. the stream can be started and stopped
+12. a local recording can be started for a set duration, then stopped
+13. (a single Twitch event can trigger any or all of the above actions in a specific sequence)
+
+**Twitch:**
+
+1. users can use !commands in chat to trigger the bot
+    - e.g. `!hug Sammy` 👉 the bot posts `Timmy gives Sammy a warm hug` to chat
+    - e.g. `!point` 👉 the bot checks the user's current points in the db, then posts `@Timmy, you have 12,345 XP` to chat
+    - e.g. `!ball Sammy` 👉 the "ball" OBS source in scene "DOLLARYDOOS" is shown and animated to fly across the screen in a slow upward arc; the "Leather Ball" toy is removed from Timmy's inventory and added to Sammy's inventory; the bot posts `@Sammy, you now have the Leather Ball toy. Kick it to someone with 👉 !ball <user's name>` to chat
+2. Twitch bits trigger bot events
+    - e.g. cheering 666 bits causes a jumpscare video source in OBS to play after a random delay; the user is awarded 666 XP
+    - e.g. cheering 200 bits causes OBS to mute the mic and music channels, play a video source for 30 seconds, then unmute the audio channels; the user is awarded 200 XP
+3. Twitch channel rewards trigger bot events
+    - e.g. user redeems "Boo"
+
+### Database
+
+1. _(stored data detailed in full in `DS.md`)_
+2. stores OBS scenes and sources, with their respective OBS ids
+    - the bot will scrape this data from OBS each time it starts up, as well as have a option to manually update the list should I add a source/scene while streaming
+
+---
 
 ## Version 0.9
 
@@ -41,8 +87,10 @@ The Broadcaster can:
     - users spend 1111 bits to trigger this event
     - a random card is pulled from the Deck of Many Things, which either rewards or harms the user/other users/the stream itself
     - each time a card it drawn, it is removed from the deck (for all users) - when all cards are gone, the deck is 'replenished'
-    - some cards can be retained by the user, so those get added to their inventory
+    - some cards can be retained by the user and used at a later time, so those get added to their inventory
     - when a user uses one of their held cards, it is removed from their inventory
+
+---
 
 ## Version 1.0
 
@@ -62,9 +110,19 @@ The Broadcaster can:
     - users can see what `!toys` they have
     - users can see what `!cards` they have earned through the Deck of Many Things
 
+---
+
+## Version 2.1
+
+1. When 'Shield Mode' is activated in the Twitch channel, a sequence of actions fire
+    - a shield wall video source is shown in OBS
+    - the chat room settings are changed: can only chat if following for at least 6 months (3 months? 1 year??); TTS is disabled; a shield icon is shown in the corner of the stream (while the settings are active); sub alerts only show the Koala image and not the username or any messages; anything that can be trolled is basically disabled until Shield Mode is deactivated
+
+---
+
 ## Version 2.0
 
-1. Rough GUI using Kivy (just for the bot admin)
+1. Rough GUI using Kivy (just for the bot admin side of things)
 2. Web app
 3. Mobile app using Kivy
 

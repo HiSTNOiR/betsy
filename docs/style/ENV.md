@@ -1,4 +1,4 @@
-# .ENV template
+# .ENV
 
 ```bash
 # Twitch Bot Configuration
