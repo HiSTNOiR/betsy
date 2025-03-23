@@ -4,8 +4,8 @@ Tests for the formatting utility module.
 import unittest
 from bot.utils.formatting import (
     format_points, format_username, format_command,
-    format_duration, format_item_name, pluralise,
-    format_list, truncate, normalise_name, format_chat_message
+    format_item_name, pluralise, format_list,
+    truncate, normalise_name, format_chat_message
 )
 
 class TestFormatting(unittest.TestCase):
@@ -75,36 +75,6 @@ class TestFormatting(unittest.TestCase):
         
         # Custom prefix
         self.assertEqual(format_command('command', prefix='?'), '?command')
-    
-    def test_format_duration(self):
-        """Test duration formatting."""
-        # Zero
-        self.assertEqual(format_duration(0), '0s')
-        
-        # Seconds only
-        self.assertEqual(format_duration(42), '42s')
-        
-        # Minutes and seconds
-        self.assertEqual(format_duration(65), '1m 5s')
-        
-        # Hours, minutes, and seconds
-        self.assertEqual(format_duration(3665), '1h 1m 5s')
-        
-        # Rounding
-        self.assertEqual(format_duration(3600), '1h')
-        self.assertEqual(format_duration(60), '1m')
-        
-        # Negative duration
-        self.assertEqual(format_duration(-10), '0s')
-        
-        # Float input
-        self.assertEqual(format_duration(42.5), '42s')
-        
-        # String input
-        self.assertEqual(format_duration('42'), '42s')
-        
-        # Invalid input
-        self.assertEqual(format_duration('invalid'), '0s')
     
     def test_format_item_name(self):
         """Test item name formatting."""

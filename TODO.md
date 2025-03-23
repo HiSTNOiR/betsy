@@ -4,22 +4,22 @@
 
 🟥🟥🟥🟥🟥🟥 check that function calls use BrE
 
-🟧🟧🟧🟧🟧🟧 CURRENT BRANCH = utils
+🟧🟧🟧🟧🟧🟧 CHECK WHAT THE CURRENT BRANCH IS
 
 Current task:
 
--   config: determine any util functions that are needed
--   config: set up the `config.py` file
--   extract util functions and move them to the utils folder (new or existing files can be used)
+-   utils: organise functions into their correct files (the main purpose of the function determines the file it belongs to)
+    -   e.g. `format_timedelta()`'s main purpose is formatting (i.e. `formatting.py`), and does NOT belong in `time_utils.py`, even though it's working with time
 
 Requirements:
 
--   Use the .env variables provided in the style folder
+-   All code and comments must use British English spelling
 -   KISS principle
 -   Robust error handling and logging
 
 ## Next ...
 
+-   write tests for each util file (start with `test_formatting.py` and make sure it has all of the correct functions)
 -   check out fuzzywuzzy library for `parsing.py`
 
 ## Then ...

@@ -76,12 +76,12 @@ ENVIRONMENT_PENALTY_MULTIPLIER = 0.8
 
 ### Urban Environment
 
-| Effect Type | Boon for...                                              | Bust for...                                |
-| ----------- | -------------------------------------------------------- | ------------------------------------------ |
-| Armour      | Shadow Plate, Tattered Cloth, Dragonhide Vest            | Celestial Plate, Rusty Plate (noisy)       |
-| Armour Mods | Black Dye, Indigo Dye, Polish (if matching guard colors) | Helmet Plume, Heraldic Tabard (stands out) |
-| Weapons     | Rusty Dagger, Serpent's Fang, Bent Short Sword           | Dented Spear, Armageddon, World Ender      |
-| Weapon Mods | Poison Vial, Scabbard (concealment), Cleaning Kit        | Intimidating Talisman (attracts attention) |
+| Effect Type | Boon for...                                               | Bust for...                                |
+| ----------- | --------------------------------------------------------- | ------------------------------------------ |
+| Armour      | Shadow Plate, Tattered Cloth, Dragonhide Vest             | Celestial Plate, Rusty Plate (noisy)       |
+| Armour Mods | Black Dye, Indigo Dye, Polish (if matching guard colours) | Helmet Plume, Heraldic Tabard (stands out) |
+| Weapons     | Rusty Dagger, Serpent's Fang, Bent Short Sword            | Dented Spear, Armageddon, World Ender      |
+| Weapon Mods | Poison Vial, Scabbard (concealment), Cleaning Kit         | Intimidating Talisman (attracts attention) |
 
 ### Aquatic/Coastal Environment
 

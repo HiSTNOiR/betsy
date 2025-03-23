@@ -192,33 +192,6 @@ def get_time_until(target_time: datetime) -> timedelta:
         return timedelta(0)
     return target_time - now
 
-def format_timedelta(delta: timedelta, include_seconds: bool = True) -> str:
-    """
-    Format a timedelta as a readable string.
-    
-    Args:
-        delta: Timedelta to format
-        include_seconds: Whether to include seconds in output
-    
-    Returns:
-        Formatted timedelta string
-    """
-    days = delta.days
-    hours, remainder = divmod(delta.seconds, 3600)
-    minutes, seconds = divmod(remainder, 60)
-    
-    parts = []
-    if days > 0:
-        parts.append(f"{days}d")
-    if hours > 0:
-        parts.append(f"{hours}h")
-    if minutes > 0:
-        parts.append(f"{minutes}m")
-    if include_seconds and (seconds > 0 or not parts):
-        parts.append(f"{seconds}s")
-    
-    return " ".join(parts) if parts else "0s"
-
 def get_cooldown_end_time(cooldown_seconds: float) -> datetime:
     """
     Calculate when a cooldown will end.

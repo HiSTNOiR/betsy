@@ -79,6 +79,50 @@ def format_command(command: str, prefix: str = '!') -> str:
     # Add prefix back
     return f"{prefix}{command}"
 
+def format_item_name(item_name: str) -> str:
+    """
+    Format an item name for consistency and display.
+    
+    Args:
+        item_name: Item name to format
+    
+    Returns:
+        Formatted item name
+    """
+    if not item_name:
+        return ""
+    
+    # Capitalise each word
+    words = item_name.strip().split()
+    return " ".join(word.capitalise() for word in words)
+
+def format_timedelta(delta: timedelta, include_seconds: bool = True) -> str:
+    """
+    Format a timedelta as a readable string.
+    
+    Args:
+        delta: Timedelta to format
+        include_seconds: Whether to include seconds in output
+    
+    Returns:
+        Formatted timedelta string
+    """
+    days = delta.days
+    hours, remainder = divmod(delta.seconds, 3600)
+    minutes, seconds = divmod(remainder, 60)
+    
+    parts = []
+    if days > 0:
+        parts.append(f"{days}d")
+    if hours > 0:
+        parts.append(f"{hours}h")
+    if minutes > 0:
+        parts.append(f"{minutes}m")
+    if include_seconds and (seconds > 0 or not parts):
+        parts.append(f"{seconds}s")
+    
+    return " ".join(parts) if parts else "0s"
+
 def format_duration(seconds: Union[int, float]) -> str:
     """
     Format a duration in seconds as a human-readable string.
@@ -111,24 +155,7 @@ def format_duration(seconds: Union[int, float]) -> str:
     except (ValueError, TypeError):
         logger.warning(f"Invalid duration value: {seconds}")
         return "0s"
-
-def format_item_name(item_name: str) -> str:
-    """
-    Format an item name for consistency and display.
-    
-    Args:
-        item_name: Item name to format
-    
-    Returns:
-        Formatted item name
-    """
-    if not item_name:
-        return ""
-    
-    # Capitalise each word
-    words = item_name.strip().split()
-    return " ".join(word.capitalise() for word in words)
-
+        
 def pluralise(word: str, count: int) -> str:
     """
     Pluralise a word based on count.
