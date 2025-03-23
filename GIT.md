@@ -37,3 +37,12 @@ Conflicts?
 git add resolved_files_here
 git commit -m 'thing here'
 ```
+
+Updating my local copy with any main branch changes after I've already been doing shit on my end:
+
+```bash
+# While in my own branch
+git pull --rebase origin main
+# gets changes from main and applies them to my local code
+# replays my changes on top of the new code so I don't lose anything
+```
