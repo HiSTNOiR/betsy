@@ -29,36 +29,25 @@ _This will be changed to a schema document once I've got that ready._
 -   duel_wins
 -   duel_loses
 
-## obs scenes
+## obs actions
 
--   name (PK, maybe a composite key with id to future-proof from OBS changes?)
--   id (the id in OBS)
--   state (enabled/disabled)
-
-## obs sources
-
--   name (PK, maybe a composite key with id to future-proof from OBS changes?)
--   id (the id in OBS, which is needed for targetting the source)
--   state (enabled/disabled)
--   position (x, y coords)
--   transform (width, height)
--   text_content (string, i.e. what an OBS text source needs to be changed to)
--   (other things that might be needed in the future?)
-
-## obs inputs
-
--   name (PK)
--   id (? dunno if audio inputs/outputs have ids)
--   state (enabled/disabled)
-
-## obs filters
-
--   name (PK)
--   id (? dunno if filters have ids)
+-   id (PK)
+-   scene_name
 -   source_name
+-   source_id (from OBS itself)
+-   input_name (for mic and desktop audio devices)
+-   filter_name (for turning on a filter on a source or scene)
 -   state (enabled/disabled)
+-   position (x, y)
+-   size (width, height)
+-   text (string that replaces whatever is currently in the OBS Text source)
+-   animate_params (start here, stop there, do this animation)
+-   transform_params (change to these dimensions, relocate to these coordinates without an animation)
+-   (other stuff that might be needed in the future???)
 
 ## commands
+
+_(These are custom commands, base commands are all hard-coded to reduce load on the db)_
 
 -   id (PK)
 -   name (this is what the user types in chat, e.g. `!points`)
