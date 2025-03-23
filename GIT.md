@@ -6,10 +6,14 @@ What's branches are there? `git branch`
 
 What needs doing? `git status`
 
-Create a new branch for a new feature: `git checkout -b branch_name_here`
-Add files: `git add .`
-Commit changes: `git commit -m 'branch_name_here stuff'`
-Push to branch: `git push -u origin branch_name_here`
+Create a new branch for a new feature:
+
+```bash
+git checkout -b branch_name_here
+git add .
+git commit -m 'message'
+git push -u origin branch_name_here
+```
 
 When ready to merge with main:
 
