@@ -45,6 +45,14 @@ _This will be changed to a schema document once I've got that ready._
 -   transform_params (change to these dimensions, relocate to these coordinates without an animation)
 -   (other stuff that might be needed in the future???)
 
+## action sequences
+
+_(For complex actions like DOMT, sub alerts, bits triggers)_
+
+-   id (PK)
+-   name (animate_arc_up, animate_a_to_b, show_delayed, multi_sources)
+-   trigger_type (i.e. bits, twitch reward redemption, !command, Discord action, emote combo (easter eggs) etc)
+
 ## commands
 
 _(These are custom commands, base commands are all hard-coded to reduce load on the db)_
@@ -94,6 +102,31 @@ _(These are custom commands, base commands are all hard-coded to reduce load on 
 -   name
 -   cost (i.e. XP needed to buy this item)
 -   date_added (e.g. for notifying users about newly added toys)
+
+## duels
+
+-   if (PK)
+-   challenger (who initiated the duel)
+-   opponent (who accepted the duel)
+-   pot_size
+-   winner
+-   was_draw
+-   was_underdog_win
+-   duel_date
+
+## duel environments
+
+-   id (PK)
+-   name
+-   description
+-   boons_armour (all of the armour types that benefit from this environment)
+-   boons_armour_mods (all of the armour mod types that benefit from this environment)
+-   busts_armour (all of the armour types that are disadvantaged from this environment)
+-   busts_armour_mods (all of the armour mod types that are disadvantaged from this environment)
+-   boons_weapon (all of the weapon types that benefit from this environment)
+-   boons_weapon_mods (all of the weapon mod types that benefit from this environment)
+-   busts_weapon (all of the weapon types that are disadvantaged from this environment)
+-   busts_weapon_mods (all of the weapon mod types that are disadvantaged from this environment)
 
 ---
 
