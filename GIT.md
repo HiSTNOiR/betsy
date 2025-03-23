@@ -1,5 +1,10 @@
 # GIT
 
+What's the active branch? `git branch` (\* marks active one)
+What's branches are there? `git branch`
+
+What needs doing? `git status`
+
 Create a new branch for a new feature: `git checkout -b branch_name_here`
 Add files: `git add .`
 Commit changes: `git commit -m 'branch_name_here stuff'`
