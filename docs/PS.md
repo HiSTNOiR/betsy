@@ -174,6 +174,7 @@ betsy/
 │
 ├── tests/                       # Test modules
 │   ├── __init__.py
+│   ├── ✅ run_tests.py          # Runs all tests with 'test_' prefix
 │   ├── 📙🧪 test_formatting.py
 │   ├── test_commands.py
 │   ├── test_duel.py

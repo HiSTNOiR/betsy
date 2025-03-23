@@ -9,7 +9,11 @@
 Current task:
 
 -   utils: organise functions into their correct files (the main purpose of the function determines the file it belongs to)
+
     -   e.g. `format_timedelta()`'s main purpose is formatting (i.e. `formatting.py`), and does NOT belong in `time_utils.py`, even though it's working with time
+
+-   organise tests into folders (`utils/test_formatting.py`)
+-   update `tests/run_tests.py` so it accepts an argument to specify which folder to use
 
 Requirements:
 
