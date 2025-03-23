@@ -1,6 +1,7 @@
 # PROJECT STRUCTURE
 
 ✅ good to go
+📙 working on now
 🧪 needs testing
 🛑 borked
 
@@ -41,17 +42,17 @@ betsy/
 │   │
 │   ├── utils/               # Utility functions
 │   │   ├── __init__.py
-│   │   ├── 🧪cooldown.py      # Command CD handling
-│   │   ├── 🧪formatting.py    # Consistent formatting of user inputs
-│   │   ├── 🧪parsing.py       # Type conversion, argument parsing, sanitisation etc
-│   │   ├── 🧪permissions.py   # User access permissions
-│   │   ├── 🧪queue.py         # Priority-based queue
-│   │   ├── 🧪random_utils.py  # Random selection for duels, DOMT card drawing etc
-│   │   ├── 🧪sanitisation.py  # Sanitising all inputs/outputs
-│   │   ├── 🧪security.py      # Security utils, token handling etc
-│   │   ├── 🧪throttling.py    # Bot throttling
-│   │   ├── 🧪time_utils.py    # Timers, scheduling, duration calculations
-│   │   └── 🧪validation.py    # Validating all inputs/outputs
+│   │   ├── 📙🧪cooldown.py      # Command CD handling
+│   │   ├── 📙🧪formatting.py    # Consistent formatting of user inputs
+│   │   ├── 📙🧪parsing.py       # Type conversion, argument parsing, sanitisation etc
+│   │   ├── 📙🧪permissions.py   # User access permissions
+│   │   ├── 📙🧪queue.py         # Priority-based queue
+│   │   ├── 📙🧪random_utils.py  # Random selection for duels, DOMT card drawing etc
+│   │   ├── 📙🧪sanitisation.py  # Sanitising all inputs/outputs
+│   │   ├── 📙🧪security.py      # Security utils, token handling etc
+│   │   ├── 📙🧪throttling.py    # Bot throttling
+│   │   ├── 📙🧪time_utils.py    # Timers, scheduling, duration calculations
+│   │   └── 📙🧪validation.py    # Validating all inputs/outputs
 │   │
 │   ├── health/                  # Bot health monitoring
 │   │   ├── __init__.py
@@ -173,6 +174,7 @@ betsy/
 │
 ├── tests/                       # Test modules
 │   ├── __init__.py
+│   ├── 📙🧪 test_formatting.py
 │   ├── test_commands.py
 │   ├── test_duel.py
 │   ├── test_shop.py
