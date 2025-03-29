@@ -14,7 +14,7 @@ _Package progress_
 3. Platforms - Twitch and OBS connectivity modules ✅
 4. Commands - Command parsing, routing and execution ✅
 5. Events - Event handling system ✅
-6. Features/Points - Points system implementation
+6. Features/Points - Points system implementation ✅
 7. Features/Shop - Shop and purchasing system
 8. Features/Inventory - Inventory management
 9. Features/Duel - Duel system

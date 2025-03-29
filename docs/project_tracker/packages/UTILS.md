@@ -275,3 +275,36 @@
 | event_scheduling.py | sort_scheduled_events | Sort events by scheduled time |
 | event_scheduling.py | create_recurring_schedule | Create schedule for recurring event |
 | event_scheduling.py | validate_schedule | Validate schedule specification |
+
+## Points Utility Functions
+
+| Module | Function | Description |
+|--------|----------|-------------|
+| points.py | calculate_earning_rate | Calculate points earning rate based on user activity |
+| points.py | calculate_points_over_time | Calculate points earned over time period |
+| points.py | validate_points_amount | Validate points amount is within allowed range |
+| points.py | check_points_transfer | Check if points transfer is valid |
+| points.py | calculate_gamble_outcome | Calculate outcome of points gambling |
+| points.py | format_points_leaderboard | Format points leaderboard for display |
+| points.py | calculate_points_statistics | Calculate statistics for points economy |
+| points.py | convert_bits_to_points | Convert Twitch bits to points amount |
+| points.py | convert_subscription_to_points | Convert subscription to points amount |
+| points.py | estimate_watch_time_points | Estimate points earned from watch time |
+| points.py | apply_points_multiplier | Apply multiplier to points amount |
+| points.py | calculate_points_inflation | Calculate inflation rate in points economy |
+| points.py | format_transaction_history | Format points transaction history for display |
+| points.py | generate_earning_summary | Generate summary of points earning sources |
+| points.py | generate_spending_summary | Generate summary of points spending sinks |
+
+## Economy Analysis Utilities
+
+| Module | Function | Description |
+|--------|----------|-------------|
+| economy.py | calculate_gini_coefficient | Calculate Gini coefficient for points distribution |
+| economy.py | calculate_points_velocity | Calculate velocity of points in economy |
+| economy.py | detect_points_anomalies | Detect anomalies in points transactions |
+| economy.py | calculate_points_sink_ratio | Calculate ratio of points sinks to sources |
+| economy.py | predict_points_inflation | Predict future inflation rate |
+| economy.py | recommend_economy_adjustments | Recommend adjustments to balance economy |
+| economy.py | simulate_economy_change | Simulate effect of economy parameter change |
+| economy.py | calculate_economy_health | Calculate overall health of points economy |
