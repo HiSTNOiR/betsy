@@ -13,16 +13,16 @@ betsy/
 │   ├── 📄 __init__.py
 │   │
 │   ├── 📄 core/
-│   │   ├── 📄 __init__.py
-│   │   ├── app.py                      # Main application entry point
-│   │   ├── constants.py                # Global constants
-│   │   ├── errors.py                   # Error hierarchy
-│   │   ├── logging.py                  # Logging configuration
+│   │   ├── 🧪 __init__.py
+│   │   ├── 🧪 app.py                      # Main application entry point
+│   │   ├── 🧪 constants.py                # Global constants
+│   │   ├── 🧪 errors.py                   # Error hierarchy
+│   │   ├── 🧪 logging.py                  # Logging configuration
 │   │   │
 │   │   ├── 📄 config/                     # Configuration management
-│   │   │   ├── 📄 __init__.py
-│   │   │   ├── config.py               # Configuration manager
-│   │   │   └── validators.py           # Configuration validators
+│   │   │   ├── 🧪 __init__.py
+│   │   │   ├── 🧪 config.py               # Configuration manager
+│   │   │   └── 🧪 validators.py           # Configuration validators
 │   │   │
 │   │   ├── 📄 events/                     # Event system
 │   │   │   ├── 📄 __init__.py
@@ -32,9 +32,9 @@ betsy/
 │   │   │   └── handlers.py             # Global event handlers
 │   │   │
 │   │   └── 📄 lifecycle/                  # Application lifecycle
-│   │       ├── 📄 __init__.py
-│   │       ├── manager.py              # Lifecycle manager
-│   │       └── hooks.py                # Lifecycle hooks
+│   │       ├── 🧪 __init__.py
+│   │       ├── 🧪 manager.py              # Lifecycle manager
+│   │       └── 🧪 hooks.py                # Lifecycle hooks
 │   │
 │   ├── 📄 commands/                       # Command system
 │   │   ├── 📄 __init__.py
@@ -364,17 +364,17 @@ betsy/
 │   │   └── dashboard.py                # Dashboard components
 │   │
 │   └── 📄 utils/                          # Utility modules
-│       ├── 📄 __init__.py
+│       ├── 🧪 __init__.py
 │       ├── cooldown.py                 # Cooldown utilities
-│       ├── formatting.py               # Text formatting
+│       ├── 🧪 formatting.py               # Text formatting
 │       ├── parsing.py                  # Text parsing
 │       ├── permissions.py              # Permission utilities
 │       ├── queue.py                    # Queue implementations
-│       ├── random_utils.py             # Random utilities
+│       ├── random.py                   # Random utilities
 │       ├── sanitisation.py             # Input sanitisation
-│       ├── security.py                 # Security utilities
+│       ├── 🧪 security.py                 # Security utilities
 │       ├── throttling.py               # Rate limiting
-│       ├── time_utils.py               # Time utilities
+│       ├── 🧪 time.py                     # Time utilities
 │       └── validation.py               # Input validation
 │
 ├── 📄 docs/                               # Documentation

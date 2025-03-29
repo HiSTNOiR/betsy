@@ -45,7 +45,7 @@ _Package progress_
    - Custom exception hierarchy
    - Error reporting mechanisms
 5. Create essential utility modules:
-   - time_utils.py - Time-related functions
+   - time.py - Time-related functions
    - security.py - Security functions and validation
    - formatting.py - Text formatting utilities
 
@@ -53,7 +53,7 @@ _Package progress_
 - `bot/core/config/config.py` - Configuration management
 - `bot/core/logging.py` - Logging infrastructure
 - `bot/core/errors.py` - Error classes and handling
-- `bot/utils/time_utils.py` - Time-related utilities
+- `bot/utils/time.py` - Time-related utilities
 - `bot/utils/security.py` - Security utilities
 - `bot/utils/formatting.py` - Text formatting utilities
 
