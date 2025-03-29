@@ -6,7 +6,7 @@ This module provides utility functions for working with time and dates.
 
 import datetime
 from datetime import datetime, timedelta, timezone
-from typing import Optional, Tuple, Union
+from typing import Optional, Tuple, Union, List
 
 
 def get_utc_now() -> datetime:
@@ -121,7 +121,7 @@ def format_duration(
     if minutes > 0 or hours > 0 or days > 0:
         parts.append(f"{int(minutes)}m")
 
-    if include_seconds and (seconds > 0 or not parts):
+    if include_seconds and (seconds > 0 or milliseconds > 0 or not parts):
         if include_milliseconds and milliseconds > 0:
             parts.append(f"{int(seconds)}.{milliseconds:03d}s")
         else:
@@ -139,6 +139,7 @@ def parse_duration(duration_str: str) -> float:
     - "1d2h3m4s"
     - "1h 30m"
     - "90s"
+    - "1.5h"
 
     Args:
         duration_str (str): Duration string to parse.
@@ -151,6 +152,10 @@ def parse_duration(duration_str: str) -> float:
     """
     import re
 
+    # Validate input
+    if not duration_str or not isinstance(duration_str, str):
+        raise ValueError(f"Invalid duration string: {duration_str}")
+
     # Extract all time components
     pattern = r'(\d+\.?\d*)([dhms])'
     matches = re.findall(pattern, duration_str.lower())
@@ -161,7 +166,10 @@ def parse_duration(duration_str: str) -> float:
     total_seconds = 0.0
 
     for value, unit in matches:
-        value = float(value)
+        try:
+            value = float(value)
+        except ValueError:
+            raise ValueError(f"Invalid numeric value in duration: {value}")
 
         if unit == 'd':
             total_seconds += value * 86400  # days to seconds
@@ -251,12 +259,19 @@ def is_same_day(dt1: datetime, dt2: datetime) -> bool:
     Returns:
         bool: True if the datetimes are on the same day, False otherwise.
     """
-    if dt1.tzinfo is None and dt2.tzinfo is not None:
+    # Ensure both datetimes have timezone info for proper comparison
+    if dt1.tzinfo is None:
         dt1 = dt1.replace(tzinfo=timezone.utc)
-    elif dt1.tzinfo is not None and dt2.tzinfo is None:
+    if dt2.tzinfo is None:
         dt2 = dt2.replace(tzinfo=timezone.utc)
 
-    return (dt1.year == dt2.year and dt1.month == dt2.month and dt1.day == dt2.day)
+    # Convert both to UTC for consistency
+    dt1_utc = dt1.astimezone(timezone.utc)
+    dt2_utc = dt2.astimezone(timezone.utc)
+
+    return (dt1_utc.year == dt2_utc.year and
+            dt1_utc.month == dt2_utc.month and
+            dt1_utc.day == dt2_utc.day)
 
 
 def add_time(
@@ -304,7 +319,7 @@ def get_date_range(
     start_date: datetime,
     end_date: datetime,
     include_end: bool = True
-) -> list:
+) -> List[datetime]:
     """
     Get a list of dates in a range.
 
@@ -314,7 +329,7 @@ def get_date_range(
         include_end (bool): Whether to include the end date.
 
     Returns:
-        list: List of dates in the range.
+        List[datetime]: List of dates in the range.
     """
     if start_date > end_date:
         return []

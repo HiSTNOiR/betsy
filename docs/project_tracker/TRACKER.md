@@ -411,15 +411,31 @@ betsy/
 │   ├── migrate.py                      # Database migration script
 │   └── bootstrap.py                    # Environment bootstrap script
 │
-├── 📄 tests/                              # Tests
+├── 📄 tests/
 │   ├── 📄 __init__.py
+│   ├── ✅ run_tests.py
 │   │
-│   ├── 📄 unit/                           # Unit tests
+│   ├── 📄 unit/
 │   │   ├── 📄 __init__.py
-│   │   ├── test_config.py              # Configuration tests
-│   │   ├── test_commands.py            # Command tests
-│   │   ├── test_features.py            # Feature tests
-│   │   └── test_utils.py               # Utility tests
+│   │   ├── test_commands.py
+│   │   ├── test_features.py
+│   │   ├── test_utils.py
+│   │   │
+│   │   ├── 📄 core/
+│   │   │   ├── 📄 __init__.py
+│   │   │   ├── test_app_constants.py
+│   │   │   ├── test_config_validators.py
+│   │   │   ├── test_config.py
+│   │   │   ├── test_errors.py
+│   │   │   ├── test_logging.py
+│   │   │   ├── test_lifecycle.py
+│   │   │   └── test_lifecycle_hooks.py
+│   │   │
+│   │   └── 📄 utils/
+│   │       ├── 📄 __init__.py
+│   │       ├── test_formatting.py
+│   │       ├── test_security.py
+│   │       └── ✅ test_time.py
 │   │
 │   ├── 📄 integration/                    # Integration tests
 │   │   ├── 📄 __init__.py
