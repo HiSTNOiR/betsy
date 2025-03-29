@@ -173,6 +173,26 @@
 | duel.py | check_underdog_win | Check if underdog win occurs |
 | duel.py | distribute_pot | Distribute duel pot to winner |
 | duel.py | format_duel_result | Format duel result for chat |
+| duel.py | calculate_equipment_score | Calculate base score from equipment stats |
+| duel.py | calculate_environment_effect | Calculate effect of environment on equipment |
+| duel.py | format_duel_challenge | Format duel challenge notification for chat |
+| duel.py | format_duel_timeout | Format duel timeout notification for chat |
+| duel.py | format_durability_change | Format durability change notification |
+| duel.py | format_duel_stats | Format duel statistics for display |
+| duel.py | format_duel_history | Format user's duel history for display |
+| duel.py | format_duel_leaderboard | Format duel leaderboard for display |
+| duel.py | format_environment_description | Format environment description with effects |
+| duel.py | generate_duel_id | Generate unique ID for duel challenge |
+| duel.py | is_valid_duel_amount | Validate duel amount is within allowed range |
+| duel.py | calculate_underdog_factor | Calculate underdog factor based on score difference |
+| duel.py | get_duel_timeout_time | Calculate when duel challenge should time out |
+| duel.py | is_equipment_compatible | Check if equipment is compatible with environment |
+| duel.py | determine_equipment_advantage | Determine equipment advantage in environment |
+| duel.py | track_duel_metrics | Track metrics for duel system analytics |
+| duel.py | get_user_duel_rank | Get user's rank based on duel statistics |
+| duel.py | calculate_win_probability | Calculate win probability for duel participants |
+| duel.py | format_win_loss_record | Format user's win/loss record for display |
+| duel.py | categorise_duel_participants | Categorise participants by experience level |
 
 ## Shop System Utilities
 | Module | Function | Description |
