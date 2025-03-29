@@ -229,3 +229,49 @@
 | command.py | generate_command_signature | Generate command signature from argument definitions |
 | command.py | format_cooldown_info | Format cooldown information for display |
 | command.py | format_permission_info | Format permission requirements for display |
+
+## Event Utilities
+
+| Module | Function | Description |
+|--------|----------|-------------|
+| event.py | event_to_dict | Convert event object to dictionary representation |
+| event.py | dict_to_event | Convert dictionary to event object |
+| event.py | merge_event_data | Merge data from multiple events |
+| event.py | filter_event_data | Filter sensitive data from event |
+| event.py | get_event_type | Get standardised event type from event object |
+| event.py | is_same_event_type | Compare if two events are of same type |
+| event.py | extract_event_metadata | Extract metadata from event |
+| event.py | create_event_id | Create unique ID for event |
+| event.py | categorise_event | Categorise event into standard categories |
+| event.py | format_event_for_display | Format event for user-friendly display |
+| event.py | generate_event_timestamp | Generate consistent timestamp for event |
+| event.py | copy_event | Create deep copy of event |
+| event.py | prioritise_event | Determine priority level for event |
+| event.py | match_event_pattern | Match event against pattern specification |
+
+## EventBus Utilities
+
+| Module | Function | Description |
+|--------|----------|-------------|
+| eventbus.py | create_event_subscription | Create standardised event subscription |
+| eventbus.py | parse_event_pattern | Parse event pattern for subscription |
+| eventbus.py | match_subscription | Check if event matches subscription pattern |
+| eventbus.py | get_subscription_key | Generate key for subscription |
+| eventbus.py | filter_event_subscriptions | Filter subscriptions by criteria |
+| eventbus.py | sort_subscribers | Sort subscribers by priority |
+| eventbus.py | validate_event_handler | Validate handler function or method |
+| eventbus.py | wrap_sync_handler | Wrap synchronous handler for async execution |
+| eventbus.py | wrap_async_handler | Wrap async handler for sync execution |
+
+## Event Scheduling Utilities
+
+| Module | Function | Description |
+|--------|----------|-------------|
+| event_scheduling.py | calculate_next_occurrence | Calculate next occurrence for recurring event |
+| event_scheduling.py | parse_cron_expression | Parse cron expression for scheduling |
+| event_scheduling.py | create_schedule | Create schedule from specification |
+| event_scheduling.py | is_event_due | Check if scheduled event is due |
+| event_scheduling.py | get_time_until_event | Get time until scheduled event |
+| event_scheduling.py | sort_scheduled_events | Sort events by scheduled time |
+| event_scheduling.py | create_recurring_schedule | Create schedule for recurring event |
+| event_scheduling.py | validate_schedule | Validate schedule specification |
