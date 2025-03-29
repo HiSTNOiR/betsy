@@ -485,3 +485,61 @@ The following utility functions should be added to the UTILS.md file under the a
 | shop.py | calculate_bulk_purchase_discount | Calculate discount for bulk purchases |
 | shop.py | format_owned_vs_available | Format comparison of owned vs available items |
 | shop.py | calculate_total_cost | Calculate total cost for multiple purchases |
+
+## Easter Eggs Emote Detection and Analysis
+
+| Module | Function | Description |
+|--------|----------|-------------|
+| emote.py | detect_emotes | Detect Twitch, BTTV, and FFZ emotes in message |
+| emote.py | is_emote_only | Check if message contains only emotes |
+| emote.py | extract_emote_sequence | Extract sequence of emotes from message |
+| emote.py | count_emotes | Count number of emotes in message |
+| emote.py | get_unique_emotes | Get list of unique emotes in message |
+| emote.py | match_emote_sequence | Check if message matches specific emote sequence |
+| emote.py | load_twitch_emotes | Load Twitch emotes from API |
+| emote.py | load_bttv_emotes | Load BetterTTV emotes from API |
+| emote.py | load_ffz_emotes | Load FrankerFaceZ emotes from API |
+| emote.py | is_known_emote | Check if string is a known emote |
+
+## Easter Eggs Message Timing and Pattern Analysis
+
+| Module | Function | Description |
+|--------|----------|-------------|
+| timing.py | track_user_message_timing | Track timing of user messages |
+| timing.py | calculate_message_intervals | Calculate intervals between user messages |
+| timing.py | detect_timing_pattern | Detect consistent timing pattern in messages |
+| timing.py | calculate_timing_consistency | Calculate consistency of user message timing |
+| timing.py | is_interval_within_tolerance | Check if message interval is within tolerance of target |
+| timing.py | calculate_next_expected_message | Calculate next expected message time based on pattern |
+| timing.py | get_user_message_history | Get history of user's message timestamps |
+| timing.py | reset_timing_streak | Reset user's timing streak |
+| timing.py | update_timing_streak | Update user's timing streak count |
+
+## Easter Egg Detection and Management
+
+| Module | Function | Description |
+|--------|----------|-------------|
+| easter_egg.py | check_self_targeting | Check if command targets self (for Easter Egg) |
+| easter_egg.py | generate_random_egg_trigger | Generate random trigger for Easter Egg |
+| easter_egg.py | check_egg_conditions | Check if conditions are met for Easter Egg |
+| easter_egg.py | format_egg_discovery_message | Format message for Easter Egg discovery |
+| easter_egg.py | calculate_streak_bonus | Calculate bonus from timing streak |
+| easter_egg.py | format_combo_progress | Format emote combo progress message |
+| easter_egg.py | format_streak_progress | Format timing streak progress message |
+| easter_egg.py | validate_egg_trigger | Validate Easter Egg trigger configuration |
+| easter_egg.py | validate_egg_conditions | Validate Easter Egg condition configuration |
+| easter_egg.py | validate_egg_reward | Validate Easter Egg reward configuration |
+
+## Easter Eggs Reward Application
+
+| Module | Function | Description |
+|--------|----------|-------------|
+| rewards.py | apply_points_reward | Apply points reward to user |
+| rewards.py | apply_multiplier_reward | Apply points multiplier to user |
+| rewards.py | calculate_multiplier_duration | Calculate duration for multiplier |
+| rewards.py | apply_item_reward | Add item to user's inventory as reward |
+| rewards.py | apply_card_reward | Add DOMT card to user's inventory as reward |
+| rewards.py | format_reward_message | Format message describing reward |
+| rewards.py | calculate_scaled_reward | Calculate reward scaled by user level/activity |
+| rewards.py | distribute_team_reward | Distribute reward among team/group |
+| rewards.py | log_reward_application | Log application of reward |
