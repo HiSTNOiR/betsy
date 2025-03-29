@@ -18,13 +18,14 @@ _Package progress_
 3. 🧠 Platforms - Twitch and OBS connectivity modules
 4. 🧠 Commands - Command parsing, routing and execution
 5. 🧠 Events - Event handling system
-6. 🧠 Features/Points - Points system implementation
-7. 🧠 Features/Shop - Shop and purchasing system
-8. 🧠 Features/Inventory - Inventory management
-9. 🧠 Features/Duel - Duel system
-10. 🧠 Features/DOMT - Deck of Many Things
-11. 🧠 Features/OBS Actions - OBS sequences and actions
-12. 🧠 Features/Easter Eggs - Special features and hidden rewards
+6. 🧠 Middleware - Request/response processing pipelines
+7. 🧠 Features/Points - Points system implementation
+8. 🧠 Features/Shop - Shop and purchasing system
+9. 🧠 Features/Inventory - Inventory management
+10. 🧠 Features/Duel - Duel system
+11. 🧠 Features/DOMT - Deck of Many Things
+12. 🧠 Features/OBS Actions - OBS sequences and actions
+13. 🧠 Features/Easter Eggs - Special features and hidden rewards
 
 - - -
 
@@ -156,7 +157,50 @@ _Package progress_
 - `bot/utils/permissions.py` - Permission management
 - `bot/utils/cooldown.py` - Cooldown management
 
-## Phase 4: Points System
+## Phase 4: Middleware Framework
+
+**Goal**: Implement middleware pipelines for processing commands, events, and feature operations.
+
+### Tasks:
+1. Create core middleware framework
+   - Middleware base classes
+   - Middleware chain implementation
+   - Priority-based middleware execution
+2. Implement command middleware
+   - Permission checking middleware
+   - Cooldown middleware
+   - Logging middleware
+   - Error handling middleware
+3. Implement event middleware
+   - Validation middleware
+   - Transformation middleware
+   - Security middleware
+   - Throttling middleware
+4. Create feature-specific middleware
+   - Points transaction middleware
+   - Shop transaction middleware
+   - Inventory operation middleware
+   - Duel operation middleware
+
+**Files to Create**:
+- `bot/middleware/` - Middleware system
+  - `bot/middleware/base.py` - Core middleware definitions
+  - `bot/middleware/manager.py` - Middleware chain management
+  - `bot/middleware/commands/` - Command middleware
+    - `bot/middleware/commands/permission.py` - Permission checking
+    - `bot/middleware/commands/cooldown.py` - Command cooldowns
+    - `bot/middleware/commands/logging.py` - Command logging
+  - `bot/middleware/events/` - Event middleware
+    - `bot/middleware/events/validation.py` - Event validation
+    - `bot/middleware/events/throttling.py` - Event throttling
+    - `bot/middleware/events/security.py` - Security checks
+  - `bot/middleware/features/` - Feature-specific middleware
+    - `bot/middleware/features/points.py` - Points transaction middleware
+    - `bot/middleware/features/shop.py` - Shop transaction middleware
+    - `bot/middleware/features/inventory.py` - Inventory middleware
+    - `bot/middleware/features/duel.py` - Duel middleware
+
+## Phase 5: Points System
 
 **Goal**: Implement the XP/points system as a foundation for other features.
 
@@ -173,15 +217,20 @@ _Package progress_
    - Formatting
    - Validation
    - Calculation
+4. Integrate with points middleware
+   - Transaction validation
+   - Transaction modification
+   - Transaction logging
 
 **Files to Create**:
 - `bot/features/points/` - Points system
   - `bot/features/points/manager.py` - Points management
   - `bot/features/points/tracker.py` - Points tracking
   - `bot/features/points/commands.py` - Points commands
+  - `bot/features/points/middleware.py` - Points-specific middleware integration
 - `bot/utils/points.py` - Points utilities
 
-## Phase 5: Shop System
+## Phase 6: Shop System
 
 **Goal**: Implement the shop system for purchasing items.
 
@@ -200,15 +249,20 @@ _Package progress_
    - Item buying
    - Gear upgrading
    - Gear modifying
+4. Integrate with shop middleware
+   - Purchase validation
+   - Purchase modification
+   - Purchase logging
 
 **Files to Create**:
 - `bot/features/shop/` - Shop system
   - `bot/features/shop/manager.py` - Shop management
   - `bot/features/shop/items.py` - Item definitions
   - `bot/features/shop/commands.py` - Shop commands
+  - `bot/features/shop/middleware.py` - Shop-specific middleware integration
 - `bot/utils/shop.py` - Shop utilities
 
-## Phase 6: Inventory System
+## Phase 7: Inventory System
 
 **Goal**: Implement the inventory system for tracking owned items.
 
@@ -225,14 +279,19 @@ _Package progress_
 3. Create inventory utilities
    - Formatting
    - Validation
+4. Integrate with inventory middleware
+   - Operation validation
+   - Operation modification
+   - Operation logging
 
 **Files to Create**:
 - `bot/features/inventory/` - Inventory system
   - `bot/features/inventory/manager.py` - Inventory management
   - `bot/features/inventory/commands.py` - Inventory commands
+  - `bot/features/inventory/middleware.py` - Inventory-specific middleware integration
 - `bot/utils/inventory.py` - Inventory utilities
 
-## Phase 7: Duel System
+## Phase 8: Duel System
 
 **Goal**: Implement the duel system for user battles.
 
@@ -251,6 +310,10 @@ _Package progress_
 4. Implement duel commands
    - Duel challenging
    - Duel accepting/rejecting
+5. Integrate with duel middleware
+   - Operation validation
+   - Operation modification
+   - Operation logging
 
 **Files to Create**:
 - `bot/features/duel/` - Duel system
@@ -258,9 +321,10 @@ _Package progress_
   - `bot/features/duel/calculator.py` - Winner calculation
   - `bot/features/duel/environment.py` - Environment effects
   - `bot/features/duel/commands.py` - Duel commands
+  - `bot/features/duel/middleware.py` - Duel-specific middleware integration
 - `bot/utils/duel.py` - Duel utilities
 
-## Phase 8: Deck of Many Things
+## Phase 9: Deck of Many Things
 
 **Goal**: Implement the Deck of Many Things system.
 
@@ -277,6 +341,10 @@ _Package progress_
 4. Implement card commands
    - Card drawing
    - Card using
+5. Integrate with DOMT middleware
+   - Operation validation
+   - Operation modification
+   - Operation logging
 
 **Files to Create**:
 - `bot/features/domt/` - Deck of Many Things system
@@ -284,9 +352,10 @@ _Package progress_
   - `bot/features/domt/cards.py` - Card definitions
   - `bot/features/domt/effects.py` - Effect processing
   - `bot/features/domt/commands.py` - DOMT commands
+  - `bot/features/domt/middleware.py` - DOMT-specific middleware integration
 - `bot/utils/domt.py` - DOMT utilities
 
-## Phase 9: OBS Actions and Sequences
+## Phase 10: OBS Actions and Sequences
 
 **Goal**: Implement OBS action sequences for events.
 
@@ -305,6 +374,10 @@ _Package progress_
    - Reward triggers
    - Command triggers
    - Event triggers
+4. Integrate with OBS actions middleware
+   - Operation validation
+   - Operation modification
+   - Operation logging
 
 **Files to Create**:
 - `bot/features/obs_actions/` - OBS actions system
@@ -312,9 +385,10 @@ _Package progress_
   - `bot/features/obs_actions/actions.py` - Action definitions
   - `bot/features/obs_actions/sequences.py` - Sequence handling
   - `bot/features/obs_actions/triggers.py` - Trigger processing
+  - `bot/features/obs_actions/middleware.py` - OBS actions middleware integration
 - `bot/utils/obs_actions.py` - OBS actions utilities
 
-## Phase 10: Easter Eggs and Special Features
+## Phase 11: Easter Eggs and Special Features
 
 **Goal**: Implement easter eggs and special features.
 
@@ -328,15 +402,20 @@ _Package progress_
 3. Create random event system
    - Event scheduling
    - Event triggering
+4. Integrate with easter egg middleware
+   - Operation validation
+   - Operation modification
+   - Operation logging
 
 **Files to Create**:
 - `bot/features/easter_eggs/` - Easter eggs system
   - `bot/features/easter_eggs/manager.py` - Easter egg management
   - `bot/features/easter_eggs/emote_combos.py` - Emote combo handling
   - `bot/features/easter_eggs/special_commands.py` - Special command behaviours
+  - `bot/features/easter_eggs/middleware.py` - Easter egg middleware integration
 - `bot/utils/random_utils.py` - Random utilities for easter eggs
 
-## Phase 11: Testing and Refinement
+## Phase 12: Testing and Refinement
 
 **Goal**: Implement comprehensive testing and refinement.
 
@@ -344,9 +423,11 @@ _Package progress_
 1. Create unit tests
    - Core component testing
    - Utility function testing
+   - Middleware testing
 2. Implement integration tests
    - Command processing testing
    - Event handling testing
+   - Middleware chain testing
 3. Create end-to-end tests
    - Complete feature testing
    - User flow testing
@@ -361,6 +442,7 @@ _Package progress_
 - `bot/tests/unit/` - Unit tests
   - `bot/tests/unit/core/` - Core component tests
   - `bot/tests/unit/utils/` - Utility function tests
+  - `bot/tests/unit/middleware/` - Middleware tests
   - `bot/tests/unit/features/` - Feature tests
 - `bot/tests/integration/` - Integration tests
 - `bot/tests/e2e/` - End-to-end tests
