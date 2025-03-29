@@ -433,8 +433,8 @@ betsy/
 │   │   │
 │   │   └── 📄 utils/
 │   │       ├── 📄 __init__.py
-│   │       ├── test_formatting.py
-│   │       ├── test_security.py
+│   │       ├── 👉 test_formatting.py
+│   │       ├── ✅ test_security.py
 │   │       └── ✅ test_time.py
 │   │
 │   ├── 📄 integration/                    # Integration tests
