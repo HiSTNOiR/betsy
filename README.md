@@ -2,6 +2,8 @@
 
 Yep.
 
+![CodeRabbit Pull Request Reviews](https://img.shields.io/coderabbit/prs/github/HiSTNOiR/betsy?utm_source=oss&utm_medium=github&utm_campaign=HiSTNOiR%2Fbetsy&labelColor=171717&color=FF570A&link=https%3A%2F%2Fcoderabbit.ai&label=CodeRabbit+Reviews)
+
 ## (Hopefully Human) References
 
 -   [Good Python Shit](https://docs.python-guide.org/writing/structure/)
