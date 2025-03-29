@@ -211,6 +211,17 @@
 | inventory.py | check_inventory_space | Check if user has inventory space |
 | inventory.py | get_item_details | Get detailed information about item |
 | inventory.py | use_inventory_item | Use item from inventory |
+| inventory.py | transfer_inventory_item | Transfer item between users |
+| inventory.py | count_inventory_items | Count specific items in inventory |
+| inventory.py | search_inventory | Search inventory for matching items |
+| inventory.py | categorise_inventory | Group inventory items by category |
+| inventory.py | sort_inventory | Sort inventory by various criteria |
+| inventory.py | validate_item_transfer | Validate if item transfer is allowed |
+| inventory.py | format_durability_bar | Format visual durability bar for display |
+| inventory.py | calculate_equipment_stats | Calculate combined stats from equipment |
+| inventory.py | check_cooldown_status | Check if item is on cooldown for usage |
+| inventory.py | format_cooldown_remaining | Format remaining cooldown time |
+| inventory.py | generate_item_history | Generate history of item acquisitions and usage |
 
 ## Command Parsing and Validation
 
