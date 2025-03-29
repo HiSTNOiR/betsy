@@ -7,195 +7,452 @@
 
 ```
 betsy/
-├── .env                 # Environment variables (from ENV.md template)
-├── .gitignore
-├── README.md
-├── requirements.txt
-├── main.py              # Entry point for the application
 │
 ├── bot/
 │   ├── __init__.py
 │   │
-│   ├── core/                 # Core modules
+│   ├── core/
 │   │   ├── __init__.py
-│   │   ├── state.py          # Real-time state management and persistence
-│   │   ├── bot.py            # Main bot class
-│   │   ├── connections.py    # Initialises connections to OBS, Twitch etc
-│   │   ├── constants.py      # Common constants and enums
-│   │   ├── errors.py         # Custom exception classes
-│   │   ├── logging.py        # Logging configuration
+│   │   ├── app.py                      # Main application entry point
+│   │   ├── constants.py                # Global constants
+│   │   ├── errors.py                   # Error hierarchy
+│   │   ├── logging.py                  # Logging configuration
 │   │   │
-│   │   ├── config/            # Configuration modules
+│   │   ├── config/                     # Configuration management
 │   │   │   ├── __init__.py
-│   │   │   ├── config.py      # Configuration loader (reads from .env)
-│   │   │   ├── dev.py         # Development config values
-│   │   │   ├── prod.py        # Production config values
-│   │   │   └── default.py     # Default config values
+│   │   │   ├── config.py               # Configuration manager
+│   │   │   └── validators.py           # Configuration validators
 │   │   │
-│   │   └── cache/
+│   │   ├── events/                     # Event system
+│   │   │   ├── __init__.py
+│   │   │   ├── base.py                 # Base event classes
+│   │   │   ├── dispatcher.py           # Event dispatcher
+│   │   │   ├── registry.py             # Event registry
+│   │   │   └── handlers.py             # Global event handlers
+│   │   │
+│   │   └── lifecycle/                  # Application lifecycle
 │   │       ├── __init__.py
-│   │       ├── manager.py           # Core cache management logic (incl periodic db sync)
-│   │       ├── command_cache.py
-│   │       ├── item_cache.py        # Item and shop cache
-│   │       ├── strategies.py        # Memory, file caching etc
-│   │       └── user_cache.py
+│   │       ├── manager.py              # Lifecycle manager
+│   │       └── hooks.py                # Lifecycle hooks
 │   │
-│   ├── middleware/                  
+│   ├── commands/                       # Command system
 │   │   ├── __init__.py
-│   │   ├── base.py          # Base middleware classes and infrastructure
-│   │   ├── registry.py      # Middleware registration
-│   │   ├── manager.py       # Middleware chain management
-│   │   ├── points.py        # Points-specific middleware
-│   │   ├── shop.py          # Shop-specific middleware
-│   │   ├── validation.py    # Input validation middleware
-│   │   ├── logging.py       # Logging middleware
-│   │   ├── security.py      # Security middleware
-│   │   └── throttling.py    # Rate limiting middleware
+│   │   ├── base.py                     # Base command classes
+│   │   ├── context.py                  # Command context
+│   │   ├── handler.py                  # Command handler
+│   │   ├── parser.py                   # Command parser
+│   │   ├── registry.py                 # Command registry
+│   │   ├── cooldown.py                 # Command cooldowns
+│   │   ├── permissions.py              # Command permissions
+│   │   └── decorators.py               # Command decorators
 │   │
-│   ├── utils/                 # Utility functions
+│   ├── db/                             # Database layer
 │   │   ├── __init__.py
-│   │   ├── cooldown.py        # Command CD handling
-│   │   ├── formatting.py      # Consistent formatting of user inputs
-│   │   ├── parsing.py         # Type conversion, argument parsing, sanitisation etc
-│   │   ├── permissions.py     # User access permissions
-│   │   ├── queue.py           # Priority-based queue
-│   │   ├── random_utils.py    # Random selection for duels, DOMT card drawing etc
-│   │   ├── sanitisation.py    # Sanitising all inputs/outputs
-│   │   ├── security.py        # Security utils, token handling etc
-│   │   ├── throttling.py      # Bot throttling
-│   │   ├── time_utils.py      # Timers, scheduling, duration calculations
-│   │   └── validation.py      # Validating all inputs/outputs
-│   │
-│   ├── health/            # Bot health monitoring
-│   │   ├── __init__.py
-│   │   └── status.py
-│   │
-│   ├── metrics/            # Monitoring and analytics modules
-│   │   ├── __init__.py
-│   │   ├── analytics.py    # Analytics collection
-│   │   └── reporters.py    # Visualisation or reporting tools
-│   │
-│   ├── db/                  # Database modules
-│   │   ├── __init__.py
-│   │   ├── ✅schema.sql     # DB schema
-│   │   ├── connection.py    # DB connection manager
-│   │   ├── users.py         # All CRUD operation for users
-│   │   ├── items.py         # All CRUD operation for items
-│   │   ├── commands.py      # All CRUD operation for commands
-│   │   ├── duels.py         # All CRUD operation for duels
-│   │   └── domt.py          # All CRUD operation for domt
-│   │
-│   ├── services/          # Service layers for external systems
-│   │   ├── __init__.py
+│   │   ├── connection.py               # Database connection management
+│   │   ├── migrations.py               # Database migrations
+│   │   ├── schema.sql                  # Database schema
 │   │   │
-│   │   ├── twitch/            # Twitch integration
+│   │   ├── models/                     # Data models
 │   │   │   ├── __init__.py
-│   │   │   ├── api.py         # Twitch API wrapper
-│   │   │   ├── chat.py        # Chat message handling
-│   │   │   ├── events.py      # Event subscription handling
-│   │   │   ├── bits.py        # Bits and cheers handling
-│   │   │   └── rewards.py     # Channel points handling
+│   │   │   ├── base.py                 # Base model
+│   │   │   ├── user.py                 # User model
+│   │   │   ├── command.py              # Command model
+│   │   │   ├── item.py                 # Item model
+│   │   │   ├── inventory.py            # Inventory model
+│   │   │   └── stream.py               # Stream model
 │   │   │
-│   │   ├── obs/                 # OBS integration
-│   │   │   ├── __init__.py
-│   │   │   ├── client.py        # OBS WebSocket client
-│   │   │   ├── scenes.py        # Scene management
-│   │   │   ├── sources.py       # Source management
-│   │   │   ├── audio.py         # Audio management
-│   │   │   ├── sequences.py     # Complex sequences of actions
-│   │   │   ├── animations.py    # Source animation helpers
-│   │   │   └── filters.py       # Filter management
-│   │   │
-│   │   └── discord/          # Future Discord integration
+│   │   └── repositories/               # Data access layer
 │   │       ├── __init__.py
-│   │       └── client.py     # Discord client
+│   │       ├── base.py                 # Base repository
+│   │       ├── user_repository.py      # User repository
+│   │       ├── command_repository.py   # Command repository
+│   │       ├── item_repository.py      # Item repository
+│   │       └── stream_repository.py    # Stream repository
 │   │
-│   ├── features/         # Feature modules
+│   ├── middleware/                     # Middleware system
 │   │   ├── __init__.py
-│   │   ├── points.py     # XP/Points system
+│   │   ├── base.py                     # Base middleware
+│   │   ├── pipeline.py                 # Middleware pipeline
 │   │   │
-│   │   ├── shop/                   # Shop system
+│   │   ├── commands/                   # Command middleware
 │   │   │   ├── __init__.py
-│   │   │   ├── buy.py              # Handlers for buying items
-│   │   │   ├── armour.py
-│   │   │   ├── armour_mods.py
-│   │   │   ├── toys.py
-│   │   │   ├── weapons.py
-│   │   │   └── weapons_mods.py
+│   │   │   ├── permission.py           # Permission middleware
+│   │   │   ├── cooldown.py             # Cooldown middleware
+│   │   │   ├── logging.py              # Logging middleware
+│   │   │   ├── validation.py           # Validation middleware
+│   │   │   └── error.py                # Error handling middleware
 │   │   │
-│   │   ├── duel_system/           # Duels system
+│   │   ├── events/                     # Event middleware
 │   │   │   ├── __init__.py
-│   │   │   ├── environments.py    # Handling of duel environments
-│   │   │   ├── seasonal.py        # Handling of seasonal affixes
-│   │   │   ├── duel.py            # Core duel system modules
-│   │   │   └── winner.py          # Calculating the winner
+│   │   │   ├── logging.py              # Logging middleware
+│   │   │   ├── validation.py           # Validation middleware
+│   │   │   ├── filtering.py            # Filtering middleware
+│   │   │   └── error.py                # Error handling middleware
 │   │   │
-│   │   ├── inventory/           # Inventory management
-│   │   │   ├── __init__.py
-│   │   │   └── user_items.py    # Handling users' items
-│   │   │
-│   │   ├── domt/                  # Deck of Many Things
-│   │   │   ├── __init__.py
-│   │   │   ├── domt.py            # Core modules
-│   │   │   └── cards/             # Handling of each card
-│   │   │       ├── balance.py
-│   │   │       ├── comet.py
-│   │   │       ├── donjon.py
-│   │   │       ├── euryale.py
-│   │   │       ├── fates.py
-│   │   │       ├── flames.py
-│   │   │       ├── fool.py
-│   │   │       ├── idiot.py
-│   │   │       ├── jester.py
-│   │   │       ├── key.py
-│   │   │       ├── knight.py
-│   │   │       ├── moon.py
-│   │   │       ├── rogue.py
-│   │   │       ├── ruin.py
-│   │   │       ├── skull.py
-│   │   │       ├── star.py
-│   │   │       ├── sun.py
-│   │   │       ├── talons.py
-│   │   │       ├── throne.py
-│   │   │       ├── vizier.py
-│   │   │       └── void.py
-│   │   │
-│   │   └── easter_eggs/       # Easter eggs
+│   │   └── features/                   # Feature middleware
 │   │       ├── __init__.py
-│   │       ├── one.py
-│   │       ├── two.py
-│   │       └── three.py
+│   │       ├── points.py               # Points middleware
+│   │       ├── shop.py                 # Shop middleware
+│   │       ├── inventory.py            # Inventory middleware
+│   │       └── duel.py                 # Duel middleware
 │   │
-│   ├── commands/          # Handlers for default/core commands
+│   ├── platforms/                      # Platform integrations
 │   │   ├── __init__.py
-│   │   ├── general.py     # General commands (help, hello, addcmd etc.)
-│   │   ├── points.py      # XP/Points commands
-│   │   └── admin.py       # Bot admin commands (Hist only)
+│   │   ├── base.py                     # Base platform
+│   │   │
+│   │   ├── twitch/                     # Twitch integration
+│   │   │   ├── __init__.py
+│   │   │   ├── client.py               # Twitch client
+│   │   │   ├── auth.py                 # Twitch auth
+│   │   │   ├── chat.py                 # Twitch chat
+│   │   │   ├── events.py               # Twitch events
+│   │   │   ├── api.py                  # Twitch API
+│   │   │   └── handlers.py             # Twitch event handlers
+│   │   │
+│   │   ├── obs/                        # OBS integration
+│   │   │   ├── __init__.py
+│   │   │   ├── client.py               # OBS client
+│   │   │   ├── scenes.py               # Scene management
+│   │   │   ├── sources.py              # Source management
+│   │   │   ├── filters.py              # Filter management
+│   │   │   ├── audio.py                # Audio management
+│   │   │   └── events.py               # OBS events
+│   │   │
+│   │   ├── discord/                    # Discord integration
+│   │   │   ├── __init__.py
+│   │   │   ├── client.py               # Discord client
+│   │   │   ├── commands.py             # Discord commands
+│   │   │   ├── events.py               # Discord events
+│   │   │   └── sync.py                 # Discord synchronisation
+│   │   │
+│   │   ├── youtube/                    # YouTube integration
+│   │   │   ├── __init__.py
+│   │   │   ├── client.py               # YouTube client
+│   │   │   ├── chat.py                 # YouTube chat
+│   │   │   ├── events.py               # YouTube events
+│   │   │   └── api.py                  # YouTube API
+│   │   │
+│   │   └── bitfocus/                   # BitFocus Companion integration
+│   │       ├── __init__.py
+│   │       ├── client.py               # BitFocus client
+│   │       ├── actions.py              # BitFocus actions
+│   │       └── events.py               # BitFocus events
 │   │
-│   └── handlers/          # Event handlers
+│   ├── features/                       # Feature modules
+│   │   ├── __init__.py
+│   │   ├── base.py                     # Base feature
+│   │   ├── manager.py                  # Feature manager
+│   │   │
+│   │   ├── points/                     # Points system
+│   │   │   ├── __init__.py
+│   │   │   ├── feature.py              # Points feature
+│   │   │   ├── manager.py              # Points manager
+│   │   │   ├── commands.py             # Points commands
+│   │   │   ├── events.py               # Points events
+│   │   │   ├── repository.py           # Points repository
+│   │   │   └── middleware.py           # Points middleware
+│   │   │
+│   │   ├── shop/                       # Shop system
+│   │   │   ├── __init__.py
+│   │   │   ├── feature.py              # Shop feature
+│   │   │   ├── manager.py              # Shop manager
+│   │   │   ├── commands.py             # Shop commands
+│   │   │   ├── events.py               # Shop events
+│   │   │   ├── repository.py           # Shop repository
+│   │   │   ├── middleware.py           # Shop middleware
+│   │   │   │
+│   │   │   └── items/                  # Shop items
+│   │   │       ├── __init__.py
+│   │   │       ├── base.py             # Base item
+│   │   │       ├── weapon.py           # Weapon items
+│   │   │       ├── armour.py           # Armour items
+│   │   │       ├── toy.py              # Toy items
+│   │   │       └── mod.py              # Modification items
+│   │   │
+│   │   ├── inventory/                  # Inventory system
+│   │   │   ├── __init__.py
+│   │   │   ├── feature.py              # Inventory feature
+│   │   │   ├── manager.py              # Inventory manager
+│   │   │   ├── commands.py             # Inventory commands
+│   │   │   ├── events.py               # Inventory events
+│   │   │   ├── repository.py           # Inventory repository
+│   │   │   └── middleware.py           # Inventory middleware
+│   │   │
+│   │   ├── duel/                       # Duel system
+│   │   │   ├── __init__.py
+│   │   │   ├── feature.py              # Duel feature
+│   │   │   ├── manager.py              # Duel manager
+│   │   │   ├── commands.py             # Duel commands
+│   │   │   ├── events.py               # Duel events
+│   │   │   ├── repository.py           # Duel repository
+│   │   │   ├── middleware.py           # Duel middleware
+│   │   │   ├── calculator.py           # Duel calculator
+│   │   │   └── environment.py          # Duel environments
+│   │   │
+│   │   ├── domt/                       # Deck of Many Things
+│   │   │   ├── __init__.py
+│   │   │   ├── feature.py              # DOMT feature
+│   │   │   ├── manager.py              # DOMT manager
+│   │   │   ├── commands.py             # DOMT commands
+│   │   │   ├── events.py               # DOMT events
+│   │   │   ├── repository.py           # DOMT repository
+│   │   │   ├── middleware.py           # DOMT middleware
+│   │   │   ├── cards.py                # Card definitions
+│   │   │   └── effects.py              # Card effects
+│   │   │
+│   │   ├── obs_actions/                # OBS action system
+│   │   │   ├── __init__.py
+│   │   │   ├── feature.py              # OBS Actions feature
+│   │   │   ├── manager.py              # Action manager
+│   │   │   ├── commands.py             # Action commands
+│   │   │   ├── events.py               # Action events
+│   │   │   ├── repository.py           # Action repository
+│   │   │   ├── middleware.py           # Action middleware
+│   │   │   ├── triggers.py             # Action triggers
+│   │   │   ├── sequences.py            # Action sequences
+│   │   │   │
+│   │   │   └── actions/                # Action implementations
+│   │   │       ├── __init__.py
+│   │   │       ├── base.py             # Base action
+│   │   │       ├── scene.py            # Scene actions
+│   │   │       ├── source.py           # Source actions
+│   │   │       ├── filter.py           # Filter actions
+│   │   │       ├── audio.py            # Audio actions
+│   │   │       ├── text.py             # Text actions
+│   │   │       └── animation.py        # Animation actions
+│   │   │
+│   │   ├── easter_eggs/                # Easter eggs
+│   │   │   ├── __init__.py
+│   │   │   ├── feature.py              # Easter Eggs feature
+│   │   │   ├── manager.py              # Easter Eggs manager
+│   │   │   ├── commands.py             # Easter Eggs commands
+│   │   │   ├── events.py               # Easter Eggs events
+│   │   │   ├── repository.py           # Easter Eggs repository
+│   │   │   ├── middleware.py           # Easter Eggs middleware
+│   │   │   ├── emote_combos.py         # Emote combos
+│   │   │   └── special_commands.py     # Special commands
+│   │   │
+│   │   ├── dungeon/                    # Dungeon/raid system
+│   │   │   ├── __init__.py
+│   │   │   ├── feature.py              # Dungeon feature
+│   │   │   ├── manager.py              # Dungeon manager
+│   │   │   ├── commands.py             # Dungeon commands
+│   │   │   ├── events.py               # Dungeon events
+│   │   │   ├── repository.py           # Dungeon repository
+│   │   │   ├── middleware.py           # Dungeon middleware
+│   │   │   ├── boss.py                 # Boss definitions
+│   │   │   └── rewards.py              # Dungeon rewards
+│   │   │
+│   │   ├── betsy_vault/                # Betsy Vault feature
+│   │   │   ├── __init__.py
+│   │   │   ├── feature.py              # Betsy Vault feature
+│   │   │   ├── manager.py              # Vault manager
+│   │   │   ├── commands.py             # Vault commands
+│   │   │   ├── events.py               # Vault events
+│   │   │   ├── repository.py           # Vault repository
+│   │   │   └── middleware.py           # Vault middleware
+│   │   │
+│   │   ├── shield_mode/                # Shield Mode feature
+│   │   │   ├── __init__.py
+│   │   │   ├── feature.py              # Shield Mode feature
+│   │   │   ├── manager.py              # Shield Mode manager
+│   │   │   ├── commands.py             # Shield Mode commands
+│   │   │   ├── events.py               # Shield Mode events
+│   │   │   └── actions.py              # Shield Mode actions
+│   │   │
+│   │   ├── todo/                       # To-Do system
+│   │   │   ├── __init__.py
+│   │   │   ├── feature.py              # Todo feature
+│   │   │   ├── manager.py              # Todo manager
+│   │   │   ├── commands.py             # Todo commands
+│   │   │   ├── events.py               # Todo events
+│   │   │   └── repository.py           # Todo repository
+│   │   │
+│   │   ├── chat_log/                   # Chat logging
+│   │   │   ├── __init__.py
+│   │   │   ├── feature.py              # Chat Log feature
+│   │   │   ├── manager.py              # Log manager
+│   │   │   ├── commands.py             # Log commands
+│   │   │   ├── events.py               # Log events
+│   │   │   └── repository.py           # Log repository
+│   │   │
+│   │   └── ai/                         # AI integration
+│   │       ├── __init__.py
+│   │       ├── feature.py              # AI feature
+│   │       ├── manager.py              # AI manager
+│   │       ├── commands.py             # AI commands
+│   │       ├── events.py               # AI events
+│   │       ├── repository.py           # AI repository
+│   │       ├── llm.py                  # Language model integration
+│   │       └── chat.py                 # AI chat functionality
+│   │
+│   ├── ui/                             # User interface systems
+│   │   ├── __init__.py
+│   │   ├── base.py                     # Base UI
+│   │   │
+│   │   ├── cli/                        # Command-line interface
+│   │   │   ├── __init__.py
+│   │   │   ├── app.py                  # CLI application
+│   │   │   ├── commands.py             # CLI commands
+│   │   │   └── formatter.py            # CLI output formatter
+│   │   │
+│   │   ├── kivy/                       # Kivy GUI application
+│   │   │   ├── __init__.py
+│   │   │   ├── app.py                  # Kivy application
+│   │   │   ├── main.py                 # Main Kivy entry point
+│   │   │   │
+│   │   │   ├── screens/                # Kivy screens
+│   │   │   │   ├── __init__.py
+│   │   │   │   ├── base.py             # Base screen
+│   │   │   │   ├── dashboard.py        # Dashboard screen
+│   │   │   │   ├── commands.py         # Commands screen
+│   │   │   │   ├── shop.py             # Shop screen
+│   │   │   │   ├── users.py            # Users screen
+│   │   │   │   ├── settings.py         # Settings screen
+│   │   │   │   └── logs.py             # Logs screen
+│   │   │   │
+│   │   │   ├── widgets/                # Kivy widgets
+│   │   │   │   ├── __init__.py
+│   │   │   │   ├── base.py             # Base widgets
+│   │   │   │   ├── cards.py            # Card widgets
+│   │   │   │   ├── charts.py           # Chart widgets
+│   │   │   │   ├── lists.py            # List widgets
+│   │   │   │   └── modals.py           # Modal widgets
+│   │   │   │
+│   │   │   └── styles/                 # Kivy styles
+│   │   │       ├── __init__.py
+│   │   │       ├── theme.py            # Theme definition
+│   │   │       └── colours.py          # Colour definitions
+│   │   │
+│   │   ├── web/                        # Web application
+│   │   │   ├── __init__.py
+│   │   │   ├── app.py                  # Web app
+│   │   │   ├── routes.py               # Web routes
+│   │   │   ├── auth.py                 # Web auth
+│   │   │   │
+│   │   │   ├── api/                    # Web API
+│   │   │   │   ├── __init__.py
+│   │   │   │   ├── routes.py           # API routes
+│   │   │   │   ├── users.py            # User endpoints
+│   │   │   │   ├── commands.py         # Command endpoints
+│   │   │   │   ├── stats.py            # Stats endpoints
+│   │   │   │   └── settings.py         # Settings endpoints
+│   │   │   │
+│   │   │   ├── templates/              # Web templates
+│   │   │   │   ├── base.html           # Base template
+│   │   │   │   ├── dashboard.html      # Dashboard template
+│   │   │   │   ├── login.html          # Login template
+│   │   │   │   └── settings.html       # Settings template
+│   │   │   │
+│   │   │   └── static/                 # Web static files
+│   │   │       ├── css/                # CSS files
+│   │   │       ├── js/                 # JavaScript files
+│   │   │       └── img/                # Image files
+│   │   │
+│   │   └── mobile/                     # Mobile app integration
+│   │       ├── __init__.py
+│   │       ├── app.py                  # Mobile app
+│   │       └── api.py                  # Mobile API client
+│   │
+│   ├── visualization/                  # Data visualization
+│   │   ├── __init__.py
+│   │   ├── base.py                     # Base visualization
+│   │   ├── charts.py                   # Chart generation
+│   │   ├── reports.py                  # Report generation
+│   │   ├── metrics.py                  # Metrics calculation
+│   │   └── dashboard.py                # Dashboard components
+│   │
+│   └── utils/                          # Utility modules
 │       ├── __init__.py
-│       ├── chat.py        # Chat message handlers
-│       ├── bits.py        # Bits handlers
-│       ├── rewards.py     # Channel point reward handlers
-│       └── shields.py     # Shield mode handlers
+│       ├── cooldown.py                 # Cooldown utilities
+│       ├── formatting.py               # Text formatting
+│       ├── parsing.py                  # Text parsing
+│       ├── permissions.py              # Permission utilities
+│       ├── queue.py                    # Queue implementations
+│       ├── random_utils.py             # Random utilities
+│       ├── sanitisation.py             # Input sanitisation
+│       ├── security.py                 # Security utilities
+│       ├── throttling.py               # Rate limiting
+│       ├── time_utils.py               # Time utilities
+│       └── validation.py               # Input validation
 │
-├── scripts/           # Utility scripts
-│   ├── setup_db.py    # Database setup script
-│   ├── backup.py      # Backup utility
-│   └── migrate.py     # Version migration script
+├── docs/                               # Documentation
+│   ├── index.md                        # Documentation index
+│   │
+│   ├── api/                            # API documentation
+│   │   └── index.md                    # API documentation index
+│   │
+│   ├── features/                       # Feature documentation
+│   │   ├── points.md                   # Points system docs
+│   │   ├── shop.md                     # Shop system docs
+│   │   ├── duel.md                     # Duel system docs
+│   │   ├── domt.md                     # DOMT docs
+│   │   └── obs_actions.md              # OBS Actions docs
+│   │
+│   ├── guides/                         # User guides
+│   │   ├── installation.md             # Installation guide
+│   │   ├── configuration.md            # Configuration guide
+│   │   └── commands.md                 # Commands reference
+│   │
+│   ├── dev/                            # Developer documentation
+│   │   ├── architecture.md             # Architecture overview
+│   │   ├── contributing.md             # Contributing guide
+│   │   └── testing.md                  # Testing guide
+│   │
+│   └── refs/                           # Reference documentation
+│       ├── twitch/                     # Twitch API references
+│       ├── obs/                        # OBS API references
+│       └── database/                   # Database schema reference
 │
-├── tests/                 # Test modules
+├── scripts/                            # Utility scripts
+│   ├── setup.py                        # Setup script
+│   ├── backup.py                       # Database backup script
+│   ├── migrate.py                      # Database migration script
+│   └── bootstrap.py                    # Environment bootstrap script
+│
+├── tests/                              # Tests
 │   ├── __init__.py
-│   ├── ✅ run_tests.py    # Runs all tests with 'test_' prefix
-│   └── test_thing.py
+│   │
+│   ├── unit/                           # Unit tests
+│   │   ├── __init__.py
+│   │   ├── test_config.py              # Configuration tests
+│   │   ├── test_commands.py            # Command tests
+│   │   ├── test_features.py            # Feature tests
+│   │   └── test_utils.py               # Utility tests
+│   │
+│   ├── integration/                    # Integration tests
+│   │   ├── __init__.py
+│   │   ├── test_database.py            # Database integration tests
+│   │   ├── test_twitch.py              # Twitch integration tests
+│   │   └── test_obs.py                 # OBS integration tests
+│   │
+│   ├── e2e/                            # End-to-end tests
+│   │   ├── __init__.py
+│   │   ├── test_commands.py            # Command E2E tests
+│   │   ├── test_shop.py                # Shop E2E tests
+│   │   └── test_duel.py                # Duel E2E tests
+│   │
+│   └── mocks/                          # Test mocks
+│       ├── __init__.py
+│       ├── twitch.py                   # Twitch API mocks
+│       ├── obs.py                      # OBS API mocks
+│       └── db.py                       # Database mocks
 │
-├── migrations/        # Database migrations
-│   ├── __init__.py
-│   └── versions/      # Migration versions
+├── data/                               # Data directory
+│   ├── .gitignore                      # Gitignore for data files
+│   └── README.md                       # Data directory README
 │
-└── gui/               # GUI implementation (Version 2.0)
-    ├── __init__.py
-    ├── kivy_app.py    # Kivy application
-    ├── web_app.py     # Web application
-    └── templates/     # Web templates
+├── logs/                               # Log directory
+│   ├── .gitignore                      # Gitignore for log files
+│   └── README.md                       # Log directory README
+│
+├── README.md                           # Project README
+├── CHANGELOG.md                        # Project changelog
+├── LICENSE                             # Project license
+├── .env                                # Environment variables
+├── .gitignore                          # Git ignore file
+├── pyproject.toml                      # Poetry/PEP 518 config
+├── setup.py                            # Package setup script
+├── requirements.txt                    # Package requirements
+└── tox.ini                             # Tox configuration (testing)
 ```
