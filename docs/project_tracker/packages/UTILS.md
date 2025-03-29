@@ -208,6 +208,7 @@
 | shop.py | check_affordability | Check if user can afford item |
 
 ## Deck of Many Things Utilities
+
 | Module | Function | Description |
 |--------|----------|-------------|
 | domt.py | draw_card | Draw card from deck |
@@ -217,6 +218,44 @@
 | domt.py | add_card_to_inventory | Add card to user's inventory |
 | domt.py | use_card_from_inventory | Use card from user's inventory |
 | domt.py | format_card_result | Format card draw result for chat |
+| domt.py | format_card_description | Format description of card |
+| domt.py | format_card_effect | Format description of card effect |
+| domt.py | validate_bits_for_draw | Validate bits amount for card draw |
+| domt.py | calculate_effect_chance | Calculate chance of effect happening |
+| domt.py | check_retainable_card | Check if card can be retained |
+| domt.py | generate_card_display | Generate formatted card display |
+| domt.py | parse_card_parameters | Parse parameters for card effect |
+| domt.py | get_card_stats | Get statistics for specific card |
+| domt.py | format_deck_status | Format deck status for display |
+| domt.py | format_cards_inventory | Format user's owned cards for display |
+| domt.py | check_card_compatibility | Check if card is compatible with user |
+| domt.py | get_card_history | Get history of card draws |
+| domt.py | calculate_card_probability | Calculate probability of drawing card |
+
+## OBS Card Animation Utilities
+
+| Module | Function | Description |
+|--------|----------|-------------|
+| obs_cards.py | show_card_in_obs | Show card in OBS |
+| obs_cards.py | hide_card_in_obs | Hide card in OBS |
+| obs_cards.py | animate_card_reveal | Animate card reveal in OBS |
+| obs_cards.py | animate_card_flip | Animate card flip in OBS |
+| obs_cards.py | create_card_sequence | Create OBS action sequence for card |
+| obs_cards.py | apply_card_filter | Apply filter for card effect |
+| obs_cards.py | remove_card_filter | Remove filter for card effect |
+| obs_cards.py | set_card_position | Set position of card in OBS |
+| obs_cards.py | play_card_sound | Play sound for card draw |
+| obs_cards.py | create_card_animation | Create animation for card |
+
+## Bits Integration Utilities
+
+| Module | Function | Description |
+|--------|----------|-------------|
+| bits_domt.py | validate_domt_bits | Validate bits for DOMT draw |
+| bits_domt.py | process_domt_bits | Process bits for DOMT draw |
+| bits_domt.py | calculate_bits_cost | Calculate cost in bits for card draw |
+| bits_domt.py | format_bits_notification | Format bits donation notification for DOMT |
+| bits_domt.py | track_bits_spending | Track bits spent on DOMT |
 
 ## Inventory System Utilities
 | Module | Function | Description |
