@@ -147,6 +147,88 @@
 | obs.py | start_stop_stream | Start or stop stream |
 | obs.py | start_stop_recording | Start or stop recording |
 
+# Additional OBS Actions Utility Functions
+
+The following utility functions should be added to the UTILS.md file under the appropriate sections to support the OBS Actions feature:
+
+## OBS Integration Utilities
+
+| Module | Function | Description |
+|--------|----------|-------------|
+| obs.py | execute_action_sequence | Execute ordered sequence of OBS actions |
+| obs.py | validate_obs_action | Validate OBS action parameters |
+| obs.py | create_action_sequence | Create sequence of OBS actions |
+| obs.py | save_action_sequence | Save action sequence to database |
+| obs.py | load_action_sequence | Load action sequence from database |
+| obs.py | register_action_trigger | Register trigger for action sequence |
+| obs.py | parse_action_parameters | Parse parameters for OBS action |
+| obs.py | interpolate_position | Interpolate between position values for animations |
+| obs.py | interpolate_size | Interpolate between size values for animations |
+| obs.py | interpolate_rotation | Interpolate between rotation values for animations |
+| obs.py | interpolate_opacity | Interpolate between opacity values for animations |
+| obs.py | calculate_easing | Calculate easing function result |
+| obs.py | format_action_description | Format action description for display |
+| obs.py | format_sequence_description | Format sequence description for display |
+| obs.py | get_scene_sources | Get sources in a specific scene |
+| obs.py | get_source_filters | Get filters for a specific source |
+| obs.py | validate_scene_name | Validate scene name exists |
+| obs.py | validate_source_name | Validate source name exists in scene |
+| obs.py | validate_filter_name | Validate filter name exists for source |
+| obs.py | validate_audio_source | Validate audio source exists |
+
+## OBS Animation Utilities
+
+| Module | Function | Description |
+|--------|----------|-------------|
+| animation.py | linear_interpolation | Calculate linear interpolation between values |
+| animation.py | ease_in | Calculate ease-in interpolation |
+| animation.py | ease_out | Calculate ease-out interpolation |
+| animation.py | ease_in_out | Calculate ease-in-out interpolation |
+| animation.py | bounce | Calculate bounce interpolation |
+| animation.py | elastic | Calculate elastic interpolation |
+| animation.py | back | Calculate back interpolation |
+| animation.py | calculate_bezier | Calculate point on bezier curve |
+| animation.py | create_animation_frames | Create frame data for animation |
+| animation.py | calculate_transition | Calculate transition between two states |
+| animation.py | format_animation_timeline | Format animation timeline for debugging |
+| animation.py | calculate_animation_duration | Calculate total duration for animation |
+| animation.py | validate_animation_parameters | Validate animation parameters |
+| animation.py | parse_animation_path | Parse animation path specification |
+
+## OBS Trigger System Utilities
+
+| Module | Function | Description |
+|--------|----------|-------------|
+| triggers.py | parse_trigger_definition | Parse trigger definition from string |
+| triggers.py | validate_trigger | Validate trigger configuration |
+| triggers.py | match_event_to_trigger | Check if event matches trigger definition |
+| triggers.py | format_trigger_description | Format trigger description for display |
+| triggers.py | create_command_trigger | Create trigger for command execution |
+| triggers.py | create_bits_trigger | Create trigger for bits donation |
+| triggers.py | create_reward_trigger | Create trigger for channel point redemption |
+| triggers.py | create_subscription_trigger | Create trigger for subscription event |
+| triggers.py | create_follow_trigger | Create trigger for follow event |
+| triggers.py | create_raid_trigger | Create trigger for raid event |
+| triggers.py | create_shield_mode_trigger | Create trigger for shield mode changes |
+| triggers.py | validate_trigger_parameters | Validate trigger parameters for specific type |
+| triggers.py | get_trigger_type | Get standardised trigger type from event |
+| triggers.py | get_trigger_value | Extract trigger value from event |
+
+## OBS Template System Utilities
+
+| Module | Function | Description |
+|--------|----------|-------------|
+| templates.py | load_template | Load action sequence template |
+| templates.py | save_template | Save action sequence template |
+| templates.py | apply_template | Apply template with parameters |
+| templates.py | validate_template | Validate template definition |
+| templates.py | format_template_description | Format template description |
+| templates.py | parse_template_parameters | Parse template parameters from input |
+| templates.py | substitute_template_variables | Substitute variables in template |
+| templates.py | generate_template_from_sequence | Generate template from existing sequence |
+| templates.py | extract_template_schema | Extract parameter schema from template |
+| templates.py | format_template_usage | Format template usage instructions |
+
 ## Twitch Integration Utilities
 | Module | Function | Description |
 |--------|----------|-------------|
