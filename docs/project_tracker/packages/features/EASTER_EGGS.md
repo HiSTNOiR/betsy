@@ -501,19 +501,6 @@ The `features/easter_eggs` package implements hidden features and rewards for th
 | hooks.py | get_hooks | Get singleton hooks instance |
 | hooks.py | register_hook | Register hook with global instance |
 
-## Easter Egg Middleware
-| Module | Function | Description |
-|--------|----------|-------------|
-| middleware.py | EasterEggMiddleware | Middleware for easter egg operations |
-| middleware.py | EasterEggMiddleware.process_operation | Process operation through middleware |
-| middleware.py | EasterEggMiddleware.register_middleware | Register operation middleware |
-| middleware.py | EasterEggMiddleware.validate_operation | Validate easter egg operation |
-| middleware.py | EasterEggMiddleware.modify_operation | Modify easter egg operation |
-| middleware.py | EasterEggMiddleware.log_operation | Log operation details |
-| middleware.py | EasterEggMiddleware.get_chain | Get middleware chain |
-| middleware.py | get_middleware | Get singleton middleware instance |
-| middleware.py | register_middleware | Register middleware with global instance |
-
 ## Easter Egg Initialisation
 | Module | Function | Description |
 |--------|----------|-------------|

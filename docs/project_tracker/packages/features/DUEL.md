@@ -278,19 +278,6 @@ The `features/duel` package implements the duelling system for the Twitch bot, a
 | hooks.py | get_hooks | Get singleton hooks instance |
 | hooks.py | register_hook | Register hook with global instance |
 
-## Duel Middleware
-| Module | Function | Description |
-|--------|----------|-------------|
-| middleware.py | DuelMiddleware | Middleware for duel operations |
-| middleware.py | DuelMiddleware.process_operation | Process operation through middleware |
-| middleware.py | DuelMiddleware.register_middleware | Register operation middleware |
-| middleware.py | DuelMiddleware.validate_operation | Validate duel operation |
-| middleware.py | DuelMiddleware.modify_operation | Modify duel operation |
-| middleware.py | DuelMiddleware.log_operation | Log operation details |
-| middleware.py | DuelMiddleware.get_chain | Get middleware chain |
-| middleware.py | get_middleware | Get singleton middleware instance |
-| middleware.py | register_middleware | Register middleware with global instance |
-
 ## Duel Initialisation
 | Module | Function | Description |
 |--------|----------|-------------|

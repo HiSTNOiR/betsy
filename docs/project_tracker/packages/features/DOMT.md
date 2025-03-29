@@ -265,19 +265,6 @@ The `features/domt` package implements the Deck of Many Things system for the Tw
 | hooks.py | get_hooks | Get singleton hooks instance |
 | hooks.py | register_hook | Register hook with global instance |
 
-## DOMT Middleware
-| Module | Function | Description |
-|--------|----------|-------------|
-| middleware.py | DOMTMiddleware | Middleware for DOMT operations |
-| middleware.py | DOMTMiddleware.process_operation | Process operation through middleware |
-| middleware.py | DOMTMiddleware.register_middleware | Register operation middleware |
-| middleware.py | DOMTMiddleware.validate_operation | Validate DOMT operation |
-| middleware.py | DOMTMiddleware.modify_operation | Modify DOMT operation |
-| middleware.py | DOMTMiddleware.log_operation | Log operation details |
-| middleware.py | DOMTMiddleware.get_chain | Get middleware chain |
-| middleware.py | get_middleware | Get singleton middleware instance |
-| middleware.py | register_middleware | Register middleware with global instance |
-
 ## Card Animations
 | Module | Function | Description |
 |--------|----------|-------------|

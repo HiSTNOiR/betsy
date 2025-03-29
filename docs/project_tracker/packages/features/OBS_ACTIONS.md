@@ -444,19 +444,6 @@ The `features/obs_actions` package provides a comprehensive system for defining,
 | hooks.py | get_hooks | Get singleton hooks instance |
 | hooks.py | register_hook | Register hook with global instance |
 
-## OBS Actions Middleware
-| Module | Function | Description |
-|--------|----------|-------------|
-| middleware.py | OBSActionsMiddleware | Middleware for OBS actions operations |
-| middleware.py | OBSActionsMiddleware.process_operation | Process operation through middleware |
-| middleware.py | OBSActionsMiddleware.register_middleware | Register operation middleware |
-| middleware.py | OBSActionsMiddleware.validate_operation | Validate OBS actions operation |
-| middleware.py | OBSActionsMiddleware.modify_operation | Modify OBS actions operation |
-| middleware.py | OBSActionsMiddleware.log_operation | Log operation details |
-| middleware.py | OBSActionsMiddleware.get_chain | Get middleware chain |
-| middleware.py | get_middleware | Get singleton middleware instance |
-| middleware.py | register_middleware | Register middleware with global instance |
-
 ## OBS Initialisation
 | Module | Function | Description |
 |--------|----------|-------------|

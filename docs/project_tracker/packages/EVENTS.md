@@ -208,27 +208,6 @@ The `events` package provides a comprehensive event handling framework for the T
 | filters.py | CompositeFilter | Create complex filters with logic operators |
 | filters.py | CompositeFilter.filter | Apply composite filter logic |
 
-## Event Middleware
-| Module | Function | Description |
-|--------|----------|-------------|
-| middleware.py | EventMiddleware | Base class for event middleware |
-| middleware.py | EventMiddleware.process | Process event before dispatching |
-| middleware.py | EventMiddleware.get_priority | Get middleware priority |
-| middleware.py | MiddlewareManager | Manager for middleware chain |
-| middleware.py | MiddlewareManager.add | Add middleware to chain |
-| middleware.py | MiddlewareManager.remove | Remove middleware from chain |
-| middleware.py | MiddlewareManager.process | Process event through middleware chain |
-| middleware.py | LoggingMiddleware | Middleware for event logging |
-| middleware.py | LoggingMiddleware.process | Log event details |
-| middleware.py | ValidationMiddleware | Middleware for event validation |
-| middleware.py | ValidationMiddleware.process | Validate event data |
-| middleware.py | ThrottlingMiddleware | Middleware for event throttling |
-| middleware.py | ThrottlingMiddleware.process | Throttle frequent events |
-| middleware.py | SecurityMiddleware | Middleware for security checks |
-| middleware.py | SecurityMiddleware.process | Perform security checks on events |
-| middleware.py | TransformationMiddleware | Middleware for event transformation |
-| middleware.py | TransformationMiddleware.process | Transform event data |
-
 ## Event Errors
 | Module | Function | Description |
 |--------|----------|-------------|

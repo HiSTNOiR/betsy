@@ -2,25 +2,29 @@
 
 This document outlines the recommended sequence of development phases for the Twitch bot project, focusing on establishing a robust foundation before building more complex features.
 
+> 🧠 contemplating things  
+> 👉 you are here  
+> ✅ finalised
+
 - - -
-## Pre-Phase
+## 👉 Pre-Phase
 
 **Goal**: Document the phases, packages and modules.
 
 _Package progress_
 
-1. Core - Foundation and essential utilities ✅
-2. DB - Database connectivity and data models ✅
-3. Platforms - Twitch and OBS connectivity modules ✅
-4. Commands - Command parsing, routing and execution ✅
-5. Events - Event handling system ✅
-6. Features/Points - Points system implementation ✅
-7. Features/Shop - Shop and purchasing system
-8. Features/Inventory - Inventory management
-9. Features/Duel - Duel system
-10. Features/DOMT - Deck of Many Things
-11. Features/OBS Actions - OBS sequences and actions
-12. Features/Easter Eggs - Special features and hidden rewards
+1. 🧠 Core - Foundation and essential utilities
+2. 🧠 DB - Database connectivity and data models
+3. 🧠 Platforms - Twitch and OBS connectivity modules
+4. 🧠 Commands - Command parsing, routing and execution
+5. 🧠 Events - Event handling system
+6. 🧠 Features/Points - Points system implementation
+7. 🧠 Features/Shop - Shop and purchasing system
+8. 🧠 Features/Inventory - Inventory management
+9. 🧠 Features/Duel - Duel system
+10. 🧠 Features/DOMT - Deck of Many Things
+11. 🧠 Features/OBS Actions - OBS sequences and actions
+12. 🧠 Features/Easter Eggs - Special features and hidden rewards
 
 - - -
 

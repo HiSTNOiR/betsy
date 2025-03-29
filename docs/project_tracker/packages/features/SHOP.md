@@ -283,19 +283,6 @@ The `features/shop` package provides a comprehensive shop system for the Twitch 
 | hooks.py | get_hooks | Get singleton hooks instance |
 | hooks.py | register_hook | Register hook with global instance |
 
-## Shop Middleware
-| Module | Function | Description |
-|--------|----------|-------------|
-| middleware.py | ShopMiddleware | Middleware for shop transactions |
-| middleware.py | ShopMiddleware.process_transaction | Process through middleware |
-| middleware.py | ShopMiddleware.register_middleware | Register transaction middleware |
-| middleware.py | ShopMiddleware.validate_transaction | Validate transaction |
-| middleware.py | ShopMiddleware.modify_transaction | Modify transaction |
-| middleware.py | ShopMiddleware.log_transaction | Log transaction details |
-| middleware.py | ShopMiddleware.get_chain | Get middleware chain |
-| middleware.py | get_middleware | Get singleton middleware instance |
-| middleware.py | register_transaction_middleware | Register middleware |
-
 ## Shop Initialisation
 | Module | Function | Description |
 |--------|----------|-------------|

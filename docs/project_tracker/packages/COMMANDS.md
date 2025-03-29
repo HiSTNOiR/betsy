@@ -150,23 +150,6 @@ The `commands` package provides the framework for defining, registering, and exe
 | cooldowns.py | BucketType | Enum for cooldown bucket types |
 | cooldowns.py | CommandOnCooldownError | Error raised when command on cooldown |
 
-## Command Middleware
-| Module | Function | Description |
-|--------|----------|-------------|
-| middleware.py | Middleware | Base class for command middleware |
-| middleware.py | Middleware.process_command | Process command before execution |
-| middleware.py | Middleware.process_context | Process context before execution |
-| middleware.py | Middleware.handle_error | Handle error during execution |
-| middleware.py | Middleware.after_command | Process after command execution |
-| middleware.py | MiddlewareManager | Manager for middleware chain |
-| middleware.py | MiddlewareManager.add | Add middleware to chain |
-| middleware.py | MiddlewareManager.remove | Remove middleware from chain |
-| middleware.py | MiddlewareManager.process | Process command through middleware chain |
-| middleware.py | LoggingMiddleware | Middleware for command logging |
-| middleware.py | PermissionMiddleware | Middleware for permission checks |
-| middleware.py | CooldownMiddleware | Middleware for cooldown handling |
-| middleware.py | ThrottlingMiddleware | Middleware for command throttling |
-
 ## Command Errors
 | Module | Function | Description |
 |--------|----------|-------------|

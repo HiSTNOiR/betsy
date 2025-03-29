@@ -1,9 +1,9 @@
 # PROJECT STRUCTURE
 
-✅ good to go
-📙 working on now
-🧪 needs testing
-🛑 borked
+> ✅ good to go  
+> 👉 working on now  
+> 🧪 needs testing  
+> 🛑 borked
 
 ```
 betsy/

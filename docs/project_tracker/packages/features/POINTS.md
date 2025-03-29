@@ -208,19 +208,6 @@ The `features/points` package implements the XP/points system for the Twitch bot
 | hooks.py | get_hooks | Get singleton hooks instance |
 | hooks.py | register_hook | Register hook with global instance |
 
-## Points Middleware
-| Module | Function | Description |
-|--------|----------|-------------|
-| middleware.py | PointsMiddleware | Middleware for points transactions |
-| middleware.py | PointsMiddleware.process_transaction | Process transaction through middleware |
-| middleware.py | PointsMiddleware.register_middleware | Register transaction middleware |
-| middleware.py | PointsMiddleware.validate_transaction | Validate transaction is allowed |
-| middleware.py | PointsMiddleware.modify_transaction | Modify transaction amount |
-| middleware.py | PointsMiddleware.log_transaction | Log transaction details |
-| middleware.py | PointsMiddleware.get_chain | Get middleware chain |
-| middleware.py | get_middleware | Get singleton middleware instance |
-| middleware.py | register_transaction_middleware | Register middleware with global instance |
-
 ## Points Initialisation
 | Module | Function | Description |
 |--------|----------|-------------|

@@ -266,19 +266,6 @@ The `features/inventory` package provides a comprehensive inventory management s
 | hooks.py | get_hooks | Get singleton hooks instance |
 | hooks.py | register_hook | Register hook with global instance |
 
-## Inventory Middleware
-| Module | Function | Description |
-|--------|----------|-------------|
-| middleware.py | InventoryMiddleware | Middleware for inventory operations |
-| middleware.py | InventoryMiddleware.process_operation | Process operation through middleware |
-| middleware.py | InventoryMiddleware.register_middleware | Register operation middleware |
-| middleware.py | InventoryMiddleware.validate_operation | Validate inventory operation |
-| middleware.py | InventoryMiddleware.modify_operation | Modify inventory operation |
-| middleware.py | InventoryMiddleware.log_operation | Log operation details |
-| middleware.py | InventoryMiddleware.get_chain | Get middleware chain |
-| middleware.py | get_middleware | Get singleton middleware instance |
-| middleware.py | register_middleware | Register middleware with global instance |
-
 ## Cooldown Manager
 | Module | Function | Description |
 |--------|----------|-------------|
