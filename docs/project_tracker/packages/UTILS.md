@@ -308,3 +308,28 @@
 | economy.py | recommend_economy_adjustments | Recommend adjustments to balance economy |
 | economy.py | simulate_economy_change | Simulate effect of economy parameter change |
 | economy.py | calculate_economy_health | Calculate overall health of points economy |
+
+## Shop System Utilities
+
+| Module | Function | Description |
+|--------|----------|-------------|
+| shop.py | format_shop_display | Format shop items for display in chat |
+| shop.py | format_item_details | Format detailed item information |
+| shop.py | categorise_items | Group items by category for display |
+| shop.py | get_next_level_item | Get next level item for upgrading |
+| shop.py | calculate_upgrade_cost | Calculate cost to upgrade to next level |
+| shop.py | calculate_refund_value | Calculate refund value for an item |
+| shop.py | calculate_effective_cost | Calculate effective cost after discounts |
+| shop.py | validate_modification_compatibility | Check if modification is compatible with item |
+| shop.py | format_item_comparison | Format comparison between two items |
+| shop.py | format_equipment_stats | Format weapon or armour statistics |
+| shop.py | generate_item_description | Generate description for an item |
+| shop.py | fuzzy_search_items | Search for items using fuzzy matching |
+| shop.py | format_durability_display | Format durability display for items |
+| shop.py | calculate_modification_bonus | Calculate bonus from item modifications |
+| shop.py | recommend_user_upgrade | Recommend next upgrade for user |
+| shop.py | get_affordable_items | Get items user can afford from shop |
+| shop.py | check_level_requirement | Check if user meets level requirements |
+| shop.py | calculate_bulk_purchase_discount | Calculate discount for bulk purchases |
+| shop.py | format_owned_vs_available | Format comparison of owned vs available items |
+| shop.py | calculate_total_cost | Calculate total cost for multiple purchases |
