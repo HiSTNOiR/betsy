@@ -211,3 +211,21 @@
 | inventory.py | check_inventory_space | Check if user has inventory space |
 | inventory.py | get_item_details | Get detailed information about item |
 | inventory.py | use_inventory_item | Use item from inventory |
+
+## Command Parsing and Validation
+
+| Module | Function | Description |
+|--------|----------|-------------|
+| command.py | is_hidden_command | Check if command is hidden based on metadata |
+| command.py | is_admin_command | Check if command has admin-only permission level |
+| command.py | should_execute_command | Determine if command should be executed based on context |
+| command.py | normalise_command_name | Normalise command name for internal processing |
+| command.py | validate_command_name | Validate that a command name meets requirements |
+| command.py | collect_command_metadata | Collect metadata from command decorators |
+| command.py | format_argument_help | Format argument help text for command help display |
+| command.py | get_command_categories | Get all command categories from registered commands |
+| command.py | filter_commands_for_user | Filter commands based on user's permissions |
+| command.py | format_command_group_help | Format help text for command groups |
+| command.py | generate_command_signature | Generate command signature from argument definitions |
+| command.py | format_cooldown_info | Format cooldown information for display |
+| command.py | format_permission_info | Format permission requirements for display |

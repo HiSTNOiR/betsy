@@ -11,7 +11,7 @@ _Package progress_
 
 1. Core - Foundation and essential utilities ✅
 2. DB - Database connectivity and data models ✅
-3. Platforms - Twitch and OBS connectivity modules
+3. Platforms - Twitch and OBS connectivity modules ✅
 4. Commands - Command parsing, routing and execution
 5. Events - Event handling system
 6. Features/Points - Points system implementation
