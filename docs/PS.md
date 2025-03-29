@@ -1,42 +1,43 @@
 # PROJECT STRUCTURE
 
-> ✅ good to go  
-> 👉 working on now  
+> ✅ finalised
+> 📄 created  
+> 👉 you are here  
 > 🧪 needs testing  
 > 🛑 borked
 
 ```
 betsy/
 │
-├── bot/
-│   ├── __init__.py
+├── 📄 bot/
+│   ├── 📄 __init__.py
 │   │
-│   ├── core/
-│   │   ├── __init__.py
+│   ├── 📄 core/
+│   │   ├── 📄 __init__.py
 │   │   ├── app.py                      # Main application entry point
 │   │   ├── constants.py                # Global constants
 │   │   ├── errors.py                   # Error hierarchy
 │   │   ├── logging.py                  # Logging configuration
 │   │   │
-│   │   ├── config/                     # Configuration management
-│   │   │   ├── __init__.py
+│   │   ├── 📄 config/                     # Configuration management
+│   │   │   ├── 📄 __init__.py
 │   │   │   ├── config.py               # Configuration manager
 │   │   │   └── validators.py           # Configuration validators
 │   │   │
-│   │   ├── events/                     # Event system
-│   │   │   ├── __init__.py
+│   │   ├── 📄 events/                     # Event system
+│   │   │   ├── 📄 __init__.py
 │   │   │   ├── base.py                 # Base event classes
 │   │   │   ├── dispatcher.py           # Event dispatcher
 │   │   │   ├── registry.py             # Event registry
 │   │   │   └── handlers.py             # Global event handlers
 │   │   │
-│   │   └── lifecycle/                  # Application lifecycle
-│   │       ├── __init__.py
+│   │   └── 📄 lifecycle/                  # Application lifecycle
+│   │       ├── 📄 __init__.py
 │   │       ├── manager.py              # Lifecycle manager
 │   │       └── hooks.py                # Lifecycle hooks
 │   │
-│   ├── commands/                       # Command system
-│   │   ├── __init__.py
+│   ├── 📄 commands/                       # Command system
+│   │   ├── 📄 __init__.py
 │   │   ├── base.py                     # Base command classes
 │   │   ├── context.py                  # Command context
 │   │   ├── handler.py                  # Command handler
@@ -46,14 +47,14 @@ betsy/
 │   │   ├── permissions.py              # Command permissions
 │   │   └── decorators.py               # Command decorators
 │   │
-│   ├── db/                             # Database layer
-│   │   ├── __init__.py
+│   ├── 📄 db/                             # Database layer
+│   │   ├── 📄 __init__.py
 │   │   ├── connection.py               # Database connection management
 │   │   ├── migrations.py               # Database migrations
-│   │   ├── schema.sql                  # Database schema
+│   │   ├── 📄 schema.sql                  # Database schema
 │   │   │
-│   │   ├── models/                     # Data models
-│   │   │   ├── __init__.py
+│   │   ├── 📄 models/                     # Data models
+│   │   │   ├── 📄 __init__.py
 │   │   │   ├── base.py                 # Base model
 │   │   │   ├── user.py                 # User model
 │   │   │   ├── command.py              # Command model
@@ -61,47 +62,47 @@ betsy/
 │   │   │   ├── inventory.py            # Inventory model
 │   │   │   └── stream.py               # Stream model
 │   │   │
-│   │   └── repositories/               # Data access layer
-│   │       ├── __init__.py
+│   │   └── 📄 repositories/               # Data access layer
+│   │       ├── 📄 __init__.py
 │   │       ├── base.py                 # Base repository
 │   │       ├── user_repository.py      # User repository
 │   │       ├── command_repository.py   # Command repository
 │   │       ├── item_repository.py      # Item repository
 │   │       └── stream_repository.py    # Stream repository
 │   │
-│   ├── middleware/                     # Middleware system
-│   │   ├── __init__.py
+│   ├── 📄 middleware/                     # Middleware system
+│   │   ├── 📄 __init__.py
 │   │   ├── base.py                     # Base middleware
 │   │   ├── pipeline.py                 # Middleware pipeline
 │   │   │
-│   │   ├── commands/                   # Command middleware
-│   │   │   ├── __init__.py
+│   │   ├── 📄 commands/                   # Command middleware
+│   │   │   ├── 📄 __init__.py
 │   │   │   ├── permission.py           # Permission middleware
 │   │   │   ├── cooldown.py             # Cooldown middleware
 │   │   │   ├── logging.py              # Logging middleware
 │   │   │   ├── validation.py           # Validation middleware
 │   │   │   └── error.py                # Error handling middleware
 │   │   │
-│   │   ├── events/                     # Event middleware
-│   │   │   ├── __init__.py
+│   │   ├── 📄 events/                     # Event middleware
+│   │   │   ├── 📄 __init__.py
 │   │   │   ├── logging.py              # Logging middleware
 │   │   │   ├── validation.py           # Validation middleware
 │   │   │   ├── filtering.py            # Filtering middleware
 │   │   │   └── error.py                # Error handling middleware
 │   │   │
-│   │   └── features/                   # Feature middleware
-│   │       ├── __init__.py
+│   │   └── 📄 features/                   # Feature middleware
+│   │       ├── 📄 __init__.py
 │   │       ├── points.py               # Points middleware
 │   │       ├── shop.py                 # Shop middleware
 │   │       ├── inventory.py            # Inventory middleware
 │   │       └── duel.py                 # Duel middleware
 │   │
-│   ├── platforms/                      # Platform integrations
-│   │   ├── __init__.py
+│   ├── 📄 platforms/                      # Platform integrations
+│   │   ├── 📄 __init__.py
 │   │   ├── base.py                     # Base platform
 │   │   │
-│   │   ├── twitch/                     # Twitch integration
-│   │   │   ├── __init__.py
+│   │   ├── 📄 twitch/                     # Twitch integration
+│   │   │   ├── 📄 __init__.py
 │   │   │   ├── client.py               # Twitch client
 │   │   │   ├── auth.py                 # Twitch auth
 │   │   │   ├── chat.py                 # Twitch chat
@@ -109,8 +110,8 @@ betsy/
 │   │   │   ├── api.py                  # Twitch API
 │   │   │   └── handlers.py             # Twitch event handlers
 │   │   │
-│   │   ├── obs/                        # OBS integration
-│   │   │   ├── __init__.py
+│   │   ├──📄  obs/                        # OBS integration
+│   │   │   ├── 📄 __init__.py
 │   │   │   ├── client.py               # OBS client
 │   │   │   ├── scenes.py               # Scene management
 │   │   │   ├── sources.py              # Source management
@@ -118,33 +119,33 @@ betsy/
 │   │   │   ├── audio.py                # Audio management
 │   │   │   └── events.py               # OBS events
 │   │   │
-│   │   ├── discord/                    # Discord integration
-│   │   │   ├── __init__.py
+│   │   ├── 📄 discord/                    # Discord integration
+│   │   │   ├── 📄 __init__.py
 │   │   │   ├── client.py               # Discord client
 │   │   │   ├── commands.py             # Discord commands
 │   │   │   ├── events.py               # Discord events
 │   │   │   └── sync.py                 # Discord synchronisation
 │   │   │
-│   │   ├── youtube/                    # YouTube integration
-│   │   │   ├── __init__.py
+│   │   ├── 📄 youtube/                    # YouTube integration
+│   │   │   ├── 📄 __init__.py
 │   │   │   ├── client.py               # YouTube client
 │   │   │   ├── chat.py                 # YouTube chat
 │   │   │   ├── events.py               # YouTube events
 │   │   │   └── api.py                  # YouTube API
 │   │   │
-│   │   └── bitfocus/                   # BitFocus Companion integration
-│   │       ├── __init__.py
+│   │   └── 📄 bitfocus/                   # BitFocus Companion integration
+│   │       ├── 📄 __init__.py
 │   │       ├── client.py               # BitFocus client
 │   │       ├── actions.py              # BitFocus actions
 │   │       └── events.py               # BitFocus events
 │   │
-│   ├── features/                       # Feature modules
-│   │   ├── __init__.py
+│   ├── 📄 features/                       # Feature modules
+│   │   ├── 📄 __init__.py
 │   │   ├── base.py                     # Base feature
 │   │   ├── manager.py                  # Feature manager
 │   │   │
-│   │   ├── points/                     # Points system
-│   │   │   ├── __init__.py
+│   │   ├── 📄 points/                     # Points system
+│   │   │   ├── 📄 __init__.py
 │   │   │   ├── feature.py              # Points feature
 │   │   │   ├── manager.py              # Points manager
 │   │   │   ├── commands.py             # Points commands
@@ -152,8 +153,8 @@ betsy/
 │   │   │   ├── repository.py           # Points repository
 │   │   │   └── middleware.py           # Points middleware
 │   │   │
-│   │   ├── shop/                       # Shop system
-│   │   │   ├── __init__.py
+│   │   ├── 📄 shop/                       # Shop system
+│   │   │   ├── 📄 __init__.py
 │   │   │   ├── feature.py              # Shop feature
 │   │   │   ├── manager.py              # Shop manager
 │   │   │   ├── commands.py             # Shop commands
@@ -161,16 +162,16 @@ betsy/
 │   │   │   ├── repository.py           # Shop repository
 │   │   │   ├── middleware.py           # Shop middleware
 │   │   │   │
-│   │   │   └── items/                  # Shop items
-│   │   │       ├── __init__.py
+│   │   │   └── 📄 items/                  # Shop items
+│   │   │       ├── 📄 __init__.py
 │   │   │       ├── base.py             # Base item
 │   │   │       ├── weapon.py           # Weapon items
 │   │   │       ├── armour.py           # Armour items
 │   │   │       ├── toy.py              # Toy items
 │   │   │       └── mod.py              # Modification items
 │   │   │
-│   │   ├── inventory/                  # Inventory system
-│   │   │   ├── __init__.py
+│   │   ├── 📄 inventory/                  # Inventory system
+│   │   │   ├── 📄 __init__.py
 │   │   │   ├── feature.py              # Inventory feature
 │   │   │   ├── manager.py              # Inventory manager
 │   │   │   ├── commands.py             # Inventory commands
@@ -178,8 +179,8 @@ betsy/
 │   │   │   ├── repository.py           # Inventory repository
 │   │   │   └── middleware.py           # Inventory middleware
 │   │   │
-│   │   ├── duel/                       # Duel system
-│   │   │   ├── __init__.py
+│   │   ├── 📄 duel/                       # Duel system
+│   │   │   ├── 📄 __init__.py
 │   │   │   ├── feature.py              # Duel feature
 │   │   │   ├── manager.py              # Duel manager
 │   │   │   ├── commands.py             # Duel commands
@@ -189,8 +190,8 @@ betsy/
 │   │   │   ├── calculator.py           # Duel calculator
 │   │   │   └── environment.py          # Duel environments
 │   │   │
-│   │   ├── domt/                       # Deck of Many Things
-│   │   │   ├── __init__.py
+│   │   ├── 📄 domt/                       # Deck of Many Things
+│   │   │   ├── 📄 __init__.py
 │   │   │   ├── feature.py              # DOMT feature
 │   │   │   ├── manager.py              # DOMT manager
 │   │   │   ├── commands.py             # DOMT commands
@@ -200,8 +201,8 @@ betsy/
 │   │   │   ├── cards.py                # Card definitions
 │   │   │   └── effects.py              # Card effects
 │   │   │
-│   │   ├── obs_actions/                # OBS action system
-│   │   │   ├── __init__.py
+│   │   ├── 📄 obs_actions/                # OBS action system
+│   │   │   ├── 📄 __init__.py
 │   │   │   ├── feature.py              # OBS Actions feature
 │   │   │   ├── manager.py              # Action manager
 │   │   │   ├── commands.py             # Action commands
@@ -211,8 +212,8 @@ betsy/
 │   │   │   ├── triggers.py             # Action triggers
 │   │   │   ├── sequences.py            # Action sequences
 │   │   │   │
-│   │   │   └── actions/                # Action implementations
-│   │   │       ├── __init__.py
+│   │   │   └── 📄 actions/                # Action implementations
+│   │   │       ├── 📄 __init__.py
 │   │   │       ├── base.py             # Base action
 │   │   │       ├── scene.py            # Scene actions
 │   │   │       ├── source.py           # Source actions
@@ -221,8 +222,8 @@ betsy/
 │   │   │       ├── text.py             # Text actions
 │   │   │       └── animation.py        # Animation actions
 │   │   │
-│   │   ├── easter_eggs/                # Easter eggs
-│   │   │   ├── __init__.py
+│   │   ├── 📄 easter_eggs/                # Easter eggs
+│   │   │   ├── 📄 __init__.py
 │   │   │   ├── feature.py              # Easter Eggs feature
 │   │   │   ├── manager.py              # Easter Eggs manager
 │   │   │   ├── commands.py             # Easter Eggs commands
@@ -232,8 +233,8 @@ betsy/
 │   │   │   ├── emote_combos.py         # Emote combos
 │   │   │   └── special_commands.py     # Special commands
 │   │   │
-│   │   ├── dungeon/                    # Dungeon/raid system
-│   │   │   ├── __init__.py
+│   │   ├── 📄 dungeon/                    # Dungeon/raid system
+│   │   │   ├── 📄 __init__.py
 │   │   │   ├── feature.py              # Dungeon feature
 │   │   │   ├── manager.py              # Dungeon manager
 │   │   │   ├── commands.py             # Dungeon commands
@@ -243,8 +244,8 @@ betsy/
 │   │   │   ├── boss.py                 # Boss definitions
 │   │   │   └── rewards.py              # Dungeon rewards
 │   │   │
-│   │   ├── betsy_vault/                # Betsy Vault feature
-│   │   │   ├── __init__.py
+│   │   ├── 📄 betsy_vault/                # Betsy Vault feature
+│   │   │   ├── 📄 __init__.py
 │   │   │   ├── feature.py              # Betsy Vault feature
 │   │   │   ├── manager.py              # Vault manager
 │   │   │   ├── commands.py             # Vault commands
@@ -252,32 +253,32 @@ betsy/
 │   │   │   ├── repository.py           # Vault repository
 │   │   │   └── middleware.py           # Vault middleware
 │   │   │
-│   │   ├── shield_mode/                # Shield Mode feature
-│   │   │   ├── __init__.py
+│   │   ├── 📄 shield_mode/                # Shield Mode feature
+│   │   │   ├── 📄 __init__.py
 │   │   │   ├── feature.py              # Shield Mode feature
 │   │   │   ├── manager.py              # Shield Mode manager
 │   │   │   ├── commands.py             # Shield Mode commands
 │   │   │   ├── events.py               # Shield Mode events
 │   │   │   └── actions.py              # Shield Mode actions
 │   │   │
-│   │   ├── todo/                       # To-Do system
-│   │   │   ├── __init__.py
+│   │   ├── 📄 todo/                       # To-Do system
+│   │   │   ├── 📄 __init__.py
 │   │   │   ├── feature.py              # Todo feature
 │   │   │   ├── manager.py              # Todo manager
 │   │   │   ├── commands.py             # Todo commands
 │   │   │   ├── events.py               # Todo events
 │   │   │   └── repository.py           # Todo repository
 │   │   │
-│   │   ├── chat_log/                   # Chat logging
-│   │   │   ├── __init__.py
+│   │   ├── 📄 chat_log/                   # Chat logging
+│   │   │   ├── 📄 __init__.py
 │   │   │   ├── feature.py              # Chat Log feature
 │   │   │   ├── manager.py              # Log manager
 │   │   │   ├── commands.py             # Log commands
 │   │   │   ├── events.py               # Log events
 │   │   │   └── repository.py           # Log repository
 │   │   │
-│   │   └── ai/                         # AI integration
-│   │       ├── __init__.py
+│   │   └── 📄 ai/                         # AI integration
+│   │       ├── 📄 __init__.py
 │   │       ├── feature.py              # AI feature
 │   │       ├── manager.py              # AI manager
 │   │       ├── commands.py             # AI commands
@@ -286,23 +287,23 @@ betsy/
 │   │       ├── llm.py                  # Language model integration
 │   │       └── chat.py                 # AI chat functionality
 │   │
-│   ├── ui/                             # User interface systems
-│   │   ├── __init__.py
+│   ├── 📄 ui/                             # User interface systems
+│   │   ├── 📄 __init__.py
 │   │   ├── base.py                     # Base UI
 │   │   │
-│   │   ├── cli/                        # Command-line interface
-│   │   │   ├── __init__.py
+│   │   ├── 📄 cli/                        # Command-line interface
+│   │   │   ├── 📄 __init__.py
 │   │   │   ├── app.py                  # CLI application
 │   │   │   ├── commands.py             # CLI commands
 │   │   │   └── formatter.py            # CLI output formatter
 │   │   │
-│   │   ├── kivy/                       # Kivy GUI application
-│   │   │   ├── __init__.py
+│   │   ├── 📄 kivy/                       # Kivy GUI application
+│   │   │   ├── 📄 __init__.py
 │   │   │   ├── app.py                  # Kivy application
 │   │   │   ├── main.py                 # Main Kivy entry point
 │   │   │   │
-│   │   │   ├── screens/                # Kivy screens
-│   │   │   │   ├── __init__.py
+│   │   │   ├── 📄 screens/                # Kivy screens
+│   │   │   │   ├── 📄 __init__.py
 │   │   │   │   ├── base.py             # Base screen
 │   │   │   │   ├── dashboard.py        # Dashboard screen
 │   │   │   │   ├── commands.py         # Commands screen
@@ -311,59 +312,59 @@ betsy/
 │   │   │   │   ├── settings.py         # Settings screen
 │   │   │   │   └── logs.py             # Logs screen
 │   │   │   │
-│   │   │   ├── widgets/                # Kivy widgets
-│   │   │   │   ├── __init__.py
+│   │   │   ├── 📄 widgets/                # Kivy widgets
+│   │   │   │   ├── 📄 __init__.py
 │   │   │   │   ├── base.py             # Base widgets
 │   │   │   │   ├── cards.py            # Card widgets
 │   │   │   │   ├── charts.py           # Chart widgets
 │   │   │   │   ├── lists.py            # List widgets
 │   │   │   │   └── modals.py           # Modal widgets
 │   │   │   │
-│   │   │   └── styles/                 # Kivy styles
-│   │   │       ├── __init__.py
+│   │   │   └── 📄 styles/                 # Kivy styles
+│   │   │       ├── 📄 __init__.py
 │   │   │       ├── theme.py            # Theme definition
 │   │   │       └── colours.py          # Colour definitions
 │   │   │
-│   │   ├── web/                        # Web application
-│   │   │   ├── __init__.py
+│   │   ├── 📄 web/                        # Web application
+│   │   │   ├── 📄 __init__.py
 │   │   │   ├── app.py                  # Web app
 │   │   │   ├── routes.py               # Web routes
 │   │   │   ├── auth.py                 # Web auth
 │   │   │   │
-│   │   │   ├── api/                    # Web API
-│   │   │   │   ├── __init__.py
+│   │   │   ├── 📄 api/                    # Web API
+│   │   │   │   ├── 📄 __init__.py
 │   │   │   │   ├── routes.py           # API routes
 │   │   │   │   ├── users.py            # User endpoints
 │   │   │   │   ├── commands.py         # Command endpoints
 │   │   │   │   ├── stats.py            # Stats endpoints
 │   │   │   │   └── settings.py         # Settings endpoints
 │   │   │   │
-│   │   │   ├── templates/              # Web templates
+│   │   │   ├── 📄 templates/              # Web templates
 │   │   │   │   ├── base.html           # Base template
 │   │   │   │   ├── dashboard.html      # Dashboard template
 │   │   │   │   ├── login.html          # Login template
 │   │   │   │   └── settings.html       # Settings template
 │   │   │   │
-│   │   │   └── static/                 # Web static files
+│   │   │   └── 📄 static/                 # Web static files
 │   │   │       ├── css/                # CSS files
 │   │   │       ├── js/                 # JavaScript files
 │   │   │       └── img/                # Image files
 │   │   │
-│   │   └── mobile/                     # Mobile app integration
-│   │       ├── __init__.py
+│   │   └── 📄 mobile/                     # Mobile app integration
+│   │       ├── 📄 __init__.py
 │   │       ├── app.py                  # Mobile app
 │   │       └── api.py                  # Mobile API client
 │   │
-│   ├── visualization/                  # Data visualization
-│   │   ├── __init__.py
-│   │   ├── base.py                     # Base visualization
+│   ├── 📄 visualisation/                  # Data visualisation
+│   │   ├── 📄 __init__.py
+│   │   ├── base.py                     # Base visualisation
 │   │   ├── charts.py                   # Chart generation
 │   │   ├── reports.py                  # Report generation
 │   │   ├── metrics.py                  # Metrics calculation
 │   │   └── dashboard.py                # Dashboard components
 │   │
-│   └── utils/                          # Utility modules
-│       ├── __init__.py
+│   └── 📄 utils/                          # Utility modules
+│       ├── 📄 __init__.py
 │       ├── cooldown.py                 # Cooldown utilities
 │       ├── formatting.py               # Text formatting
 │       ├── parsing.py                  # Text parsing
@@ -376,13 +377,13 @@ betsy/
 │       ├── time_utils.py               # Time utilities
 │       └── validation.py               # Input validation
 │
-├── docs/                               # Documentation
+├── 📄 docs/                               # Documentation
 │   ├── index.md                        # Documentation index
 │   │
 │   ├── api/                            # API documentation
 │   │   └── index.md                    # API documentation index
 │   │
-│   ├── features/                       # Feature documentation
+│   ├── 📄 features/                       # Feature documentation
 │   │   ├── points.md                   # Points system docs
 │   │   ├── shop.md                     # Shop system docs
 │   │   ├── duel.md                     # Duel system docs
@@ -399,60 +400,60 @@ betsy/
 │   │   ├── contributing.md             # Contributing guide
 │   │   └── testing.md                  # Testing guide
 │   │
-│   └── refs/                           # Reference documentation
+│   └── 📄 refs/                           # Reference documentation
 │       ├── twitch/                     # Twitch API references
 │       ├── obs/                        # OBS API references
 │       └── database/                   # Database schema reference
 │
-├── scripts/                            # Utility scripts
+├── 📄 scripts/                            # Utility scripts
 │   ├── setup.py                        # Setup script
 │   ├── backup.py                       # Database backup script
 │   ├── migrate.py                      # Database migration script
 │   └── bootstrap.py                    # Environment bootstrap script
 │
-├── tests/                              # Tests
-│   ├── __init__.py
+├── 📄 tests/                              # Tests
+│   ├── 📄 __init__.py
 │   │
-│   ├── unit/                           # Unit tests
-│   │   ├── __init__.py
+│   ├── 📄 unit/                           # Unit tests
+│   │   ├── 📄 __init__.py
 │   │   ├── test_config.py              # Configuration tests
 │   │   ├── test_commands.py            # Command tests
 │   │   ├── test_features.py            # Feature tests
 │   │   └── test_utils.py               # Utility tests
 │   │
-│   ├── integration/                    # Integration tests
-│   │   ├── __init__.py
+│   ├── 📄 integration/                    # Integration tests
+│   │   ├── 📄 __init__.py
 │   │   ├── test_database.py            # Database integration tests
 │   │   ├── test_twitch.py              # Twitch integration tests
 │   │   └── test_obs.py                 # OBS integration tests
 │   │
-│   ├── e2e/                            # End-to-end tests
-│   │   ├── __init__.py
+│   ├── 📄 e2e/                            # End-to-end tests
+│   │   ├── 📄 __init__.py
 │   │   ├── test_commands.py            # Command E2E tests
 │   │   ├── test_shop.py                # Shop E2E tests
 │   │   └── test_duel.py                # Duel E2E tests
 │   │
-│   └── mocks/                          # Test mocks
-│       ├── __init__.py
+│   └── 📄 mocks/                          # Test mocks
+│       ├── 📄 __init__.py
 │       ├── twitch.py                   # Twitch API mocks
 │       ├── obs.py                      # OBS API mocks
 │       └── db.py                       # Database mocks
 │
-├── data/                               # Data directory
+├── 📄 data/                               # Data directory
 │   ├── .gitignore                      # Gitignore for data files
 │   └── README.md                       # Data directory README
 │
-├── logs/                               # Log directory
+├── 📄 logs/                               # Log directory
 │   ├── .gitignore                      # Gitignore for log files
 │   └── README.md                       # Log directory README
 │
-├── README.md                           # Project README
-├── CHANGELOG.md                        # Project changelog
-├── LICENSE                             # Project license
-├── .env                                # Environment variables
-├── .gitignore                          # Git ignore file
+├── 📄 README.md                           # Project README
+├── 📄 CHANGELOG.md                        # Project changelog
+├── 📄 LICENSE                             # Project license
+├── 📄 .env                                # Environment variables
+├── 📄 .gitignore                          # Git ignore file
 ├── pyproject.toml                      # Poetry/PEP 518 config
 ├── setup.py                            # Package setup script
-├── requirements.txt                    # Package requirements
+├── 📄 requirements.txt                    # Package requirements
 └── tox.ini                             # Tox configuration (testing)
 ```
