@@ -12,12 +12,16 @@ import os
 import re
 import secrets
 import string
-from typing import Any, Dict, List, Optional, Union
+import urllib.parse
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 import logging
 
 # Set up logger for this module
 logger = logging.getLogger(__name__)
+
+# Constants for URL validation
+VALID_SCHEMES = frozenset(['http', 'https', 'ws', 'wss'])
 
 
 def generate_random_string(length: int = 32, include_special: bool = False) -> str:
@@ -31,6 +35,9 @@ def generate_random_string(length: int = 32, include_special: bool = False) -> s
     Returns:
         str: Random string.
     """
+    if length <= 0:
+        return ""
+
     alphabet = string.ascii_letters + string.digits
     if include_special:
         alphabet += string.punctuation
@@ -48,25 +55,36 @@ def generate_token(length: int = 64) -> str:
     Returns:
         str: Base64-encoded token.
     """
+    if length <= 0:
+        return ""
+
     token_bytes = secrets.token_bytes(length)
     return base64.urlsafe_b64encode(token_bytes).decode('utf-8').rstrip('=')
 
 
-def hash_password(password: str, salt: Optional[str] = None) -> Dict[str, str]:
+def hash_password(password: str, salt: Optional[Union[str, bytes]] = None) -> Dict[str, str]:
     """
     Hash a password using a secure algorithm (PBKDF2-HMAC-SHA256).
 
     Args:
         password (str): Password to hash.
-        salt (Optional[str]): Salt to use. If None, a random salt is generated.
+        salt (Optional[Union[str, bytes]]): Salt to use. If None, a random salt is generated.
 
     Returns:
         Dict[str, str]: Dictionary containing the hashed password and salt.
     """
+    if not password:
+        raise ValueError("Password cannot be empty")
+
     if salt is None:
         salt = os.urandom(32)  # 32 bytes = 256 bits
     elif isinstance(salt, str):
-        salt = salt.encode('utf-8')
+        # Convert hex string to bytes
+        try:
+            salt = bytes.fromhex(salt)
+        except ValueError:
+            # If not valid hex, use as UTF-8
+            salt = salt.encode('utf-8')
 
     # Use PBKDF2-HMAC-SHA256 with 100,000 iterations
     password_hash = hashlib.pbkdf2_hmac(
@@ -83,32 +101,42 @@ def hash_password(password: str, salt: Optional[str] = None) -> Dict[str, str]:
     }
 
 
-def verify_password(password: str, password_hash: str, salt: str) -> bool:
+def verify_password(password: str, password_hash: str, salt: Union[str, bytes]) -> bool:
     """
     Verify a password against a hash.
 
     Args:
         password (str): Password to verify.
         password_hash (str): Stored password hash (hex-encoded).
-        salt (str): Salt used to hash the password (hex-encoded).
+        salt (Union[str, bytes]): Salt used to hash the password (hex-encoded or bytes).
 
     Returns:
         bool: True if the password matches, False otherwise.
     """
-    # Convert hex to bytes
+    if not password or not password_hash or not salt:
+        return False
+
+    # Convert hex to bytes if needed
     if isinstance(salt, str):
-        salt = bytes.fromhex(salt)
+        try:
+            salt = bytes.fromhex(salt)
+        except ValueError:
+            salt = salt.encode('utf-8')
 
     # Hash the password with the same salt
-    new_hash = hashlib.pbkdf2_hmac(
-        'sha256',
-        password.encode('utf-8'),
-        salt,
-        100000
-    ).hex()
+    try:
+        new_hash = hashlib.pbkdf2_hmac(
+            'sha256',
+            password.encode('utf-8'),
+            salt,
+            100000
+        ).hex()
 
-    # Compare the hashes
-    return new_hash == password_hash
+        # Compare the hashes
+        return hmac.compare_digest(new_hash, password_hash)
+    except Exception as e:
+        logger.error(f"Error verifying password: {str(e)}")
+        return False
 
 
 def generate_hmac(data: str, key: str) -> str:
@@ -122,6 +150,9 @@ def generate_hmac(data: str, key: str) -> str:
     Returns:
         str: Hex-encoded HMAC.
     """
+    if not data or not key:
+        return ""
+
     h = hmac.new(
         key.encode('utf-8'),
         data.encode('utf-8'),
@@ -142,17 +173,20 @@ def verify_hmac(data: str, key: str, expected_hmac: str) -> bool:
     Returns:
         bool: True if the HMAC matches, False otherwise.
     """
+    if not data or not key or not expected_hmac:
+        return False
+
     calculated_hmac = generate_hmac(data, key)
     return hmac.compare_digest(calculated_hmac, expected_hmac)
 
 
-def sanitise_input(input_str: str, allowed_chars: str = None) -> str:
+def sanitise_input(input_str: Optional[str], allowed_chars: Optional[str] = None) -> str:
     """
     Sanitise input by removing potentially dangerous characters.
 
     Args:
-        input_str (str): Input string to sanitise.
-        allowed_chars (str): Optional string of allowed characters.
+        input_str (Optional[str]): Input string to sanitise.
+        allowed_chars (Optional[str]): Optional string of allowed characters.
             If None, allows alphanumeric characters and basic punctuation.
 
     Returns:
@@ -170,18 +204,18 @@ def sanitise_input(input_str: str, allowed_chars: str = None) -> str:
     return re.sub(r'[^\w\s.,;\-_!?@#£$%&*()[\]{}:"\']', '', input_str)
 
 
-def sanitise_filename(filename: str) -> str:
+def sanitise_filename(filename: Optional[str]) -> str:
     """
     Sanitise a filename by removing potentially dangerous characters.
 
     Args:
-        filename (str): Filename to sanitise.
+        filename (Optional[str]): Filename to sanitise.
 
     Returns:
         str: Sanitised filename.
     """
     if not filename:
-        return ""
+        return "unnamed_file"
 
     # Remove path separators and other potentially dangerous characters
     sanitised = re.sub(r'[/\\:*?"<>|]', '', filename)
@@ -193,12 +227,12 @@ def sanitise_filename(filename: str) -> str:
     return sanitised
 
 
-def sanitise_path(path: str) -> str:
+def sanitise_path(path: Optional[str]) -> str:
     """
     Sanitise a file path by removing potentially dangerous components.
 
     Args:
-        path (str): File path to sanitise.
+        path (Optional[str]): File path to sanitise.
 
     Returns:
         str: Sanitised file path.
@@ -206,20 +240,24 @@ def sanitise_path(path: str) -> str:
     if not path:
         return ""
 
-    # Convert to Path object to handle normalization
-    from pathlib import Path
-    clean_path = Path(path).resolve()
+    try:
+        # Convert to Path object to handle normalization
+        from pathlib import Path
+        clean_path = Path(path).resolve()
 
-    # Convert back to string
-    return str(clean_path)
+        # Convert back to string
+        return str(clean_path)
+    except Exception as e:
+        logger.error(f"Error sanitising path: {str(e)}")
+        return ""
 
 
-def is_safe_url(url: str) -> bool:
+def is_safe_url(url: Optional[str]) -> bool:
     """
     Check if a URL is safe (not a local file or potentially malicious protocol).
 
     Args:
-        url (str): URL to check.
+        url (Optional[str]): URL to check.
 
     Returns:
         bool: True if the URL is safe, False otherwise.
@@ -227,27 +265,49 @@ def is_safe_url(url: str) -> bool:
     if not url:
         return False
 
-    # Check for allowed protocols
-    allowed_protocols = ('http://', 'https://', 'wss://', 'ws://')
-    has_allowed_protocol = any(url.startswith(protocol)
-                               for protocol in allowed_protocols)
+    try:
+        # Parse the URL
+        parsed = urllib.parse.urlparse(url)
 
-    # Check for potential local file access
-    has_file_protocol = url.startswith('file://')
+        # Check for allowed protocols
+        if parsed.scheme.lower() not in VALID_SCHEMES:
+            return False
 
-    # Check for potential protocol smuggling
-    has_protocol_smuggling = '//' in url.split(
-        ':', 1)[1] if ':' in url else False
+        # Check if netloc is not empty and properly formatted
+        if not parsed.netloc or parsed.netloc.startswith(":") or "@" in parsed.netloc:
+            return False
 
-    return has_allowed_protocol and not has_file_protocol and not has_protocol_smuggling
+        # Check for potential protocol smuggling
+        if "//" in parsed.path:
+            return False
+
+        # Check for potentially dangerous fragments
+        dangerous_patterns = ['javascript:', 'data:', 'vbscript:']
+        for part in [parsed.path, parsed.query, parsed.fragment]:
+            for pattern in dangerous_patterns:
+                if pattern in part.lower():
+                    return False
+
+        # Check for Unicode homoglyphs or IDNA encoding attacks
+        if any(ord(c) > 127 for c in parsed.netloc):
+            # If domain contains non-ASCII, ensure it's properly IDNA encoded
+            try:
+                parsed.netloc.encode('idna').decode('ascii')
+            except UnicodeError:
+                return False
+
+        return True
+    except Exception as e:
+        logger.error(f"Error checking URL safety: {str(e)}")
+        return False
 
 
-def is_valid_twitch_username(username: str) -> bool:
+def is_valid_twitch_username(username: Optional[str]) -> bool:
     """
     Check if a string is a valid Twitch username.
 
     Args:
-        username (str): Username to check.
+        username (Optional[str]): Username to check.
 
     Returns:
         bool: True if the username is valid, False otherwise.
@@ -260,12 +320,12 @@ def is_valid_twitch_username(username: str) -> bool:
     return bool(re.match(r'^[a-zA-Z0-9_]{4,25}$', username))
 
 
-def is_safe_command(command: str) -> bool:
+def is_safe_command(command: Optional[str]) -> bool:
     """
     Check if a command string is safe (not containing command injection).
 
     Args:
-        command (str): Command to check.
+        command (Optional[str]): Command to check.
 
     Returns:
         bool: True if the command is safe, False otherwise.
@@ -278,12 +338,12 @@ def is_safe_command(command: str) -> bool:
     return not any(char in command for char in dangerous_chars)
 
 
-def validate_twitch_token(token: str) -> bool:
+def validate_twitch_token(token: Optional[str]) -> bool:
     """
     Validate a Twitch OAuth token format.
 
     Args:
-        token (str): Token to validate.
+        token (Optional[str]): Token to validate.
 
     Returns:
         bool: True if the token has a valid format, False otherwise.
@@ -300,7 +360,7 @@ def validate_twitch_token(token: str) -> bool:
     return bool(re.match(r'^[a-zA-Z0-9_]{30,}$', token_part))
 
 
-def encrypt_string(text: str, key: str) -> str:
+def encrypt_string(text: Optional[str], key: Optional[str]) -> str:
     """
     Simple encryption for non-critical data.
 
@@ -308,8 +368,8 @@ def encrypt_string(text: str, key: str) -> str:
     library for sensitive data encryption.
 
     Args:
-        text (str): Text to encrypt.
-        key (str): Encryption key.
+        text (Optional[str]): Text to encrypt.
+        key (Optional[str]): Encryption key.
 
     Returns:
         str: Base64-encoded encrypted string.
@@ -317,25 +377,29 @@ def encrypt_string(text: str, key: str) -> str:
     if not text or not key:
         return ""
 
-    # Create a deterministic but secure key from the input key
-    hash_key = hashlib.sha256(key.encode('utf-8')).digest()
+    try:
+        # Create a deterministic but secure key from the input key
+        hash_key = hashlib.sha256(key.encode('utf-8')).digest()
 
-    # XOR each byte of the text with a byte from the key in a repeating pattern
-    result = bytearray()
-    for i, char in enumerate(text.encode('utf-8')):
-        result.append(char ^ hash_key[i % len(hash_key)])
+        # XOR each byte of the text with a byte from the key in a repeating pattern
+        result = bytearray()
+        for i, char in enumerate(text.encode('utf-8')):
+            result.append(char ^ hash_key[i % len(hash_key)])
 
-    # Return base64 encoded result
-    return base64.b64encode(result).decode('utf-8')
+        # Return base64 encoded result
+        return base64.b64encode(result).decode('utf-8')
+    except Exception as e:
+        logger.error(f"Error encrypting string: {str(e)}")
+        return ""
 
 
-def decrypt_string(encrypted_text: str, key: str) -> str:
+def decrypt_string(encrypted_text: Optional[str], key: Optional[str]) -> str:
     """
     Decrypt a string encrypted with encrypt_string.
 
     Args:
-        encrypted_text (str): Base64-encoded encrypted string.
-        key (str): Encryption key (must be the same as used for encryption).
+        encrypted_text (Optional[str]): Base64-encoded encrypted string.
+        key (Optional[str]): Encryption key (must be the same as used for encryption).
 
     Returns:
         str: Decrypted string.
@@ -359,3 +423,137 @@ def decrypt_string(encrypted_text: str, key: str) -> str:
     except Exception as e:
         logger.error(f"Error decrypting string: {str(e)}")
         return ""
+
+
+try:
+    # Attempt to import cryptography for advanced encryption
+    from cryptography.fernet import Fernet
+    from cryptography.hazmat.primitives import hashes
+    from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
+
+    def _derive_key(password: str, salt: Optional[bytes] = None) -> Tuple[bytes, bytes]:
+        """
+        Derive a key from a password using PBKDF2.
+
+        Args:
+            password (str): Password to derive the key from.
+            salt (Optional[bytes]): Salt for key derivation. If None, random salt is generated.
+
+        Returns:
+            Tuple[bytes, bytes]: (key, salt) where key is the derived key and salt is the salt used.
+        """
+        if salt is None:
+            salt = os.urandom(16)
+
+        kdf = PBKDF2HMAC(
+            algorithm=hashes.SHA256(),
+            length=32,
+            salt=salt,
+            iterations=100000,
+        )
+        key = base64.urlsafe_b64encode(kdf.derive(password.encode('utf-8')))
+        return key, salt
+
+    def secure_encrypt(text: str, password: str) -> Dict[str, str]:
+        """
+        Encrypt text using Fernet symmetric encryption with a password-derived key.
+
+        Args:
+            text (str): Text to encrypt.
+            password (str): Password for encryption.
+
+        Returns:
+            Dict[str, str]: Dictionary containing base64-encoded ciphertext and salt.
+        """
+        if not text or not password:
+            raise ValueError("Text and password cannot be empty")
+
+        # Derive key from password
+        key, salt = _derive_key(password)
+
+        # Encrypt
+        f = Fernet(key)
+        ciphertext = f.encrypt(text.encode('utf-8'))
+
+        return {
+            'ciphertext': base64.b64encode(ciphertext).decode('utf-8'),
+            'salt': base64.b64encode(salt).decode('utf-8')
+        }
+
+    def secure_decrypt(encrypted_data: Dict[str, str], password: str) -> str:
+        """
+        Decrypt text that was encrypted with secure_encrypt.
+
+        Args:
+            encrypted_data (Dict[str, str]): Dictionary with 'ciphertext' and 'salt' keys.
+            password (str): Password used for encryption.
+
+        Returns:
+            str: Decrypted text.
+        """
+        if not encrypted_data or not password:
+            raise ValueError("Encrypted data and password cannot be empty")
+
+        if 'ciphertext' not in encrypted_data or 'salt' not in encrypted_data:
+            raise ValueError(
+                "Encrypted data must contain 'ciphertext' and 'salt' keys")
+
+        # Decode the base64 encodings
+        ciphertext = base64.b64decode(encrypted_data['ciphertext'])
+        salt = base64.b64decode(encrypted_data['salt'])
+
+        # Derive key from password
+        key, _ = _derive_key(password, salt)
+
+        # Decrypt
+        f = Fernet(key)
+        plaintext = f.decrypt(ciphertext)
+
+        return plaintext.decode('utf-8')
+
+    ADVANCED_ENCRYPTION_AVAILABLE = True
+    logger.info("Advanced encryption using cryptography package is available")
+
+except ImportError:
+    # If cryptography is not available, add placeholder functions that warn users
+    def secure_encrypt(text: str, password: str) -> Dict[str, str]:
+        """
+        Placeholder for secure encryption (requires cryptography package).
+
+        Args:
+            text (str): Text to encrypt.
+            password (str): Password for encryption.
+
+        Returns:
+            Dict[str, str]: Dictionary simulating encrypted data.
+
+        Raises:
+            RuntimeError: Always raised to indicate that cryptography is not available.
+        """
+        raise RuntimeError(
+            "Advanced encryption requires the 'cryptography' package. "
+            "Install it with 'pip install cryptography'."
+        )
+
+    def secure_decrypt(encrypted_data: Dict[str, str], password: str) -> str:
+        """
+        Placeholder for secure decryption (requires cryptography package).
+
+        Args:
+            encrypted_data (Dict[str, str]): Dictionary with encrypted data.
+            password (str): Password used for encryption.
+
+        Returns:
+            str: Decrypted text.
+
+        Raises:
+            RuntimeError: Always raised to indicate that cryptography is not available.
+        """
+        raise RuntimeError(
+            "Advanced encryption requires the 'cryptography' package. "
+            "Install it with 'pip install cryptography'."
+        )
+
+    ADVANCED_ENCRYPTION_AVAILABLE = False
+    logger.warning(
+        "Advanced encryption not available. Install 'cryptography' package to enable.")
