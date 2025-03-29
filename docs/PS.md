@@ -1,12 +1,12 @@
 # PROJECT STRUCTURE
 
-> ✅ finalised
-> 📄 created  
-> 👉 you are here  
+> ✅ finalised  
 > 🧪 needs testing  
-> 🛑 borked
+> 🛑 borked  
+> 👉 i am here  
+> 📄 created
 
-```
+```md
 betsy/
 │
 ├── 📄 bot/
