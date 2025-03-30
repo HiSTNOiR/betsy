@@ -49,7 +49,7 @@ betsy/
 │   │
 │   ├── 👉 db/                             # Database layer
 │   │   ├── 🧪 __init__.py
-│   │   ├── 🧪 connection.py               # Database connection management
+│   │   ├── ✅ connection.py               # Database connection management
 │   │   ├── migrations.py               # Database migrations
 │   │   ├── 📄 schema.sql                  # Database schema
 │   │   │
@@ -448,7 +448,7 @@ betsy/
 │   │   │
 │   │   └── 📄 db/
 │   │       ├── 📄 __init__.py
-│   │       └── 📄 test_connection.py
+│   │       └── ✅ test_connection.py
 │   │   │
 │   │   └── 📄 utils/
 │   │       ├── 📄 __init__.py
