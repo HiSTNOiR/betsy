@@ -364,17 +364,17 @@ betsy/
 │   │   └── dashboard.py                # Dashboard components
 │   │
 │   └── 📄 utils/                          # Utility modules
-│       ├── 🧪 __init__.py
+│       ├── ✅ __init__.py
 │       ├── cooldown.py                 # Cooldown utilities
-│       ├── 🧪 formatting.py               # Text formatting
+│       ├── ✅ formatting.py               # Text formatting
 │       ├── parsing.py                  # Text parsing
 │       ├── permissions.py              # Permission utilities
 │       ├── queue.py                    # Queue implementations
 │       ├── random.py                   # Random utilities
 │       ├── sanitisation.py             # Input sanitisation
-│       ├── 🧪 security.py                 # Security utilities
+│       ├── ✅ security.py                 # Security utilities
 │       ├── throttling.py               # Rate limiting
-│       ├── 🧪 time.py                     # Time utilities
+│       ├── ✅ time.py                     # Time utilities
 │       └── validation.py               # Input validation
 │
 ├── 📄 docs/                               # Documentation
@@ -429,11 +429,24 @@ betsy/
 │   │   │   ├── test_errors.py
 │   │   │   ├── test_logging.py
 │   │   │   ├── test_lifecycle.py
-│   │   │   └── test_lifecycle_hooks.py
+│   │   │   ├── test_lifecycle_hooks.py
+│   │   │   │
+│   │   │   ├── 📄 config/
+│   │   │   │   ├── 📄 __init__.py
+│   │   │   │   ├── test_config.py
+│   │   │   │   └── test_validators.py
+│   │   │   │
+│   │   │   ├── 📄 events/
+│   │   │   │   └── 📄 __init__.py
+│   │   │   │
+│   │   │   └── 📄 lifecycle/
+│   │   │       ├── 📄 __init__.py
+│   │   │       ├── test_hooks.py
+│   │   │       └── test_manager.py
 │   │   │
 │   │   └── 📄 utils/
 │   │       ├── 📄 __init__.py
-│   │       ├── 👉 test_formatting.py
+│   │       ├── ✅ test_formatting.py
 │   │       ├── ✅ test_security.py
 │   │       └── ✅ test_time.py
 │   │
