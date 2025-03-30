@@ -6,7 +6,7 @@ This module provides a registry for events and event handlers.
 
 import logging
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional, Set, Type, Callable, Union, TypeVar
+from typing import Any, Dict, List, Optional, Set, Callable, TypeVar
 
 # Set up logger for this module
 logger = logging.getLogger(__name__)
