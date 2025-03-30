@@ -47,9 +47,9 @@ betsy/
 │   │   ├── permissions.py              # Command permissions
 │   │   └── decorators.py               # Command decorators
 │   │
-│   ├── 📄 db/                             # Database layer
-│   │   ├── 📄 __init__.py
-│   │   ├── connection.py               # Database connection management
+│   ├── 👉 db/                             # Database layer
+│   │   ├── 🧪 __init__.py
+│   │   ├── 🧪 connection.py               # Database connection management
 │   │   ├── migrations.py               # Database migrations
 │   │   ├── 📄 schema.sql                  # Database schema
 │   │   │
@@ -445,6 +445,10 @@ betsy/
 │   │   │       ├── 📄 __init__.py
 │   │   │       ├── ✅ test_hooks.py
 │   │   │       └── ✅ test_manager.py
+│   │   │
+│   │   └── 📄 db/
+│   │       ├── 📄 __init__.py
+│   │       └── 📄 test_connection.py
 │   │   │
 │   │   └── 📄 utils/
 │   │       ├── 📄 __init__.py
