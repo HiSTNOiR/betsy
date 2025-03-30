@@ -9,8 +9,6 @@ from typing import cast
 from bot.core.events.base import (
     CoreEventType, ErrorEvent, Event, EventHandler, EventPriority, EventType
 )
-    CoreEvent, CoreEventType, ErrorEvent, Event, EventHandler, EventPriority, EventType
-)
 from bot.core.errors import get_error_handler, ErrorContext
 
 # Set up logger for this module
@@ -109,6 +107,12 @@ class ErrorEventHandler(EventHandler):
             event (Event): The error event to handle.
         """
         try:
+            # Check if event is an instance of ErrorEvent first
+            if not isinstance(event, ErrorEvent):
+                logger.warning(
+                    f"Non-ErrorEvent received in ErrorEventHandler: {event.name}")
+                return
+
             # Try to cast to an ErrorEvent
             error_event = cast(ErrorEvent, event)
 
