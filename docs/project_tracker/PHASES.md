@@ -7,29 +7,29 @@ This document outlines the recommended sequence of development phases for the Tw
 > ✅ finalised
 
 - - -
-## 👉 Pre-Phase
+## ✅ Pre-Phase
 
 **Goal**: Document the phases, packages and modules.
 
 _Package progress_
 
-1. 🧠 Core - Foundation and essential utilities
-2. 🧠 DB - Database connectivity and data models
-3. 🧠 Platforms - Twitch and OBS connectivity modules
-4. 🧠 Commands - Command parsing, routing and execution
-5. 🧠 Events - Event handling system
-6. 🧠 Middleware - Request/response processing pipelines
-7. 🧠 Features/Points - Points system implementation
-8. 🧠 Features/Shop - Shop and purchasing system
-9. 🧠 Features/Inventory - Inventory management
-10. 🧠 Features/Duel - Duel system
-11. 🧠 Features/DOMT - Deck of Many Things
-12. 🧠 Features/OBS Actions - OBS sequences and actions
-13. 🧠 Features/Easter Eggs - Special features and hidden rewards
+1. Core - Foundation and essential utilities
+2. DB - Database connectivity and data models
+3. Platforms - Twitch and OBS connectivity modules
+4. Commands - Command parsing, routing and execution
+5. Events - Event handling system
+6. Middleware - Request/response processing pipelines
+7. Features/Points - Points system implementation
+8. Features/Shop - Shop and purchasing system
+9. Features/Inventory - Inventory management
+10. Features/Duel - Duel system
+11. Features/DOMT - Deck of Many Things
+12. Features/OBS Actions - OBS sequences and actions
+13. Features/Easter Eggs - Special features and hidden rewards
 
 - - -
 
-## Phase 0: Project Structure and Core Setup
+## ✅ Phase 0: Project Structure and Core Setup
 
 **Goal**: Establish project architecture and fundamental utilities.
 
@@ -49,15 +49,7 @@ _Package progress_
    - security.py - Security functions and validation
    - formatting.py - Text formatting utilities
 
-**Files to Create**:
-- `bot/core/config/config.py` - Configuration management
-- `bot/core/logging.py` - Logging infrastructure
-- `bot/core/errors.py` - Error classes and handling
-- `bot/utils/time.py` - Time-related utilities
-- `bot/utils/security.py` - Security utilities
-- `bot/utils/formatting.py` - Text formatting utilities
-
-## Phase 1: Database Foundation
+## 👉 Phase 1: Database Foundation
 
 **Goal**: Establish database connectivity, schema, and core data operations.
 
