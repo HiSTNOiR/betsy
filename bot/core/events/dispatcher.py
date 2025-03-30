@@ -38,8 +38,6 @@ class EventDispatcher:
         self._event_queue: asyncio.Queue[Event] = asyncio.Queue()
         self._processing_task: Optional[asyncio.Task] = None
         self._is_processing = False
-        self._lock = asyncio.Lock()  # For thread safety
-
     async def start_processing(self) -> None:
         """Start processing events from the queue."""
         if self._is_processing:
