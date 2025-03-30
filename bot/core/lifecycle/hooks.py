@@ -813,6 +813,97 @@ def register_feature_hooks(manager: Optional[LifecycleManager] = None) -> None:
     logger.debug("Registered feature lifecycle hooks")
 
 
+def register_event_hooks(manager: Optional[LifecycleManager] = None) -> None:
+    """
+    Register event system-related lifecycle hooks.
+
+    Args:
+        manager (Optional[LifecycleManager]): Lifecycle manager to register hooks with.
+            If None, uses the singleton instance.
+    """
+    if manager is None:
+        manager = get_lifecycle_manager()
+
+    def initialise_event_system() -> None:
+        """Initialise the event system."""
+        try:
+            # Importing here to avoid circular imports
+            events_module = _import_module_safely("bot.core.events")
+            if not events_module:
+                logger.warning("Events module not available")
+                return
+
+            # Create a task to initialise the event system
+            import asyncio
+            loop = asyncio.get_event_loop()
+            if not loop.is_running():
+                loop = asyncio.new_event_loop()
+                asyncio.set_event_loop(loop)
+
+            # Run the initialisation
+            loop.run_until_complete(events_module.initialise_event_system())
+
+            logger.info("Event system initialised")
+            mark_initialised("events")
+        except Exception as e:
+            logger.error(
+                f"Error initialising event system: {str(e)}", exc_info=True)
+
+    def shutdown_event_system() -> None:
+        """Shut down the event system."""
+        # Skip if event system was never initialised
+        if not is_initialised("events"):
+            logger.info("Event system was not initialised, skipping shutdown")
+            return
+
+        try:
+            # Importing here to avoid circular imports
+            events_module = _import_module_safely("bot.core.events")
+            if not events_module:
+                logger.warning("Events module not available for shutdown")
+                return
+
+            # Create a task to shut down the event system
+            import asyncio
+            loop = asyncio.get_event_loop()
+            if not loop.is_running():
+                loop = asyncio.new_event_loop()
+                asyncio.set_event_loop(loop)
+
+            # Run the shutdown
+            loop.run_until_complete(events_module.shutdown_event_system())
+
+            logger.info("Event system shutdown complete")
+        except Exception as e:
+            logger.error(
+                f"Error shutting down event system: {str(e)}", exc_info=True)
+
+    # Register initialisation hook
+    register_hook(
+        manager=manager,
+        name="initialise_event_system",
+        callback=initialise_event_system,
+        hook_type=HookType.INITIALISE,
+        priority=35,  # Initialise event system after error handling but before database
+        dependencies=[
+            HookDependency("load_config"),
+            HookDependency("configure_logging"),
+            HookDependency("setup_error_handling")
+        ]
+    )
+
+    # Register shutdown hook
+    register_hook(
+        manager=manager,
+        name="shutdown_event_system",
+        callback=shutdown_event_system,
+        hook_type=HookType.SHUTDOWN,
+        priority=15  # Shut down event system after features but before platforms
+    )
+
+    logger.debug("Registered event system lifecycle hooks")
+
+
 def register_all_hooks(manager: Optional[LifecycleManager] = None) -> None:
     """
     Register all lifecycle hooks.
