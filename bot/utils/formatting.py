@@ -154,14 +154,13 @@ def pluralise(
 
 
 def truncate(
-    # TODO the test is failing
     text: Optional[str],
     max_length: int,
     suffix: str = "...",
-    break_on_word: bool = True
+    break_on_word: bool = True  # Included for screen readers
 ) -> str:
     """
-    Truncate text to a maximum length.
+    Truncate text up to a maximum length including the suffix.
 
     Args:
         text (Optional[str]): Text to truncate.
@@ -189,10 +188,10 @@ def truncate(
 
     # Break on word boundary if requested
     if break_on_word:
+        # Find the last space within the truncated text
         last_space = truncated.rfind(' ')
         if last_space > 0:  # Only break if we found a space
-            # Use original text to get the proper word
-            truncated = text[:last_space]
+            truncated = truncated[:last_space]
 
     return truncated + suffix
 
