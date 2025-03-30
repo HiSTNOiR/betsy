@@ -38,6 +38,7 @@ class EventDispatcher:
         self._event_queue: asyncio.Queue[Event] = asyncio.Queue()
         self._processing_task: Optional[asyncio.Task] = None
         self._is_processing = False
+
     async def start_processing(self) -> None:
         """Start processing events from the queue."""
         if self._is_processing:
@@ -132,7 +133,7 @@ class EventDispatcher:
             logger.debug(f"No handlers for event: {filtered_event.name}")
             return
 
-        # Sort handlers by priority
+        # Sort handlers by priority (lower value means higher priority)
         sorted_handlers = sorted(handlers, key=lambda h: h.priority.value)
 
         # Process the event with each handler
@@ -206,7 +207,8 @@ class EventDispatcher:
         # Add generic handlers
         handlers.extend(self._generic_handlers)
 
-        return handlers
+        # Sort handlers by priority (lower value means higher priority)
+        return sorted(handlers, key=lambda h: h.priority.value)
 
     def register_handler(self, handler: EventHandler) -> None:
         """
