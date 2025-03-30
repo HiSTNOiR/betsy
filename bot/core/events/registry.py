@@ -15,6 +15,11 @@ logger = logging.getLogger(__name__)
 T = TypeVar('T', bound='Event')
 
 
+class EventRegistryError(Exception):
+    """Base exception for registry-related errors."""
+    pass
+
+
 @dataclass
 class Event:
     """
@@ -77,10 +82,10 @@ class EventRegistry:
             event_type (str): Event type to register.
 
         Raises:
-            ValueError: If the event type is already registered.
+            EventRegistryError: If the event type is already registered.
         """
         if not event_type:
-            raise ValueError("Event type cannot be empty")
+            raise EventRegistryError("Event type cannot be empty")
 
         if event_type in self._event_types:
             logger.warning(f"Event type already registered: {event_type}")
@@ -103,7 +108,7 @@ class EventRegistry:
             handler (Callable[[Event], None]): Handler function.
 
         Raises:
-            ValueError: If the event type is not registered.
+            EventRegistryError: If the event type is not registered.
         """
         if event_type is None:
             # Register a global handler
@@ -113,7 +118,8 @@ class EventRegistry:
             return
 
         if event_type not in self._event_types:
-            raise ValueError(f"Event type not registered: {event_type}")
+            raise EventRegistryError(
+                f"Event type not registered: {event_type}")
 
         self._handlers[event_type].append(handler)
         logger.debug(
@@ -194,6 +200,32 @@ class EventRegistry:
             Set[str]: Set of registered event types.
         """
         return self._event_types.copy()
+
+    def initialize(self, package_paths: Optional[List[str]] = None) -> None:
+        """
+        Initialize the event registry by scanning packages for events.
+
+        Args:
+            package_paths (Optional[List[str]]): List of package paths to scan for events.
+
+        Raises:
+            EventRegistryError: If there is an error initializing the registry.
+        """
+        try:
+            if not package_paths:
+                logger.info(
+                    "No package paths provided, skipping event discovery")
+                return
+
+            for package_path in package_paths:
+                logger.debug(f"Scanning package for events: {package_path}")
+                # Implement package scanning logic here
+
+            logger.info("Event registry initialized")
+        except Exception as e:
+            error_msg = f"Error initializing event registry: {str(e)}"
+            logger.error(error_msg, exc_info=True)
+            raise EventRegistryError(error_msg) from e
 
 
 # Singleton instance of the event registry

@@ -1,102 +1,88 @@
 #!/usr/bin/env python
 """
-Test runner for the bot.
+Test runner for the bot application.
 
-This script discovers and runs all tests for the bot.
+This script runs the application's test suite with customizable options.
 """
 
-import unittest
-import sys
-import os
 import argparse
-import logging
-from pathlib import Path
+import os
+import sys
+import unittest
+import warnings
+
+# Add the parent directory to the path so we can import bot modules
+sys.path.insert(0, os.path.abspath(
+    os.path.join(os.path.dirname(__file__), '..')))
 
 
-def get_project_root():
-    """Get the project root directory."""
-    # Get the directory of this script
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-
-    # Return the parent directory (project root)
-    return os.path.dirname(script_dir)
-
-
-def run_tests(test_path=None, verbose=False, failfast=False):
-    """
-    Discover and run tests.
-
-    Args:
-        test_path (str): Optional path to a specific test file or directory.
-        verbose (bool): Whether to produce verbose output.
-        failfast (bool): Whether to stop at the first failure.
-
-    Returns:
-        bool: True if all tests passed, False otherwise.
-    """
-    # Add the project root to the Python path
-    project_root = get_project_root()
-    sys.path.insert(0, project_root)
-
-    # Disable certain logs during tests to avoid clutter
-    logging.disable(logging.WARNING)
-
-    # Create test loader
-    loader = unittest.TestLoader()
-
-    # Discover tests
-    if test_path:
-        # Load specific test file or directory
-        if os.path.isfile(test_path):
-            suite = loader.loadTestsFromName(test_path)
-        else:
-            suite = loader.discover(test_path)
-    else:
-        # Load all tests
-        suite = loader.discover(os.path.join(project_root, "tests"))
-
-    # Create test runner
-    runner = unittest.TextTestRunner(
-        verbosity=2 if verbose else 1,
-        failfast=failfast
-    )
-
-    # Run tests
-    result = runner.run(suite)
-
-    # Re-enable all logging levels
-    logging.disable(logging.NOTSET)
-
-    # Return True if all tests passed
-    return result.wasSuccessful()
+def parse_args():
+    """Parse command line arguments."""
+    parser = argparse.ArgumentParser(
+        description='Run tests for the bot application.')
+    parser.add_argument('-v', '--verbose', action='store_true',
+                        help='Run tests in verbose mode')
+    parser.add_argument('-f', '--failfast', action='store_true',
+                        help='Stop on first failure')
+    parser.add_argument('-p', '--pattern', default='test_*.py',
+                        help='Pattern to match test files (default: test_*.py)')
+    parser.add_argument('-s', '--start-dir', default='tests',
+                        help='Directory to start discovery (default: tests)')
+    parser.add_argument('-q', '--quiet', action='store_true',
+                        help='Run tests in quiet mode (minimal output)')
+    return parser.parse_args()
 
 
 def main():
-    """Main entry point for the test runner."""
-    parser = argparse.ArgumentParser(description="Run bot tests")
-    parser.add_argument(
-        "test_path",
-        nargs="?",
-        help="Path to a specific test file or directory"
+    """Run the test suite."""
+    # Parse command line arguments
+    args = parse_args()
+
+    # Filter out ResourceWarning to avoid file closure warnings from unittest
+    warnings.filterwarnings('ignore', category=ResourceWarning)
+
+    # Filter out RuntimeWarning for coroutines to avoid noise from async tests
+    warnings.filterwarnings('ignore', category=RuntimeWarning,
+                            message="coroutine '.*' was never awaited")
+
+    # Create a test suite
+    test_loader = unittest.defaultTestLoader
+    test_suite = test_loader.discover(
+        args.start_dir,
+        pattern=args.pattern
     )
-    parser.add_argument(
-        "-v", "--verbose",
-        action="store_true",
-        help="Produce verbose output"
-    )
-    parser.add_argument(
-        "-f", "--failfast",
-        action="store_true",
-        help="Stop at the first failure"
-    )
-    args = parser.parse_args()
 
-    # Run tests
-    success = run_tests(args.test_path, args.verbose, args.failfast)
+    # Configure the test runner
+    verbosity = 2 if args.verbose else 0 if args.quiet else 1
 
-    # Exit with appropriate exit code
-    sys.exit(0 if success else 1)
+    # Custom test runner that suppresses stdout/stderr during tests
+    class QuietTestRunner(unittest.TextTestRunner):
+        def run(self, test):
+            """Run the test suite with suppressed output."""
+            # Redirect stdout and stderr during test execution
+            if args.quiet:
+                old_stdout, old_stderr = sys.stdout, sys.stderr
+                sys.stdout = open(os.devnull, 'w')
+                sys.stderr = open(os.devnull, 'w')
+
+            try:
+                result = super().run(test)
+            finally:
+                # Restore stdout and stderr
+                if args.quiet:
+                    sys.stdout.close()
+                    sys.stderr.close()
+                    sys.stdout, sys.stderr = old_stdout, old_stderr
+
+            return result
+
+    # Run the tests
+    test_runner = QuietTestRunner(verbosity=verbosity, failfast=args.failfast)
+    test_result = test_runner.run(test_suite)
+
+    # Return non-zero exit code if tests failed
+    sys.exit(not test_result.wasSuccessful())
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
