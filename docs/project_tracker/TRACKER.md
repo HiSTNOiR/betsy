@@ -14,7 +14,7 @@ betsy/
 │   │
 │   ├── 📄 core/
 │   │   ├── 🧪 __init__.py
-│   │   ├── 🧪 app.py                      # Main application entry point
+│   │   ├── ✅ app.py                      # Main application entry point
 │   │   ├── 🧪 constants.py                # Global constants
 │   │   ├── 🧪 errors.py                   # Error hierarchy
 │   │   ├── 🧪 logging.py                  # Logging configuration
@@ -423,13 +423,10 @@ betsy/
 │   │   │
 │   │   ├── 📄 core/
 │   │   │   ├── 📄 __init__.py
-│   │   │   ├── test_app_constants.py
-│   │   │   ├── test_config_validators.py
-│   │   │   ├── test_config.py
-│   │   │   ├── test_errors.py
-│   │   │   ├── test_logging.py
-│   │   │   ├── test_lifecycle.py
-│   │   │   ├── test_lifecycle_hooks.py
+│   │   │   ├── ✅ test_app.py
+│   │   │   ├── 📄 test_constants.py
+│   │   │   ├── 📄 test_errors.py
+│   │   │   ├── 📄 test_logging.py
 │   │   │   │
 │   │   │   ├── 📄 config/
 │   │   │   │   ├── 📄 __init__.py
