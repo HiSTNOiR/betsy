@@ -26,9 +26,9 @@ betsy/
 │   │   │
 │   │   ├── 📄 events/                     # Event system
 │   │   │   ├── 🧪 __init__.py
-│   │   │   ├── 🧪 base.py                 # Base event classes
+│   │   │   ├── ✅ base.py                 # Base event classes
 │   │   │   ├── 🧪 dispatcher.py           # Event dispatcher
-│   │   │   ├── 🧪 registry.py             # Event registry
+│   │   │   ├── ✅ registry.py             # Event registry
 │   │   │   └── 🧪 handlers.py             # Global event handlers
 │   │   │
 │   │   └── 📄 lifecycle/                  # Application lifecycle
@@ -438,10 +438,10 @@ betsy/
 │   │   │   │
 │   │   │   ├── 📄 events/
 │   │   │   │   ├── 📄 __init__.py
-│   │   │   │   ├── 📄 test_base.py
+│   │   │   │   ├── ✅ test_base.py
 │   │   │   │   ├── 📄 test_dispatcher.py
 │   │   │   │   ├── 📄 test_handlers.py
-│   │   │   │   └── 📄 test_registry.py
+│   │   │   │   └── ✅ test_registry.py
 │   │   │   │
 │   │   │   └── 📄 lifecycle/
 │   │   │       ├── 📄 __init__.py
