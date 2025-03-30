@@ -406,6 +406,7 @@ betsy/
 │       └── database/                   # Database schema reference
 │
 ├── 📄 scripts/                            # Utility scripts
+│   ├── 🧪 verify_imports.py               # Verifies that __init__ files are correct
 │   ├── setup.py                        # Setup script
 │   ├── backup.py                       # Database backup script
 │   ├── migrate.py                      # Database migration script
