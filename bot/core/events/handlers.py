@@ -5,10 +5,10 @@ This module provides predefined event handlers for common scenarios and system e
 """
 
 import logging
-import traceback
-from typing import Any, Dict, Optional, Set, Type, cast
-
+from typing import cast
 from bot.core.events.base import (
+    CoreEventType, ErrorEvent, Event, EventHandler, EventPriority, EventType
+)
     CoreEvent, CoreEventType, ErrorEvent, Event, EventHandler, EventPriority, EventType
 )
 from bot.core.errors import get_error_handler, ErrorContext
