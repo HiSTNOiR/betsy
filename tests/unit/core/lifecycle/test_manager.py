@@ -7,8 +7,6 @@ including hook registration, state transitions, and error handling.
 
 import unittest
 from unittest.mock import Mock, patch, call
-import threading
-import time
 import signal
 import logging
 

@@ -89,6 +89,7 @@ class LifecycleManager:
             shutdown_event (Optional[threading.Event]): Event used to signal shutdown.
                 If None, a new Event is created.
             stop_timeout (float): Timeout in seconds for stopping operations.
+                Used to limit the time spent waiting for stop hooks to complete.
         """
         self._state = LifecycleState.INITIALISING
         self._initialise_hooks: List[LifecycleHook] = []
@@ -302,7 +303,7 @@ class LifecycleManager:
         """
         Stop the application.
 
-        Executes all stop hooks in priority order.
+        Executes all stop hooks in priority order with a timeout to prevent hanging.
 
         Raises:
             LifecycleError: If there is an error stopping the application.
@@ -316,7 +317,7 @@ class LifecycleManager:
         self._state = LifecycleState.STOPPING
 
         try:
-            self._execute_stop_hooks()
+            self._execute_stop_hooks_with_timeout()
             self._state = LifecycleState.STOPPED
             logger.info("Application stopped")
         except Exception as e:
@@ -327,11 +328,49 @@ class LifecycleManager:
             raise LifecycleError(
                 f"Error stopping application: {str(e)}") from e
 
+    def _execute_stop_hooks_with_timeout(self) -> None:
+        """
+        Execute all stop hooks in priority order with a timeout.
+
+        This prevents the application from hanging if a stop hook takes too long.
+        """
+        if not self._stop_hooks:
+            logger.debug("No stop hooks to execute")
+            return
+
+        # Create a thread to execute the stop hooks
+        stop_thread = threading.Thread(
+            target=self._execute_stop_hooks,
+            name="StopHooksThread"
+        )
+        stop_thread.daemon = True
+
+        # Start the thread and wait for it to complete with timeout
+        logger.debug(
+            f"Executing stop hooks with timeout of {self._stop_timeout} seconds")
+        start_time = time.time()
+        stop_thread.start()
+        stop_thread.join(timeout=self._stop_timeout)
+
+        # Check if the thread is still alive after the timeout
+        if stop_thread.is_alive():
+            elapsed = time.time() - start_time
+            logger.warning(
+                f"Stop hooks did not complete within timeout ({elapsed:.2f}s). "
+                f"Continuing with shutdown anyway."
+            )
+
     def _execute_stop_hooks(self) -> None:
         """Execute all stop hooks in priority order."""
         for hook in self._stop_hooks:
-            logger.debug(f"Executing stop hook: {hook.name}")
-            hook.callback()
+            try:
+                logger.debug(f"Executing stop hook: {hook.name}")
+                hook.callback()
+            except Exception as e:
+                logger.error(
+                    f"Error in stop hook {hook.name}: {str(e)}", exc_info=True)
+                # Re-raise to be caught by the outer handler
+                raise
 
     def shutdown(self) -> None:
         """
