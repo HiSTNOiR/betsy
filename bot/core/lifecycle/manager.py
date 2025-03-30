@@ -81,16 +81,26 @@ class LifecycleManager:
     as well as registering hooks to be executed at specific points in the lifecycle.
     """
 
-    def __init__(self):
-        """Initialize the lifecycle manager."""
+    def __init__(self, shutdown_event: Optional[threading.Event] = None, stop_timeout: float = 5.0):
+        """
+        Initialize the lifecycle manager.
+
+        Args:
+            shutdown_event (Optional[threading.Event]): Event used to signal shutdown.
+                If None, a new Event is created.
+            stop_timeout (float): Timeout in seconds for stopping operations.
+        """
         self._state = LifecycleState.INITIALISING
         self._initialise_hooks: List[LifecycleHook] = []
         self._start_hooks: List[LifecycleHook] = []
         self._stop_hooks: List[LifecycleHook] = []
         self._shutdown_hooks: List[LifecycleHook] = []
         self._error_hooks: List[LifecycleHook] = []
-        self._shutdown_event = threading.Event()
-        self._stop_timeout = 5.0  # seconds
+        self._shutdown_event = shutdown_event or threading.Event()
+        self._stop_timeout = stop_timeout
+
+        # Last resort error handler in case all error hooks fail
+        self._fallback_error_handler = self._default_error_handler
 
     @property
     def state(self) -> LifecycleState:
@@ -194,6 +204,28 @@ class LifecycleManager:
         self._error_hooks.sort()
         logger.debug(f"Registered error hook: {name} (priority: {priority})")
 
+    def set_fallback_error_handler(self, handler: Callable[[Exception], None]) -> None:
+        """
+        Set a fallback error handler to use if all error hooks fail.
+
+        Args:
+            handler (Callable[[Exception], None]): Function to handle errors.
+        """
+        self._fallback_error_handler = handler
+        logger.debug("Set fallback error handler")
+
+    def _default_error_handler(self, exception: Exception) -> None:
+        """
+        Default fallback error handler.
+
+        Args:
+            exception (Exception): The exception that occurred.
+        """
+        logger.critical(
+            f"Unhandled error in lifecycle manager: {str(exception)}",
+            exc_info=True
+        )
+
     def initialise(self) -> None:
         """
         Initialise the application.
@@ -211,10 +243,7 @@ class LifecycleManager:
         logger.info("Initialising application")
 
         try:
-            for hook in self._initialise_hooks:
-                logger.debug(f"Executing initialise hook: {hook.name}")
-                hook.callback()
-
+            self._execute_initialise_hooks()
             self._state = LifecycleState.INITIALISED
             logger.info("Application initialised")
         except Exception as e:
@@ -224,6 +253,12 @@ class LifecycleManager:
             self._execute_error_hooks()
             raise LifecycleError(
                 f"Error initialising application: {str(e)}") from e
+
+    def _execute_initialise_hooks(self) -> None:
+        """Execute all initialisation hooks in priority order."""
+        for hook in self._initialise_hooks:
+            logger.debug(f"Executing initialise hook: {hook.name}")
+            hook.callback()
 
     def start(self) -> None:
         """
@@ -243,10 +278,7 @@ class LifecycleManager:
         self._state = LifecycleState.STARTING
 
         try:
-            for hook in self._start_hooks:
-                logger.debug(f"Executing start hook: {hook.name}")
-                hook.callback()
-
+            self._execute_start_hooks()
             self._state = LifecycleState.RUNNING
             logger.info("Application started")
 
@@ -259,6 +291,12 @@ class LifecycleManager:
             self._execute_error_hooks()
             raise LifecycleError(
                 f"Error starting application: {str(e)}") from e
+
+    def _execute_start_hooks(self) -> None:
+        """Execute all start hooks in priority order."""
+        for hook in self._start_hooks:
+            logger.debug(f"Executing start hook: {hook.name}")
+            hook.callback()
 
     def stop(self) -> None:
         """
@@ -278,10 +316,7 @@ class LifecycleManager:
         self._state = LifecycleState.STOPPING
 
         try:
-            for hook in self._stop_hooks:
-                logger.debug(f"Executing stop hook: {hook.name}")
-                hook.callback()
-
+            self._execute_stop_hooks()
             self._state = LifecycleState.STOPPED
             logger.info("Application stopped")
         except Exception as e:
@@ -291,6 +326,12 @@ class LifecycleManager:
             self._execute_error_hooks()
             raise LifecycleError(
                 f"Error stopping application: {str(e)}") from e
+
+    def _execute_stop_hooks(self) -> None:
+        """Execute all stop hooks in priority order."""
+        for hook in self._stop_hooks:
+            logger.debug(f"Executing stop hook: {hook.name}")
+            hook.callback()
 
     def shutdown(self) -> None:
         """
@@ -304,10 +345,7 @@ class LifecycleManager:
         logger.info("Shutting down application")
 
         try:
-            for hook in self._shutdown_hooks:
-                logger.debug(f"Executing shutdown hook: {hook.name}")
-                hook.callback()
-
+            self._execute_shutdown_hooks()
             logger.info("Application shutdown complete")
         except Exception as e:
             logger.error(
@@ -315,6 +353,12 @@ class LifecycleManager:
             self._execute_error_hooks()
             raise LifecycleError(
                 f"Error during application shutdown: {str(e)}") from e
+
+    def _execute_shutdown_hooks(self) -> None:
+        """Execute all shutdown hooks in priority order."""
+        for hook in self._shutdown_hooks:
+            logger.debug(f"Executing shutdown hook: {hook.name}")
+            hook.callback()
 
     def run(self) -> None:
         """
@@ -324,32 +368,56 @@ class LifecycleManager:
         stops the application, and performs shutdown.
         """
         try:
-            self.initialise()
-            self.start()
-
-            logger.info("Application running, press Ctrl+C to exit")
-
-            # Wait for shutdown signal
-            while not self._shutdown_event.is_set():
-                self._shutdown_event.wait(0.1)
-
-            logger.info("Shutdown requested")
-
-            self.stop()
-            self.shutdown()
+            self._run_initialise()
+            self._run_start()
+            self._run_wait_for_shutdown()
+            self._run_stop()
+            self._run_shutdown()
 
         except KeyboardInterrupt:
             logger.info("Keyboard interrupt received")
-            if self._state == LifecycleState.RUNNING:
-                self.stop()
-            self.shutdown()
+            self._handle_run_exception()
 
         except Exception as e:
             logger.error(f"Error in application run: {str(e)}", exc_info=True)
-            if self._state in (LifecycleState.RUNNING, LifecycleState.STARTING):
-                self.stop()
-            self.shutdown()
-            sys.exit(1)
+            self._handle_run_exception(e)
+
+    def _run_initialise(self) -> None:
+        """Initialise the application as part of the run process."""
+        self.initialise()
+
+    def _run_start(self) -> None:
+        """Start the application as part of the run process."""
+        self.start()
+        logger.info("Application running, press Ctrl+C to exit")
+
+    def _run_wait_for_shutdown(self) -> None:
+        """Wait for shutdown signal as part of the run process."""
+        while not self._shutdown_event.is_set():
+            self._shutdown_event.wait(0.1)
+
+        logger.info("Shutdown requested")
+
+    def _run_stop(self) -> None:
+        """Stop the application as part of the run process."""
+        if self._state in (LifecycleState.RUNNING, LifecycleState.STARTING):
+            self.stop()
+
+    def _run_shutdown(self) -> None:
+        """Perform shutdown as part of the run process."""
+        self.shutdown()
+
+    def _handle_run_exception(self, exception: Optional[Exception] = None) -> None:
+        """
+        Handle exceptions during the run process.
+
+        Args:
+            exception (Optional[Exception]): The exception that occurred, if any.
+        """
+        if self._state in (LifecycleState.RUNNING, LifecycleState.STARTING):
+            self.stop()
+        self.shutdown()
+        sys.exit(1)
 
     def request_shutdown(self) -> None:
         """Request application shutdown."""
@@ -367,16 +435,29 @@ class LifecycleManager:
 
     def _execute_error_hooks(self) -> None:
         """Execute all error hooks."""
+        error_count = 0
+        total_hooks = len(self._error_hooks)
+
         for hook in self._error_hooks:
             try:
                 logger.debug(f"Executing error hook: {hook.name}")
                 hook.callback()
             except Exception as e:
+                error_count += 1
                 logger.error(
                     f"Error in error hook {hook.name}: {str(e)}", exc_info=True)
 
+        # If all error hooks fail, use fallback handler
+        if error_count == total_hooks and total_hooks > 0:
+            logger.warning("All error hooks failed, using fallback handler")
+            try:
+                self._fallback_error_handler(Exception("Error hooks failed"))
+            except Exception as e:
+                logger.critical(
+                    f"Fallback error handler failed: {str(e)}", exc_info=True)
 
-# Singleton instance of the lifecycle manager
+
+# Singleton instance of the error handler
 _lifecycle_manager = LifecycleManager()
 
 
