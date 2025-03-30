@@ -183,11 +183,35 @@ def validate_enum(enum_type: Any) -> Callable[[Any], bool]:
         Callable[[Any], bool]: Validator function.
     """
     def validator(value: Any) -> bool:
+        # Check if the value is already an enum instance of the right type
+        if isinstance(value, enum_type):
+            return True
+
+        # Check if the value is a valid enum name
+        if isinstance(value, str):
+            try:
+                # Try converting enum name to enum
+                enum_type[value]
+                return True
+            except (KeyError, TypeError):
+                pass
+
+        # Try converting the value to the enum type
         try:
             enum_type(value)
             return True
         except (ValueError, TypeError):
-            return False
+            # Try converting string numeric value
+            if isinstance(value, str):
+                try:
+                    # Convert string to int and then to enum
+                    numeric_val = int(value)
+                    enum_type(numeric_val)
+                    return True
+                except (ValueError, TypeError):
+                    pass
+
+        return False
 
     return validator
 

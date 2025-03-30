@@ -22,7 +22,7 @@ betsy/
 │   │   ├── 📄 config/                     # Configuration management
 │   │   │   ├── 🧪 __init__.py
 │   │   │   ├── ✅ config.py               # Configuration manager
-│   │   │   └── 🧪 validators.py           # Configuration validators
+│   │   │   └── ✅ validators.py           # Configuration validators
 │   │   │
 │   │   ├── 📄 events/                     # Event system
 │   │   │   ├── 🧪 __init__.py
@@ -434,7 +434,7 @@ betsy/
 │   │   │   ├── 📄 config/
 │   │   │   │   ├── 📄 __init__.py
 │   │   │   │   ├── ✅ test_config.py
-│   │   │   │   └── 📄 test_validators.py
+│   │   │   │   └── ✅ test_validators.py
 │   │   │   │
 │   │   │   ├── 📄 events/
 │   │   │   │   ├── 📄 __init__.py
