@@ -17,7 +17,7 @@ betsy/
 │   │   ├── ✅ app.py                      # Main application entry point
 │   │   ├── ✅ constants.py                # Global constants
 │   │   ├── ✅ errors.py                   # Error hierarchy
-│   │   ├── 🧪 logging.py                  # Logging configuration
+│   │   ├── ✅ logging.py                  # Logging configuration
 │   │   │
 │   │   ├── 📄 config/                     # Configuration management
 │   │   │   ├── 🧪 __init__.py
@@ -426,7 +426,7 @@ betsy/
 │   │   │   ├── ✅ test_app.py
 │   │   │   ├── ✅ test_constants.py
 │   │   │   ├── ✅ test_errors.py
-│   │   │   ├── 📄 test_logging.py
+│   │   │   ├── ✅ test_logging.py
 │   │   │   │
 │   │   │   ├── 📄 config/
 │   │   │   │   ├── 📄 __init__.py
