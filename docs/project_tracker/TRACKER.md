@@ -34,7 +34,7 @@ betsy/
 │   │   └── 📄 lifecycle/                  # Application lifecycle
 │   │       ├── 🧪 __init__.py
 │   │       ├── 🧪 manager.py              # Lifecycle manager
-│   │       └── 🧪 hooks.py                # Lifecycle hooks
+│   │       └── ✅ hooks.py                # Lifecycle hooks
 │   │
 │   ├── 📄 commands/                       # Command system
 │   │   ├── 📄 __init__.py
@@ -441,7 +441,7 @@ betsy/
 │   │   │   │
 │   │   │   └── 📄 lifecycle/
 │   │   │       ├── 📄 __init__.py
-│   │   │       ├── 📄 test_hooks.py
+│   │   │       ├── ✅ test_hooks.py
 │   │   │       └── 📄 test_manager.py
 │   │   │
 │   │   └── 📄 utils/
