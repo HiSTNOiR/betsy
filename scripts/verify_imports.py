@@ -1,24 +1,90 @@
 #!/usr/bin/env python3
 """
-Import verification script for the bot packages.
+Enhanced import verification script for the bot packages.
 
-This script verifies that all exported components from the packages can be
-properly imported. It helps catch issues with __init__.py files, such as
-missing exports or circular imports.
+This script automatically discovers all packages in the project and verifies that
+all exported components can be properly imported. It helps catch issues with
+__init__.py files, such as missing exports or circular imports.
 
 Usage:
-    python scripts/verify_imports.py
+    python scripts/verify_imports.py [--package package_name]
 """
 
+import argparse
+import ast
 import importlib
-import sys
-from typing import Dict, List, Set, Tuple, Optional
 import os
+import sys
+from pathlib import Path
+from typing import Dict, List, Set, Tuple, Optional, Any
 
 # Add the project root to the Python path if needed
 project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 if project_root not in sys.path:
     sys.path.append(project_root)
+
+
+def parse_init_file(file_path: str) -> List[str]:
+    """
+    Parse an __init__.py file to extract the __all__ list.
+
+    Args:
+        file_path (str): Path to the __init__.py file.
+
+    Returns:
+        List[str]: List of exported names from __all__.
+    """
+    try:
+        with open(file_path, 'r', encoding='utf-8') as file:
+            content = file.read()
+
+        tree = ast.parse(content)
+
+        for node in ast.walk(tree):
+            if isinstance(node, ast.Assign):
+                for target in node.targets:
+                    if isinstance(target, ast.Name) and target.id == '__all__':
+                        if isinstance(node.value, ast.List):
+                            return [
+                                elt.s for elt in node.value.elts
+                                if isinstance(elt, ast.Str)
+                            ]
+
+        # If __all__ is not defined, return an empty list
+        return []
+
+    except Exception as e:
+        print(f"Error parsing {file_path}: {str(e)}")
+        return []
+
+
+def find_all_packages() -> Dict[str, List[str]]:
+    """
+    Find all packages in the project and their exported names.
+
+    Returns:
+        Dict[str, List[str]]: Dictionary mapping package paths to lists of exported names.
+    """
+    packages = {}
+
+    # Start from the bot directory
+    bot_dir = os.path.join(project_root, 'bot')
+
+    # Walk through the directory structure
+    for root, dirs, files in os.walk(bot_dir):
+        if '__init__.py' in files:
+            # Calculate the package path
+            rel_path = os.path.relpath(root, project_root)
+            package_path = rel_path.replace(os.sep, '.')
+
+            # Parse the __init__.py file
+            init_path = os.path.join(root, '__init__.py')
+            exports = parse_init_file(init_path)
+
+            # Store the package and its exports
+            packages[package_path] = exports
+
+    return packages
 
 
 def check_imports(module_path: str) -> Tuple[bool, Optional[str]]:
@@ -124,81 +190,44 @@ def main() -> int:
     Returns:
         int: Exit code (0 for success, 1 for failure)
     """
-    print("Verifying imports for bot packages...\n")
+    parser = argparse.ArgumentParser(
+        description="Verify imports for bot packages")
+    parser.add_argument('--package', type=str,
+                        help='Verify only a specific package')
+    args = parser.parse_args()
+
+    print("Discovering packages and their exports...\n")
+
+    packages = find_all_packages()
+
+    if args.package:
+        # Filter packages by the specified package
+        filtered_packages = {
+            k: v for k, v in packages.items()
+            if k == args.package or k.startswith(args.package + '.')
+        }
+        if not filtered_packages:
+            print(f"No packages found matching '{args.package}'")
+            return 1
+        packages = filtered_packages
+
+    print(f"Found {len(packages)} packages to verify\n")
 
     all_results = []
 
-    # Core package
-    core_attrs = [
-        "PROJECT_ROOT", "DATA_DIR", "LOGS_DIR", "CONFIG_DIR",
-        "DEFAULT_ENV_FILE", "DEFAULT_CONFIG", "DB_SCHEMA_FILE",
-        "TWITCH_API_BASE_URL", "TWITCH_AUTH_URL", "FEATURES",
-        "USER_RANKS", "DEFAULT_COMMAND_COOLDOWN", "DEFAULT_GLOBAL_COOLDOWN",
-        "POINTS_PER_MESSAGE", "POINTS_PER_MINUTE", "POINTS_PER_BIT",
-        "BotError", "ConfigError", "DatabaseError", "CommandError",
-        "PlatformError", "TwitchError", "OBSError", "DiscordError",
-        "FeatureError", "ValidationError", "ErrorContext", "ErrorHandler",
-        "get_error_handler", "register_default_handlers", "get_traceback_str",
-        "try_except_decorator"
-    ]
-    all_results.extend(verify_package("bot.core", core_attrs))
+    for package_path, exports in sorted(packages.items()):
+        print(f"Verifying package: {package_path}")
+        if not exports:
+            print(f"  No exports defined in __all__ for {package_path}")
+            # Just verify that the package itself can be imported
+            results = verify_package(package_path, [])
+        else:
+            print(f"  Found {len(exports)} exports to verify")
+            results = verify_package(package_path, exports)
 
-    # Config package
-    config_attrs = [
-        "ConfigManager", "get_config", "ConfigError", "ConfigValidationError",
-        "ConfigNotFoundError", "validate_required", "validate_pattern",
-        "validate_in_list", "validate_range", "validate_url",
-        "validate_path_exists", "validate_port", "validate_type",
-        "validate_enum", "apply_validator", "validate_config"
-    ]
-    all_results.extend(verify_package("bot.core.config", config_attrs))
+        all_results.extend(results)
+        print()
 
-    # Events package
-    events_attrs = [
-        "Event", "EventType", "EventPriority", "EventHandler", "EventFilter",
-        "EventError", "EventHandlerError", "EventFilterError",
-        "CoreEventType", "CoreEvent", "ErrorEvent",
-        "EventDispatcher", "get_event_dispatcher",
-        "EventRegistry", "EventRegistryError", "get_event_registry",
-        "LoggingEventHandler", "ErrorEventHandler", "LifecycleEventHandler",
-        "register_global_handlers", "initialise_event_system", "shutdown_event_system"
-    ]
-    all_results.extend(verify_package("bot.core.events", events_attrs))
-
-    # Lifecycle package
-    lifecycle_attrs = [
-        "LifecycleManager", "LifecycleState", "LifecycleError", "LifecycleHook",
-        "get_lifecycle_manager", "register_config_hooks", "register_logging_hooks",
-        "register_error_hooks", "register_database_hooks", "register_platform_hooks",
-        "register_command_hooks", "register_feature_hooks", "register_all_hooks"
-    ]
-    all_results.extend(verify_package("bot.core.lifecycle", lifecycle_attrs))
-
-    # Utils package
-    utils_attrs = [
-        # Time utilities
-        "get_utc_now", "to_utc", "format_datetime", "parse_datetime",
-        "format_duration", "parse_duration", "time_until", "time_since",
-        "format_relative_time", "is_same_day", "add_time", "format_timestamp",
-        "get_date_range",
-
-        # Security utilities
-        "generate_random_string", "generate_token", "hash_password",
-        "verify_password", "generate_hmac", "verify_hmac", "sanitise_input",
-        "sanitise_filename", "sanitise_path", "is_safe_url",
-        "is_valid_twitch_username", "is_safe_command", "validate_twitch_token",
-        "encrypt_string", "decrypt_string",
-
-        # Formatting utilities
-        "format_number", "format_currency", "pluralise", "truncate",
-        "format_list", "clean_text", "capitalise_first", "capitalise_words",
-        "format_twitch_message", "format_twitch_command", "format_time_elapsed",
-        "format_timestamp_for_humans", "format_bytes", "strip_html_tags",
-        "escape_markdown", "format_exception", "format_json"
-    ]
-    all_results.extend(verify_package("bot.utils", utils_attrs))
-
-    # Display all results
     print("\nSummary of import verification:")
     all_success = display_results(all_results)
 
