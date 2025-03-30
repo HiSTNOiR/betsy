@@ -21,7 +21,7 @@ betsy/
 │   │   │
 │   │   ├── 📄 config/                     # Configuration management
 │   │   │   ├── 🧪 __init__.py
-│   │   │   ├── 🧪 config.py               # Configuration manager
+│   │   │   ├── ✅ config.py               # Configuration manager
 │   │   │   └── 🧪 validators.py           # Configuration validators
 │   │   │
 │   │   ├── 📄 events/                     # Event system
@@ -29,7 +29,7 @@ betsy/
 │   │   │   ├── ✅ base.py                 # Base event classes
 │   │   │   ├── ✅ dispatcher.py           # Event dispatcher
 │   │   │   ├── ✅ registry.py             # Event registry
-│   │   │   └── 🧪 handlers.py             # Global event handlers
+│   │   │   └── ✅ handlers.py             # Global event handlers
 │   │   │
 │   │   └── 📄 lifecycle/                  # Application lifecycle
 │   │       ├── 🧪 __init__.py
@@ -433,14 +433,14 @@ betsy/
 │   │   │   │
 │   │   │   ├── 📄 config/
 │   │   │   │   ├── 📄 __init__.py
-│   │   │   │   ├── 📄 test_config.py
+│   │   │   │   ├── ✅ test_config.py
 │   │   │   │   └── 📄 test_validators.py
 │   │   │   │
 │   │   │   ├── 📄 events/
 │   │   │   │   ├── 📄 __init__.py
 │   │   │   │   ├── ✅ test_base.py
 │   │   │   │   ├── ✅ test_dispatcher.py
-│   │   │   │   ├── 📄 test_handlers.py
+│   │   │   │   ├── ✅ test_handlers.py
 │   │   │   │   └── ✅ test_registry.py
 │   │   │   │
 │   │   │   └── 📄 lifecycle/
