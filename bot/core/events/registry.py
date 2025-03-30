@@ -7,8 +7,8 @@ direct dependencies.
 """
 
 from bot.core.events.base import Event, EventType
-from typing import Any, Dict, List, Optional, Set, Type, TypeVar, cast
-from enum import Enum
+from typing import List, cast  # Keep only what is needed
+from enum import auto
 import pkgutil
 import logging
 import inspect
@@ -17,8 +17,7 @@ import uuid
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from datetime import datetime
-from enum import Enum, auto
-from typing import Any, Dict, Optional, Type, TypeVar, Generic, Union, ClassVar
+from typing import ClassVar, Generic
 
 from bot.utils.time import get_utc_now
 
