@@ -50,7 +50,7 @@ betsy/
 │   ├── 👉 db/                             # Database layer
 │   │   ├── 🧪 __init__.py
 │   │   ├── ✅ connection.py               # Database connection management
-│   │   ├── migrations.py               # Database migrations
+│   │   ├── 🧪 migrations.py               # Database migrations
 │   │   ├── 📄 schema.sql                  # Database schema
 │   │   │
 │   │   ├── 📄 models/                     # Data models
@@ -96,6 +96,11 @@ betsy/
 │   │       ├── shop.py                 # Shop middleware
 │   │       ├── inventory.py            # Inventory middleware
 │   │       └── duel.py                 # Duel middleware
+│   │
+│   ├── 📄 migrations/
+│   │   ├── 📄 __init__.py
+│   │   ├── 🧪 0001_initial_schema.py
+│   │   └── 🧪 0001_initial_schema.down.py
 │   │
 │   ├── 📄 platforms/                      # Platform integrations
 │   │   ├── 📄 __init__.py
@@ -393,7 +398,8 @@ betsy/
 │   ├── guides/                         # User guides
 │   │   ├── installation.md             # Installation guide
 │   │   ├── configuration.md            # Configuration guide
-│   │   └── commands.md                 # Commands reference
+│   │   ├── commands.md                 # Commands reference
+│   │   └── ✅ database_migrations.md   # Database migrations reference
 │   │
 │   ├── dev/                            # Developer documentation
 │   │   ├── architecture.md             # Architecture overview
@@ -448,7 +454,8 @@ betsy/
 │   │   │
 │   │   └── 📄 db/
 │   │       ├── 📄 __init__.py
-│   │       └── ✅ test_connection.py
+│   │       ├── ✅ test_connection.py
+│   │       └── 📄 test_migrations.py
 │   │   │
 │   │   └── 📄 utils/
 │   │       ├── 📄 __init__.py

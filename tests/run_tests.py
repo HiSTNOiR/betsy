@@ -67,9 +67,10 @@ def run_tests(pattern=None, failfast=False, quiet=False):
     start_dir = os.path.join(project_root, 'tests')
 
     if pattern:
-        suite = loader.discover(start_dir, pattern=f"*{pattern}*.py")
+        suite = loader.discover(
+            start_dir, pattern=f"*{pattern}*.py", top_level_dir=project_root)
     else:
-        suite = loader.discover(start_dir)
+        suite = loader.discover(start_dir, top_level_dir=project_root)
 
     # Prepare output capturing if quiet mode is enabled
     if quiet:
