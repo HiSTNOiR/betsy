@@ -55,20 +55,21 @@ betsy/
 │   │   │
 │   │   ├── 📄 models/                     # Data models
 │   │   │   ├── 📄 __init__.py
-│   │   │   ├── base.py                 # Base model
-│   │   │   ├── user.py                 # User model
-│   │   │   ├── command.py              # Command model
-│   │   │   ├── item.py                 # Item model
-│   │   │   ├── inventory.py            # Inventory model
-│   │   │   └── stream.py               # Stream model
+│   │   │   ├── 🧪 base.py                 # Base model
+│   │   │   ├── 🧪 user.py                 # User model
+│   │   │   ├── 📄 command.py              # Command model
+│   │   │   ├── 📄 inventory.py            # Inventory model
+│   │   │   ├── 🧪 item.py                 # Item model
+│   │   │   └── 📄 stream.py               # Stream model
 │   │   │
 │   │   └── 📄 repositories/               # Data access layer
 │   │       ├── 📄 __init__.py
-│   │       ├── base.py                 # Base repository
-│   │       ├── user_repository.py      # User repository
-│   │       ├── command_repository.py   # Command repository
-│   │       ├── item_repository.py      # Item repository
-│   │       └── stream_repository.py    # Stream repository
+│   │       ├── base.py                    # Base repository
+│   │       ├── user_repository.py         # User repository
+│   │       ├── command_repository.py      # Command repository
+│   │       ├── inventory_repository.py    # Inventory repository
+│   │       ├── item_repository.py         # Item repository
+│   │       └── stream_repository.py       # Stream repository
 │   │
 │   ├── 📄 middleware/                     # Middleware system
 │   │   ├── 📄 __init__.py
@@ -369,18 +370,19 @@ betsy/
 │   │   └── dashboard.py                # Dashboard components
 │   │
 │   └── 📄 utils/                          # Utility modules
-│       ├── ✅ __init__.py
-│       ├── cooldown.py                 # Cooldown utilities
+│       ├── 📄 __init__.py
+│       ├── 📄 cooldown.py                 # Cooldown utilities
+│       ├── 📄 db.py                       # Database utilities
 │       ├── ✅ formatting.py               # Text formatting
-│       ├── parsing.py                  # Text parsing
-│       ├── permissions.py              # Permission utilities
-│       ├── queue.py                    # Queue implementations
-│       ├── random.py                   # Random utilities
-│       ├── sanitisation.py             # Input sanitisation
+│       ├── 📄 parsing.py                  # Text parsing
+│       ├── 📄 permissions.py              # Permission utilities
+│       ├── 📄 queue.py                    # Queue implementations
+│       ├── 📄 random.py                   # Random utilities
+│       ├── 📄 sanitisation.py             # Input sanitisation
 │       ├── ✅ security.py                 # Security utilities
-│       ├── throttling.py               # Rate limiting
+│       ├── 📄 throttling.py               # Rate limiting
 │       ├── ✅ time.py                     # Time utilities
-│       └── validation.py               # Input validation
+│       └── 📄 validation.py               # Input validation
 │
 ├── 📄 docs/                               # Documentation
 │   ├── index.md                        # Documentation index

@@ -47,13 +47,9 @@ class ConfigManager:
         _required_keys (Set[str]): Set of required configuration keys.
     """
 
-    def __init__(self, env_prefix: str = "BETSY_"):
-        """
-        Initialize the ConfigManager.
 
-        Args:
-            env_prefix (str): Prefix for environment variables.
-        """
+class ConfigManager:
+    def __init__(self, env_prefix: str = "BETSY_"):
         self._config: Dict[str, Any] = {}
         self._env_prefix = env_prefix
         self._loaded = False
