@@ -415,7 +415,7 @@ betsy/
 │   ├── ✅ verify_imports.py               # Verifies that __init__ files are correct
 │   ├── setup.py                        # Setup script
 │   ├── backup.py                       # Database backup script
-│   ├── migrate.py                      # Database migration script
+│   ├── 🧪 migrate.py                      # Database migration script
 │   └── bootstrap.py                    # Environment bootstrap script
 │
 ├── 📄 tests/
@@ -452,10 +452,21 @@ betsy/
 │   │   │       ├── ✅ test_hooks.py
 │   │   │       └── ✅ test_manager.py
 │   │   │
-│   │   └── 📄 db/
-│   │       ├── 📄 __init__.py
-│   │       ├── ✅ test_connection.py
-│   │       └── 📄 test_migrations.py
+│   │   │── 📄 db/
+│   │   │   ├── 📄 __init__.py
+│   │   │   ├── ✅ test_connection.py
+│   │   │   │── ✅ test_migrations.py
+│   │   │   │
+│   │   │   │── 📄 models/
+│   │   │   │   │── 📄 __init__.py
+│   │   │   │   │── 📄 base.py
+│   │   │   │   │── 📄 command.py
+│   │   │   │   │── 📄 item.py
+│   │   │   │   │── 📄 inventory.py
+│   │   │   │   └── 📄 user.py
+│   │   │   │
+│   │   │   └── 📄 repositories/
+│   │   │       └── 📄 __init__.py
 │   │   │
 │   │   └── 📄 utils/
 │   │       ├── 📄 __init__.py
