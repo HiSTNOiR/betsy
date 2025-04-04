@@ -30,7 +30,7 @@ class HookDependency:
 
     def __init__(self, hook_name: str, hook_type: HookType = HookType.INITIALISE):
         """
-        Initialize a hook dependency.
+        Initialise a hook dependency.
 
         Args:
             hook_name (str): Name of the hook that is required.

@@ -236,7 +236,7 @@ def create_new_migration(migrations_dir: Union[str, Path], name: str) -> None:
 
 
 def init_database_connection(env_file: Optional[str] = None) -> None:
-    """Initialize the database connection."""
+    """Initialise the database connection."""
     try:
         # Load configuration
         config = get_config()
@@ -318,7 +318,7 @@ def main() -> None:
     # Create migrations directory if it doesn't exist
     os.makedirs(migrations_dir, exist_ok=True)
 
-    # Initialize database connection
+    # Initialise database connection
     init_database_connection(args.env)
 
     # Determine action based on arguments

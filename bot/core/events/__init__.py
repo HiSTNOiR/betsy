@@ -69,7 +69,7 @@ async def initialise_event_system(package_paths: list[str] = None) -> None:
 
     # Initialise the event registry
     registry = get_event_registry()
-    registry.initialize(package_paths)
+    registry.initialise(package_paths)
 
     # Register global handlers
     register_global_handlers()

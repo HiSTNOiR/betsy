@@ -78,7 +78,7 @@ class Event:
         data: Optional[Dict[str, Any]] = None
     ):
         """
-        Initialize the event.
+        Initialise the event.
 
         Args:
             type (EventType): Type of the event.
@@ -181,7 +181,7 @@ class CoreEvent(Event):
         data: Optional[Dict[str, Any]] = None
     ):
         """
-        Initialize the core event.
+        Initialise the core event.
 
         Args:
             type (CoreEventType): Type of the core event.
@@ -215,7 +215,7 @@ class ErrorEvent(CoreEvent):
         timestamp: Optional[float] = None
     ):
         """
-        Initialize the error event.
+        Initialise the error event.
 
         Args:
             source (Optional[str]): Source of the error.
@@ -239,7 +239,7 @@ class ErrorEvent(CoreEvent):
                 type(error), error, error.__traceback__
             ))
 
-        # Initialize as a core event with ERROR type
+        # Initialise as a core event with ERROR type
         super().__init__(CoreEventType.ERROR, source, timestamp, data)
 
         # Store the original exception for reference
@@ -329,7 +329,7 @@ class EventHandlerError(EventError):
 
     def __init__(self, handler: EventHandler, event: Event, original_error: Exception):
         """
-        Initialize the event handler error.
+        Initialise the event handler error.
 
         Args:
             handler (EventHandler): The handler that failed.
@@ -353,7 +353,7 @@ class EventFilterError(EventError):
 
     def __init__(self, filter: EventFilter, event: Event, original_error: Exception):
         """
-        Initialize the event filter error.
+        Initialise the event filter error.
 
         Args:
             filter (EventFilter): The filter that failed.

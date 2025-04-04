@@ -50,7 +50,7 @@ class Database:
 
     def __init__(self, db_path: Union[str, Path]):
         """
-        Initialize the database manager.
+        Initialise the database manager.
 
         Args:
             db_path (Union[str, Path]): Path to the SQLite database file.

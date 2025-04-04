@@ -189,7 +189,7 @@ def add_file_handler(
                 delay=True  # Open file on first log write; prevents open file during tests
             )
         else:
-            # The when parameter is normalized to uppercase internally by TimedRotatingFileHandler
+            # The when parameter is normalised to uppercase internally by TimedRotatingFileHandler
             # but the test expects to see the lowercase value, so we need to assign the lowercase version
             file_handler = logging.handlers.TimedRotatingFileHandler(
                 log_file,
@@ -342,7 +342,7 @@ class LoggerAdapter(logging.LoggerAdapter):
 
     def __init__(self, logger: logging.Logger, extra: Optional[Dict] = None):
         """
-        Initialize the adapter.
+        Initialise the adapter.
 
         Args:
             logger (logging.Logger): Logger to adapt.

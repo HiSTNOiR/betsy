@@ -25,7 +25,7 @@
 ### Weighted Stats + Durability + Underdog Bonus
 
 -   Weighted Stats = Base calc + Environment
-    -   Base calculation: (Weapon Level + Weapon Mods + Armor Level + Armor Mods) × Random Factor
+    -   Base calculation: (Weapon Level + Weapon Mods + amour Level + amour Mods) × Random Factor
     -   Environmental Boons/Busts: as per [Environmental Combat Effects](#environmental-combat-effects)
 -   Durability = Weapon durability + Armour durability
 -   Underdog Bonus = if the XP gap between the players is very large, there's a greater chance for an underdog victory
@@ -69,7 +69,7 @@ ENVIRONMENT_PENALTY_MULTIPLIER = 0.8
 
 | Effect Type | Boon for...                                       | Bust for...                                               |
 | ----------- | ------------------------------------------------- | --------------------------------------------------------- |
-| Armour      | Silvered Mail, Padding + any armor, Phoenix Guard | Tattered Cloth, Shadow Plate                              |
+| Armour      | Silvered Mail, Padding + any amour, Phoenix Guard | Tattered Cloth, Shadow Plate                              |
 | Armour Mods | White Dye, Blue Dye, Padding (for insulation)     | Red Dye, Yellow Dye, Polish (reflects & reveals position) |
 | Weapons     | Old Warhammer, Ironclad Mace, Battleworn Axe      | Serpent's Fang, Chipped Scimitar                          |
 | Weapon Mods | Leather Grip, Oiled, Cleaning Kit                 | Poison Vial (freezes/less effective)                      |

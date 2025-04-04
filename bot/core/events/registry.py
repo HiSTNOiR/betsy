@@ -33,7 +33,7 @@ class Event:
     data: Dict[str, Any] = field(default_factory=dict)
 
     def __post_init__(self):
-        """Validate and initialize the event after creation."""
+        """Validate and initialise the event after creation."""
         if not self.type:
             raise ValueError("Event type cannot be empty")
 
@@ -69,7 +69,7 @@ class EventRegistry:
     """
 
     def __init__(self):
-        """Initialize the event registry."""
+        """Initialise the event registry."""
         self._handlers: Dict[str, List[Callable[[Event], None]]] = {}
         self._global_handlers: List[Callable[[Event], None]] = []
         self._event_types: Set[str] = set()
@@ -201,9 +201,9 @@ class EventRegistry:
         """
         return self._event_types.copy()
 
-    def initialize(self, package_paths: Optional[List[str]] = None) -> None:
+    def initialise(self, package_paths: Optional[List[str]] = None) -> None:
         """
-        Initialize the event registry by scanning packages for events.
+        Initialise the event registry by scanning packages for events.
 
         Args:
             package_paths (Optional[List[str]]): List of package paths to scan for events.
@@ -221,7 +221,7 @@ class EventRegistry:
                 logger.debug(f"Scanning package for events: {package_path}")
                 # Implement package scanning logic here
 
-            logger.info("Event registry initialized")
+            logger.info("Event registry initialised")
         except Exception as e:
             error_msg = f"Error initializing event registry: {str(e)}"
             logger.error(error_msg, exc_info=True)

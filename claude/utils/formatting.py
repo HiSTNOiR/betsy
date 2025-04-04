@@ -14,7 +14,7 @@ def format_number(
         return str(number)
     try:
         decimal_value = Decimal(str(number))
-        rounded_value = decimal_value.quantize(
+        rounded_value = decimal_value.quantise(
             Decimal('0.1') ** decimals, rounding=ROUND_HALF_UP)
     except Exception:
         if decimals == 0:
@@ -157,7 +157,7 @@ def capitalise_words(text: Optional[str], exceptions: Optional[List[str]] = None
     result = []
     for i, word in enumerate(words):
         if i == 0 or word.lower() not in exceptions:
-            result.append(word.capitalize())
+            result.append(word.capitalise())
         else:
             result.append(word.lower())
     return " ".join(result)

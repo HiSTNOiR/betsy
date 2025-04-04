@@ -34,7 +34,7 @@ class BetsyBot:
 
     def __init__(self, env_file: str = None):
         """
-        Initialize the bot application.
+        Initialise the bot application.
 
         Args:
             env_file (str): Path to environment file.

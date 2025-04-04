@@ -21,7 +21,7 @@ class BotError(Exception):
 
     def __init__(self, message: str, *args: Any):
         """
-        Initialize the error.
+        Initialise the error.
 
         Args:
             message (str): Error message.
@@ -91,7 +91,7 @@ class ErrorContext:
         traceback_info: Optional[str] = None
     ):
         """
-        Initialize the error context.
+        Initialise the error context.
 
         Args:
             error (Exception): The exception that was raised.
@@ -135,7 +135,7 @@ class ErrorHandler:
     """
 
     def __init__(self):
-        """Initialize the error handler."""
+        """Initialise the error handler."""
         # Dictionary mapping error types to handler functions
         self._handlers: Dict[Type[Exception],
                              List[Callable[[ErrorContext], None]]] = {}

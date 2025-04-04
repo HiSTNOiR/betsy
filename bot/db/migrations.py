@@ -68,7 +68,7 @@ class Migration:
 
     def __init__(self, db: Database):
         """
-        Initialize the migration.
+        Initialise the migration.
 
         Args:
             db (Database): Database connection.
@@ -112,7 +112,7 @@ class SQLMigration(Migration):
 
     def __init__(self, db: Database, up_sql: str, down_sql: Optional[str] = None):
         """
-        Initialize the SQL migration.
+        Initialise the SQL migration.
 
         Args:
             db (Database): Database connection.
@@ -219,7 +219,7 @@ class MigrationManager:
 
     def __init__(self, db: Database, migrations_dir: Union[str, Path], create_table: bool = True):
         """
-        Initialize the migration manager.
+        Initialise the migration manager.
 
         Args:
             db (Database): Database connection.
@@ -783,7 +783,7 @@ def initialise_migration_manager(
     db: Optional[Database] = None
 ) -> MigrationManager:
     """
-    Initialize the migration manager.
+    Initialise the migration manager.
 
     Args:
         migrations_dir (Optional[Union[str, Path]]): Directory containing migration files.
@@ -795,7 +795,7 @@ def initialise_migration_manager(
         MigrationManager: Migration manager instance.
 
     Raises:
-        MigrationError: If the migration manager cannot be initialized.
+        MigrationError: If the migration manager cannot be initialised.
     """
     try:
         # Use provided database or get default
@@ -845,7 +845,7 @@ def migrate_database(
     Raises:
         MigrationError: If migrations cannot be applied.
     """
-    # Initialize migration manager
+    # Initialise migration manager
     manager = initialise_migration_manager(migrations_dir, db)
 
     # Apply migrations
@@ -873,7 +873,7 @@ def rollback_database(
     Raises:
         MigrationError: If migrations cannot be rolled back.
     """
-    # Initialize migration manager
+    # Initialise migration manager
     manager = initialise_migration_manager(migrations_dir, db)
 
     # Roll back migrations
@@ -899,7 +899,7 @@ def get_database_version(
     Raises:
         MigrationError: If the database version cannot be determined.
     """
-    # Initialize migration manager
+    # Initialise migration manager
     manager = initialise_migration_manager(migrations_dir, db)
 
     # Get current version
@@ -931,7 +931,7 @@ def create_migration(
     Raises:
         MigrationError: If the migration cannot be created.
     """
-    # Initialize migration manager
+    # Initialise migration manager
     manager = initialise_migration_manager(migrations_dir, db)
 
     # Create migration

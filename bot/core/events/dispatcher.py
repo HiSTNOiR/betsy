@@ -31,7 +31,7 @@ class EventDispatcher:
     """
 
     def __init__(self):
-        """Initialize the event dispatcher."""
+        """Initialise the event dispatcher."""
         self._handlers: Dict[EventType, List[EventHandler]] = {}
         self._generic_handlers: List[EventHandler] = []
         self._filters: List[EventFilter] = []

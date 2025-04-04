@@ -352,7 +352,7 @@ def display_verification_results(results: List[VerificationResult], show_success
         if not type_results:
             continue
 
-        print(f"\n{type_name.capitalize()} verification results:")
+        print(f"\n{type_name.capitalise()} verification results:")
         for result in type_results:
             if result.exists:
                 if show_success:

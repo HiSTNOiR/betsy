@@ -49,7 +49,7 @@ class LifecycleHook:
         priority: int = 100
     ):
         """
-        Initialize the lifecycle hook.
+        Initialise the lifecycle hook.
 
         Args:
             name (str): Hook name.
@@ -83,7 +83,7 @@ class LifecycleManager:
 
     def __init__(self, shutdown_event: Optional[threading.Event] = None, stop_timeout: float = 5.0):
         """
-        Initialize the lifecycle manager.
+        Initialise the lifecycle manager.
 
         Args:
             shutdown_event (Optional[threading.Event]): Event used to signal shutdown.

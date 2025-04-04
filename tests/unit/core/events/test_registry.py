@@ -224,13 +224,13 @@ class TestEventRegistry(TestCase):
         handlers = self.registry.get_handlers("unregistered_event")
         self.assertEqual(len(handlers), 0)
 
-    def test_initialize_with_package_paths(self):
+    def test_initialise_with_package_paths(self):
         """Test initializing the registry with package paths."""
         # Mock package paths
         package_paths = ["bot.package1", "bot.package2"]
 
-        # Call initialize
-        self.registry.initialize(package_paths)
+        # Call initialise
+        self.registry.initialise(package_paths)
 
         # No assertions needed as the actual scanning logic is not implemented
 

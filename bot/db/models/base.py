@@ -65,7 +65,7 @@ class Field:
         validators: Optional[List[callable]] = None
     ):
         """
-        Initialize a field definition.
+        Initialise a field definition.
 
         Args:
             field_type (Type): Field data type.
@@ -137,7 +137,7 @@ class Relationship:
         back_populates: Optional[str] = None
     ):
         """
-        Initialize a relationship definition.
+        Initialise a relationship definition.
 
         Args:
             related_model (str): Name of the related model class.
@@ -231,12 +231,12 @@ class BaseModel(metaclass=ModelMeta):
 
     def __init__(self, **kwargs):
         """
-        Initialize a model instance.
+        Initialise a model instance.
 
         Args:
             **kwargs: Field values.
         """
-        # Initialize internal state
+        # Initialise internal state
         self._values = {}
         self._loaded_relationships = {}
         self._is_new = True

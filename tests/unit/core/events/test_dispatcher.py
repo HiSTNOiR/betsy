@@ -89,7 +89,7 @@ class AsyncTestCase(TestCase):
 
     def __init__(self, methodName='runTest'):
         """
-        Initialize the test case with a method name.
+        Initialise the test case with a method name.
 
         This ensures the dispatcher is created for each test method.
         """

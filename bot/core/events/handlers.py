@@ -24,7 +24,7 @@ class LoggingEventHandler(EventHandler):
 
     def __init__(self, level: int = logging.DEBUG):
         """
-        Initialize the logging event handler.
+        Initialise the logging event handler.
 
         Args:
             level (int): Log level to use.
@@ -74,7 +74,7 @@ class ErrorEventHandler(EventHandler):
     """
 
     def __init__(self):
-        """Initialize the error event handler."""
+        """Initialise the error event handler."""
         pass
 
     @property
@@ -149,7 +149,7 @@ class LifecycleEventHandler(EventHandler):
     """
 
     def __init__(self):
-        """Initialize the lifecycle event handler."""
+        """Initialise the lifecycle event handler."""
         self._lifecycle_states = {
             CoreEventType.INITIALISING,
             CoreEventType.INITIALISED,

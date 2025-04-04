@@ -102,7 +102,7 @@ class EventRegistry:
     def get_registered_types(self) -> Set[str]:
         return self._event_types.copy()
 
-    def initialize(self, package_paths: Optional[List[str]] = None) -> None:
+    def initialise(self, package_paths: Optional[List[str]] = None) -> None:
         try:
             if not package_paths:
                 logger.info(
@@ -110,7 +110,7 @@ class EventRegistry:
                 return
             for package_path in package_paths:
                 logger.debug(f"Scanning package for events: {package_path}")
-            logger.info("Event registry initialized")
+            logger.info("Event registry initialised")
         except Exception as e:
             error_msg = f"Error initializing event registry: {str(e)}"
             logger.error(error_msg, exc_info=True)
