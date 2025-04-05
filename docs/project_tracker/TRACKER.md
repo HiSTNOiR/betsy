@@ -14,7 +14,7 @@ betsy_bot/
 │   ├── 📄 app.py
 │   ├── ✅ config.py
 │   ├── 📄 event_bus.py       # Central publish-subscribe event system
-│   ├── 👉 errors.py
+│   ├── ✅ errors.py
 │   └── ✅ logging.py
 │
 ├── 📄 subscribers/           # Components that listen for events
@@ -100,7 +100,7 @@ betsy_bot/
 ├── 📄 tests/
 │   ├── 📄 __init____.py
 │   ├── ✅ test_config.py
-│   ├── 📄 test_errors.py
+│   ├── ✅ test_errors.py
 │   └── ✅ test_logging.py
 │
 ├── ✅ .env                   # Example environment variables
