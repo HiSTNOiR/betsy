@@ -19,6 +19,7 @@ class Configuration:
     }
     _boolean_keys: Set[str] = {
         'DB_ENABLED', 
+        'TWITCH_ENABLED', 
         'OBS_ENABLED', 
         'DISCORD_ENABLED'
     }

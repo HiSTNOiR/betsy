@@ -14,6 +14,7 @@ CLIENT_ID=id_here
 
 # Feature flags (true/false)
 DB_ENABLED=false
+TWITCH_ENABLED=false
 OBS_ENABLED=false
 DISCORD_ENABLED=false
 
