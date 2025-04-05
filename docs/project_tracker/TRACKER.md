@@ -100,6 +100,7 @@ betsy_bot/
 ├── 📄 tests/
 │   ├── 📄 __init____.py
 │   ├── ✅ test_config.py
+│   ├── 📄 test_errors.py
 │   └── ✅ test_logging.py
 │
 ├── ✅ .env                   # Example environment variables
