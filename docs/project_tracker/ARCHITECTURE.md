@@ -6,23 +6,27 @@ Betsy Bot is a modular, event-driven Twitch bot built on a publish-subscribe arc
 
 ## Core Principles
 
-### Pure Publish-Subscribe
+### 1. Pure Publish-Subscribe
 
 All components communicate exclusively through events.
 
-### Single Responsibility
+### 2. Single Responsibility
 
 Each component performs exactly one function.
 
-### Complete Decoupling
+### 3. Complete Decoupling
 
 Components have no direct dependencies on each other.
 
-### Extensibility
+### 4. Thread-Safe Processing
+
+Simultaneous connections to OBS, Twitch, Discord, YouTube, StreamElements, Spotify and any other platforms are handled appropriately.
+
+### 5. Extensibility
 
 New features can be added by creating new subscribers.
 
-### Testability
+### 6. Testability
 
 Components can be tested in isolation.
 
