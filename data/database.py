@@ -85,7 +85,7 @@ class Database(SafeSingleton):
                     conn = sqlite3.connect(
                         self.db_path, 
                         check_same_thread=False, 
-                        isolation_level=None,  # We'll manage transactions manually
+                        isolation_level=None,
                         timeout=30.0
                     )
                     conn.row_factory = sqlite3.Row
@@ -242,7 +242,6 @@ class Database(SafeSingleton):
                 except sqlite3.Error as e:
                     error_msg = f"Error rolling back transaction: {e}"
                     logger.error(error_msg)
-                    # Don't raise here, just log the error
     
     def close(self) -> None:
         if not self.enabled:

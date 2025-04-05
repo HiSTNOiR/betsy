@@ -21,7 +21,9 @@ betsy_bot/
 │   ├── 📄 __init__.py
 │   ├── ✅ bot.db
 │   ├── ✅ database.py
-│   └── ✅ database_manager.py
+│   ├── ✅ database_manager.py
+│   └── 📄 backups/
+│       └── 📄 __init__.py
 │
 ├── 📄 subscribers/           # Components that listen for events
 │   ├── 📄 __init__.py
