@@ -1,25 +1,31 @@
+"""
+Higher-level event-driven database management
+Adds publish/subscribe event system for database operations
+Wraps raw database operations with additional event publishing
+Provides event callbacks for database changes
+"""
+import threading
+
 from typing import Any, Dict, List, Optional, Tuple, Union, Callable
 
 from core.errors import DatabaseError, handle_error
 from core.logging import get_logger
+from core.config import config
 from data.database import get_db
+
+from utils.platform_connections import SafeSingleton
 
 logger = get_logger("db_manager")
 
-class DatabaseEventManager:
+class DatabaseEventManager(SafeSingleton):
     _instance = None
+    _lock = threading.Lock()
     _subscribers = {}
     
-    def __new__(cls, *args, **kwargs):
-        if cls._instance is None:
-            cls._instance = super(DatabaseEventManager, cls).__new__(cls)
-            cls._instance._initialised = False
-        return cls._instance
-    
-    def __init__(self):
-        if not getattr(self, '_initialised', False):
-            self.db = get_db()
-            self._initialised = True
+    def _safe_init(self):
+        self.db = get_db()
+        self.enabled = config.get_boolean('DB_ENABLED', True)
+        self._lock = threading.Lock()
     
     def subscribe(self, event_type: str, callback: Callable) -> None:
         if event_type not in self._subscribers:

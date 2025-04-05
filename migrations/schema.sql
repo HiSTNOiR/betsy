@@ -21,10 +21,12 @@ CREATE TABLE IF NOT EXISTS users (
     points_gifted INTEGER NOT NULL DEFAULT 0,
     date_added TEXT NOT NULL,
     last_seen TEXT,
-    weapon TEXT DEFAULT 'Rusty Dagger',
+    weapon_id INTEGER REFERENCES weapons(id) ON DELETE SET NULL,
     weapon_durability INTEGER DEFAULT 10 CHECK (weapon_durability >= 0 AND weapon_durability <= 10),
-    armour TEXT DEFAULT 'Tattered Cloth',
+    weapon_mod_id INTEGER REFERENCES weapon_mods(id) ON DELETE SET NULL,
+    armour_id INTEGER REFERENCES armour(id) ON DELETE SET NULL,
     armour_durability INTEGER DEFAULT 10 CHECK (armour_durability >= 0 AND armour_durability <= 10),
+    armour_mod_id INTEGER REFERENCES armour_mods(id) ON DELETE SET NULL,
     duel_wins INTEGER NOT NULL DEFAULT 0,
     duel_loses INTEGER NOT NULL DEFAULT 0
 );

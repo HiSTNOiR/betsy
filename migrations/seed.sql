@@ -318,6 +318,6 @@ VALUES
 ('buy', 'Purchase an item from the shop', 'Usage: !buy [item name]', 'viewer', 5, 0, datetime('now')),
 ('points', 'Check your points balance', '@{user} has {points} points.', 'viewer', 5, 0, datetime('now'));
 
--- Create an admin user for testing
-INSERT INTO users (twitch_user_id, twitch_username, rank, points, date_added, last_seen, weapon, weapon_durability, armour, armour_durability)
-VALUES ('admin123', 'BetsyAdmin', 'bot_admin', 100000, datetime('now'), datetime('now'), 'Rusty Dagger', 10, 'Tattered Cloth', 10);
+-- Create an admin user
+INSERT INTO users (twitch_user_id, twitch_username, rank, points, date_added, last_seen, weapon_id, weapon_durability, weapon_mod_id, armour_id, armour_durability, armour_mod_id)
+VALUES ('72001547', 'histnoir', 'bot_admin', 100000, datetime('now'), datetime('now'), 10, 10, NULL, 10, 10, NULL);

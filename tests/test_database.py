@@ -94,11 +94,17 @@ class TestDatabaseEventManager(unittest.TestCase):
         self.events_received.append(data)
     
     def test_event_subscription(self):
+        # Clean up any existing test data first
+        try:
+            self.db_manager.execute("DELETE FROM users WHERE twitch_user_id = ?", ["123456"])
+        except:
+            pass  # If the delete fails (e.g., user doesn't exist), continue
+        
         self.db_manager.subscribe("row_inserted", self.event_callback)
         self.db_manager.subscribe("row_updated", self.event_callback)
         self.db_manager.subscribe("database_changed", self.event_callback)
         
-        # Test INSERT event
+        # Test INSERT event (now with clean slate)
         self.db_manager.execute(
             "INSERT INTO users (twitch_user_id, twitch_username, date_added) VALUES (?, ?, datetime('now'))",
             ("123456", "test_user")

@@ -1,3 +1,10 @@
+"""
+Low-level SQLite connection management
+Thread-safe database connection handling
+Raw database operations (execute, commit, rollback)
+Singleton database connection
+"""
+
 import os
 import sqlite3
 import threading
@@ -9,9 +16,11 @@ from core.config import config
 from core.errors import DatabaseError, handle_error
 from core.logging import get_logger
 
+from utils.platform_connections import SafeSingleton
+
 logger = get_logger("database")
 
-class Database:
+class Database(SafeSingleton):
     _instance = None
     _lock = threading.Lock()
     _connections = {}
@@ -23,20 +32,21 @@ class Database:
                 cls._instance._initialised = False
             return cls._instance
     
-    def __init__(self):
-        if not getattr(self, '_initialised', False):
-            self.db_path = config.get_path('DB_PATH', 'data/db.db')
-            self.schema_path = config.get_path('SCHEMA_PATH', 'migrations/schema.sql')
-            self.seed_path = config.get_path('SEED_PATH', 'migrations/seed.sql')
-            self.enabled = config.get_boolean('DB_ENABLED', True)
-            self._initialised = True
-            
-            if self.enabled:
-                try:
-                    self._ensure_db_directory()
-                    self._init_database()
-                except Exception as e:
-                    handle_error(DatabaseError(f"Failed to initialise database: {e}"))
+    def _safe_init(self):
+        """
+        Thread-safe initialisation method for database configuration and setup.
+        """
+        self.db_path = config.get_path('DB_PATH', 'data/db.db')
+        self.schema_path = config.get_path('SCHEMA_PATH', 'migrations/schema.sql')
+        self.seed_path = config.get_path('SEED_PATH', 'migrations/seed.sql')
+        self.enabled = config.get_boolean('DB_ENABLED', True)
+        
+        if self.enabled:
+            try:
+                self._ensure_db_directory()
+                self._init_database()
+            except Exception as e:
+                handle_error(DatabaseError(f"Failed to initialise database: {e}"))
     
     def _ensure_db_directory(self):
         db_dir = os.path.dirname(self.db_path)
@@ -54,6 +64,7 @@ class Database:
         try:
             conn = self._get_connection()
             
+            # Create schema
             if os.path.exists(self.schema_path):
                 with open(self.schema_path, 'r') as f:
                     schema_sql = f.read()
@@ -66,11 +77,20 @@ class Database:
                     with open(self.seed_path, 'r') as f:
                         seed_sql = f.read()
                     
-                    conn.executescript(seed_sql)
-                    logger.info("Seed data applied successfully")
+                    # Add transaction to allow partial seeding
+                    try:
+                        conn.executescript(seed_sql)
+                        logger.info("Seed data applied successfully")
+                    except sqlite3.IntegrityError as e:
+                        conn.rollback()
+                        logger.warning(f"Some seed data already exists, skipping: {e}")
+                    except Exception as e:
+                        conn.rollback()
+                        logger.error(f"Error applying seed data: {e}")
+                        raise
             else:
                 raise DatabaseError(f"Schema file not found: {self.schema_path}")
-                
+                    
         except sqlite3.Error as e:
             raise DatabaseError(f"Error creating database: {e}")
     
@@ -87,7 +107,38 @@ class Database:
                 raise DatabaseError(f"Error connecting to database: {e}")
         
         return self._connections[thread_id]
-    
+
+    def safe_seed(db, table_name, unique_column, records):
+        """
+        Safely seeds a table by checking for existing records first.
+        
+        Args:
+            db: Database instance
+            table_name: Table to seed
+            unique_column: Column to check for uniqueness
+            records: List of record dictionaries to insert
+        """
+        for record in records:
+            # Skip if record with this unique value already exists
+            if unique_column in record:
+                existing = db.fetchone(
+                    f"SELECT 1 FROM {table_name} WHERE {unique_column} = ?", 
+                    (record[unique_column],)
+                )
+                if existing:
+                    continue
+                    
+            # Build dynamic INSERT statement based on record keys
+            columns = ", ".join(record.keys())
+            placeholders = ", ".join(["?" for _ in record])
+            query = f"INSERT INTO {table_name} ({columns}) VALUES ({placeholders})"
+            
+            try:
+                db.execute(query, list(record.values()))
+            except Exception as e:
+                # Log the error but continue with other records
+                logger.warning(f"Failed to insert record in {table_name}: {e}")
+
     def execute(self, query: str, params: Union[Dict[str, Any], List[Any], Tuple[Any, ...]] = None) -> sqlite3.Cursor:
         if not self.enabled:
             raise DatabaseError("Database operations are disabled")
@@ -97,6 +148,11 @@ class Database:
             if params is None:
                 return conn.execute(query)
             return conn.execute(query, params)
+        except sqlite3.IntegrityError as e:
+            # For integrity errors, log and reraise but with more context
+            error_msg = f"Integrity constraint failed: {e}"
+            logger.warning(error_msg)
+            raise DatabaseError(error_msg, {"query": query})
         except sqlite3.Error as e:
             raise DatabaseError(f"Error executing query: {e}")
     

@@ -61,8 +61,9 @@ betsy_bot/
 │
 ├── 📄 utils/                 # Stateless utility functions
 │   ├── 📄 __init__.py
-│   ├── 📄 text.py            # Text manipulation functions
-│   └── 📄 time.py            # Time-related functions
+│   ├── ✅ platform_connections.py  # Thread-safe singleton handling
+│   ├── 📄 text.py                  # Text manipulation functions
+│   └── 📄 time.py                  # Time-related functions
 │
 ├── 📄 web/                   # Web application components
 │   ├── 📄 __init__.py
@@ -101,7 +102,7 @@ betsy_bot/
 │
 ├── 📄 migrations/            # Database management
 │   ├── ✅ schema.sql         # Database schema
-│   └── 👉 seed.sql           # Initial data
+│   └── ✅ seed.sql           # Initial data
 │
 ├── 📄 tests/
 │   ├── 📄 __init____.py

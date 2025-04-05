@@ -39,8 +39,7 @@ This document outlines the recommended sequence of development phases for the Tw
    - Initialise the database using the `data/schema.sql`
    - Provide basic database operations
    - Include proper error handling and logging
-   - Following the publish-subscribe architecture
-3. 👉 Seed the database with initial data
+3. ✅ Seed the database with initial data
    - DOMT, duel environments, shop inventory
 
 ## Phase 2: Platform Connectivity
