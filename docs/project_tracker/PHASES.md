@@ -27,7 +27,7 @@ This document outlines the recommended sequence of development phases for the Tw
    - Custom exception hierarchy
    - Error reporting mechanisms
 
-## 👉 Phase 1: Database Foundation
+## ✅ Phase 1: Database Foundation
 
 **Goal**: Establish database connectivity, schema, and core data operations.
 
@@ -42,12 +42,12 @@ This document outlines the recommended sequence of development phases for the Tw
 3. ✅ Seed the database with initial data
    - DOMT, duel environments, shop inventory
 
-## Phase 2: Platform Connectivity
+## 👉 Phase 2: Platform Connectivity
 
 **Goal**: Establish connections to Twitch and OBS.
 
 ### Tasks:
-1. Implement Twitch connectivity
+1. 👉 Implement Twitch connectivity
    - Authentication
    - Chat connection
    - Event handling (bits, rewards, commands, points etc.)
