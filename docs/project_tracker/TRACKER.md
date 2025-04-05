@@ -1,10 +1,12 @@
 # PROJECT STRUCTURE
 
+> 🤖 created by the bot
 > ✅ finalised  
 > 🧪 needs testing  
 > 🛑 needs fixing  
 > 👉 i am here  
 > 📄 created
+> 🧠 contemplating if this is needed
 
 ```md
 betsy_bot/
@@ -15,53 +17,69 @@ betsy_bot/
 │   ├── ✅ errors.py
 │   └── ✅ logging.py
 │
-├── 📄 data/
+├── 📄 db/
 │   ├── 📄 __init__.py
-│   ├── ✅ bot.db
+│   ├── 🤖 bot.db
 │   ├── ✅ database.py
-│   ├── ✅ database_manager.py
-│   └── 📄 backups/
+│   │── 📄 backups/
+│   │   └── 📄 __init__.py
+│   └── 📄 migrations/
+│       ├── ✅ schema.sql
+│       └── ✅ seed.sql
+│
+├── 📄 docs/
+│
+├── 📄 event_bus/           # Event distribution 👉 THE CORE OF THE BOT
+│   ├── 📄 __init__.py
+│   ├── 📄 bus.py           # Main bus
+│   └── 📄 registry.py      # Subscription registry
+│
+├── 📄 events/              # Event definitions
+│   ├── 📄 __init__.py
+│   ├── 📄 base.py
+│   ├── 📄 obs.py           # e.g. a source is disabled either manually by the streamer, or through an obs_action sequence
+│   ├── 📄 twitch.py        # i.e. channel reward redemption, cheers/bits, subscriptions, raids, hosts, gifted subs, !commands
+│   └── 📄 user.py          # Tracks user stuff that isn't platform-specific
+│
+├── 📄 kivy/
+│   ├── 📄 __init__.py
+│   ├── 📄 screens/
+│   │   └── 📄 __init__.py
+│   ├── 📄 widgets/
+│   │   └── 📄 __init__.py
+│   └── 📄 utils/
 │       └── 📄 __init__.py
-│
-├── 📄 subscribers/           # Components that listen for events
-│   └── 📄 __init__.py
-│
-├── 📄 publishers/            # Components that create events
-│   └── 📄 __init__.py
-│
-├── 📄 processors/            # Components that transform events
-│   └── 📄 __init__.py
 │
 ├── 📄 logs/
 │
-├── 📄 models/                # Data models used by events
-│   └── 📄 __init__.py
-│
-├── 📄 utils/                 # Stateless utility functions
+├── 📄 models/              # Db models used by events
 │   ├── 📄 __init__.py
-│   └── ✅ platform_connections.py  # Thread-safe singleton handling
+│   ├── 📄 user.py
+│   ├── 📄 command.py
+│   └── 📄 message.py
 │
-├── 📄 web/                   # Web application components
+├── 📄 plugins/              # Extends the base functionality
 │   ├── 📄 __init__.py
-│   ├── 📄 routes/            # Route handlers
-│   │   └── 📄 __init__.py
-│   └── 📄 static/            # Frontend assets
-│       ├── 📄 js/            # JavaScript files
-│       ├── 📄 css/           # CSS files
-│       └── 📄 templates/     # HTML templates
+│   ├── 🧠 base.py
+│   └── 🧠 registry.py      # e.g. DOMT, duel system, shop system
 │
-├── 📄 kivy_app/              # Kivy application components
+├── 📄 processors/            # Transform events
 │   ├── 📄 __init__.py
-│   ├── 📄 screens/           # Screen components
-│   │   └── 📄 __init__.py
-│   ├── 📄 widgets/           # Reusable widgets
-│   │   └── 📄 __init__.py
-│   └── 📄 utils/             # Kivy-specific utilities
-│       └── 📄 __init__.py
+│   ├── 📄 base.py
+│   ├── 📄 command_parser.py
+│   └── 📄 sanitiser.py
 │
-├── 📄 migrations/            # Database management
-│   ├── ✅ schema.sql         # Database schema
-│   └── ✅ seed.sql           # Initial data
+├── 📄 publishers/            # Generate events
+│   ├── 📄 __init__.py
+│   ├── 📄 base.py
+│   ├── 📄 obs_reader.py
+│   └── 📄 twitch_reader.py
+│
+├── 📄 subscribers/         # React to events
+│   ├── 📄 __init__.py
+│   ├── 📄 base.py
+│   ├── 📄 obs_controller.py
+│   └── 📄 twitch_sender.py     # Sends messages to Twitch
 │
 ├── 📄 tests/
 │   ├── 📄 __init____.py
@@ -70,7 +88,29 @@ betsy_bot/
 │   ├── ✅ test_errors.py
 │   └── ✅ test_logging.py
 │
-├── ✅ .env                   # Example environment variables
-├── ✅ requirements.txt       # Dependencies
-└── 📄 main.py                # Entry point
+├── 📄 utils/ 
+│   ├── 📄 __init__.py
+│   ├── 📄 threadpool.py
+│   ├── 📄 locks.py
+│   └── ✅ platform_connections.py  # Thread-safe singleton handling
+│
+├── 📄 venv/
+│
+├── 📄 web/                   # Web application components
+│   ├── 📄 __init__.py
+│   ├── 📄 routes/ 
+│   │   └── 📄 __init__.py
+│   └── 📄 static/
+│       ├── 📄 js/ 
+│       ├── 📄 css/
+│       └── 📄 templates/
+│
+├── ✅ .env
+├── ✅ .gitignore
+├── ✅ .prettierrc
+├── ✅ CHANGELOG.md           # TODO update once app is released
+├── ✅ LICENSE                # MIT Licence
+├── 📄 main.py                # Entry point
+├── ✅ README.md
+└── ✅ requirements.txt
 ```
