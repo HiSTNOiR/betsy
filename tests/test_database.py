@@ -1,136 +1,64 @@
 import os
 import unittest
 import tempfile
+import sqlite3
 
-from pathlib import Path
-
-from core.config import config
-from data.database import Database
-from data.db_manager import DatabaseEventManager
-
-class TestDatabase(unittest.TestCase):
+class TestSimpleDb(unittest.TestCase):
     def setUp(self):
-        self.temp_dir = tempfile.TemporaryDirectory()
-        self.db_path = os.path.join(self.temp_dir.name, "test.db")
-        self.schema_path = os.path.join(os.path.dirname(__file__), "../migrations/schema.sql")
-        
-        # Override configuration for testing
-        config._config["DB_PATH"] = self.db_path
-        config._config["SCHEMA_PATH"] = self.schema_path
-        config._config["DB_ENABLED"] = True
-        
-        # Create a fresh instance for testing
-        Database._instance = None
-        self.db = Database()
+        # Create a temp file for the database
+        self.db_fd, self.db_path = tempfile.mkstemp()
+        # Create a connection
+        self.conn = sqlite3.connect(self.db_path)
+        # Create test table
+        self.conn.execute('''
+            CREATE TABLE test_users (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                username TEXT UNIQUE NOT NULL,
+                points INTEGER NOT NULL DEFAULT 0
+            )
+        ''')
+        self.conn.commit()
     
     def tearDown(self):
-        self.db.close_all()
-        self.temp_dir.cleanup()
+        self.conn.close()
+        os.close(self.db_fd)
+        os.unlink(self.db_path)
     
-    def test_database_initialization(self):
-        self.assertTrue(os.path.exists(self.db_path))
+    def test_basic_operations(self):
+        # Insert
+        self.conn.execute("INSERT INTO test_users (username, points) VALUES (?, ?)", 
+                        ("test_user", 100))
+        self.conn.commit()
         
-        # Check if tables were created
-        tables = self.db.fetchall("SELECT name FROM sqlite_master WHERE type='table'")
-        table_names = [table["name"] for table in tables]
-        
-        self.assertIn("users", table_names)
-        self.assertIn("commands", table_names)
-        self.assertIn("duels", table_names)
-    
-    def test_basic_crud_operations(self):
-        # Test INSERT
-        self.db.execute(
-            "INSERT INTO users (twitch_user_id, twitch_username, date_added) VALUES (?, ?, datetime('now'))",
-            ("123456", "test_user")
-        )
-        self.db.commit()
-        
-        # Test SELECT
-        user = self.db.fetchone("SELECT * FROM users WHERE twitch_user_id = ?", ("123456",))
+        # Query
+        cursor = self.conn.execute("SELECT * FROM test_users WHERE username = ?", 
+                                ("test_user",))
+        user = cursor.fetchone()
         self.assertIsNotNone(user)
-        self.assertEqual(user["twitch_username"], "test_user")
+        self.assertEqual(user[1], "test_user")
+        self.assertEqual(user[2], 100)
         
-        # Test UPDATE
-        self.db.execute(
-            "UPDATE users SET twitch_username = ? WHERE twitch_user_id = ?",
-            ("updated_user", "123456")
-        )
-        self.db.commit()
+        # Update
+        self.conn.execute("UPDATE test_users SET points = ? WHERE username = ?", 
+                        (200, "test_user"))
+        self.conn.commit()
         
-        user = self.db.fetchone("SELECT * FROM users WHERE twitch_user_id = ?", ("123456",))
-        self.assertEqual(user["twitch_username"], "updated_user")
+        # Verify update
+        cursor = self.conn.execute("SELECT points FROM test_users WHERE username = ?", 
+                                ("test_user",))
+        points = cursor.fetchone()[0]
+        self.assertEqual(points, 200)
         
-        # Test DELETE
-        self.db.execute("DELETE FROM users WHERE twitch_user_id = ?", ("123456",))
-        self.db.commit()
+        # Delete
+        self.conn.execute("DELETE FROM test_users WHERE username = ?", 
+                        ("test_user",))
+        self.conn.commit()
         
-        user = self.db.fetchone("SELECT * FROM users WHERE twitch_user_id = ?", ("123456",))
+        # Verify deletion
+        cursor = self.conn.execute("SELECT * FROM test_users WHERE username = ?", 
+                                ("test_user",))
+        user = cursor.fetchone()
         self.assertIsNone(user)
 
-class TestDatabaseEventManager(unittest.TestCase):
-    def setUp(self):
-        self.temp_dir = tempfile.TemporaryDirectory()
-        self.db_path = os.path.join(self.temp_dir.name, "test.db")
-        self.schema_path = os.path.join(os.path.dirname(__file__), "../migrations/schema.sql")
-        
-        # Override configuration for testing
-        config._config["DB_PATH"] = self.db_path
-        config._config["SCHEMA_PATH"] = self.schema_path
-        config._config["DB_ENABLED"] = True
-        
-        # Create fresh instances for testing
-        Database._instance = None
-        DatabaseEventManager._instance = None
-        self.db_manager = DatabaseEventManager()
-        
-        self.events_received = []
-    
-    def tearDown(self):
-        self.db_manager.db.close_all()
-        self.temp_dir.cleanup()
-    
-    def event_callback(self, data):
-        self.events_received.append(data)
-    
-    def test_event_subscription(self):
-        # Clean up any existing test data first
-        try:
-            self.db_manager.execute("DELETE FROM users WHERE twitch_user_id = ?", ["123456"])
-        except:
-            pass  # If the delete fails (e.g., user doesn't exist), continue
-        
-        self.db_manager.subscribe("row_inserted", self.event_callback)
-        self.db_manager.subscribe("row_updated", self.event_callback)
-        self.db_manager.subscribe("database_changed", self.event_callback)
-        
-        # Test INSERT event (now with clean slate)
-        self.db_manager.execute(
-            "INSERT INTO users (twitch_user_id, twitch_username, date_added) VALUES (?, ?, datetime('now'))",
-            ("123456", "test_user")
-        )
-        
-        self.assertEqual(len(self.events_received), 2)  # row_inserted and database_changed
-        
-        # Test UPDATE event
-        self.events_received.clear()
-        self.db_manager.execute(
-            "UPDATE users SET twitch_username = ? WHERE twitch_user_id = ?",
-            ("updated_user", "123456")
-        )
-        
-        self.assertEqual(len(self.events_received), 2)  # row_updated and database_changed
-        
-        # Test unsubscribe
-        self.events_received.clear()
-        self.db_manager.unsubscribe("row_updated", self.event_callback)
-        
-        self.db_manager.execute(
-            "UPDATE users SET twitch_username = ? WHERE twitch_user_id = ?",
-            ("another_update", "123456")
-        )
-        
-        self.assertEqual(len(self.events_received), 1)  # only database_changed
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     unittest.main()

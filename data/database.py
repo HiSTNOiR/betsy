@@ -1,45 +1,24 @@
-"""
-Low-level SQLite connection management
-Thread-safe database connection handling
-Raw database operations (execute, commit, rollback)
-Singleton database connection
-"""
-
 import os
 import sqlite3
 import threading
-
 from pathlib import Path
 from typing import Optional, Dict, Any, List, Tuple, Union
 
-from core.config import config
-from core.errors import DatabaseError, handle_error
-from core.logging import get_logger
-
 from utils.platform_connections import SafeSingleton
+from core.config import config
+from core.logging import get_logger
+from core.errors import DatabaseError, handle_error
 
 logger = get_logger("database")
 
 class Database(SafeSingleton):
-    _instance = None
-    _lock = threading.Lock()
-    _connections = {}
-    
-    def __new__(cls, *args, **kwargs):
-        with cls._lock:
-            if cls._instance is None:
-                cls._instance = super(Database, cls).__new__(cls)
-                cls._instance._initialised = False
-            return cls._instance
-    
     def _safe_init(self):
-        """
-        Thread-safe initialisation method for database configuration and setup.
-        """
         self.db_path = config.get_path('DB_PATH', 'data/db.db')
         self.schema_path = config.get_path('SCHEMA_PATH', 'migrations/schema.sql')
         self.seed_path = config.get_path('SEED_PATH', 'migrations/seed.sql')
         self.enabled = config.get_boolean('DB_ENABLED', True)
+        self.connection_pool = {}
+        self.connection_pool_lock = threading.Lock()
         
         if self.enabled:
             try:
@@ -61,67 +40,80 @@ class Database(SafeSingleton):
             logger.info(f"Database already exists at {self.db_path}")
     
     def _create_database(self):
+        if not os.path.exists(self.schema_path):
+            error_msg = f"Schema file not found: {self.schema_path}"
+            logger.error(error_msg)
+            raise DatabaseError(error_msg)
+            
         try:
             conn = self._get_connection()
             
             # Create schema
-            if os.path.exists(self.schema_path):
-                with open(self.schema_path, 'r') as f:
-                    schema_sql = f.read()
-                    
-                conn.executescript(schema_sql)
-                logger.info("Database schema created successfully")
+            with open(self.schema_path, 'r') as f:
+                schema_sql = f.read()
                 
-                # Apply seed data if available
-                if os.path.exists(self.seed_path):
-                    with open(self.seed_path, 'r') as f:
-                        seed_sql = f.read()
-                    
-                    # Add transaction to allow partial seeding
-                    try:
-                        conn.executescript(seed_sql)
-                        logger.info("Seed data applied successfully")
-                    except sqlite3.IntegrityError as e:
-                        conn.rollback()
-                        logger.warning(f"Some seed data already exists, skipping: {e}")
-                    except Exception as e:
-                        conn.rollback()
-                        logger.error(f"Error applying seed data: {e}")
-                        raise
-            else:
-                raise DatabaseError(f"Schema file not found: {self.schema_path}")
+            conn.executescript(schema_sql)
+            logger.info("Database schema created successfully")
+            
+            # Apply seed data if available
+            if os.path.exists(self.seed_path):
+                with open(self.seed_path, 'r') as f:
+                    seed_sql = f.read()
+                
+                try:
+                    conn.executescript(seed_sql)
+                    logger.info("Seed data applied successfully")
+                except sqlite3.IntegrityError as e:
+                    conn.rollback()
+                    logger.warning(f"Some seed data already exists, skipping: {e}")
+                except Exception as e:
+                    conn.rollback()
+                    logger.error(f"Error applying seed data: {e}")
+                    raise
                     
         except sqlite3.Error as e:
-            raise DatabaseError(f"Error creating database: {e}")
+            error_msg = f"Error creating database: {e}"
+            logger.error(error_msg)
+            raise DatabaseError(error_msg)
     
     def _get_connection(self) -> sqlite3.Connection:
         thread_id = threading.get_ident()
         
-        if thread_id not in self._connections:
-            try:
-                conn = sqlite3.connect(self.db_path, check_same_thread=False)
-                conn.row_factory = sqlite3.Row
-                self._connections[thread_id] = conn
-                logger.debug(f"Created new database connection for thread {thread_id}")
-            except sqlite3.Error as e:
-                raise DatabaseError(f"Error connecting to database: {e}")
+        with self.connection_pool_lock:
+            if thread_id not in self.connection_pool:
+                try:
+                    conn = sqlite3.connect(
+                        self.db_path, 
+                        check_same_thread=False, 
+                        isolation_level=None,  # We'll manage transactions manually
+                        timeout=30.0
+                    )
+                    conn.row_factory = sqlite3.Row
+                    
+                    # Enable foreign keys
+                    conn.execute("PRAGMA foreign_keys = ON")
+                    
+                    self.connection_pool[thread_id] = {
+                        "connection": conn,
+                        "lock": threading.Lock(),
+                        "in_transaction": False
+                    }
+                    logger.debug(f"Created new database connection for thread {thread_id}")
+                except sqlite3.Error as e:
+                    error_msg = f"Error connecting to database: {e}"
+                    logger.error(error_msg)
+                    raise DatabaseError(error_msg)
         
-        return self._connections[thread_id]
-
-    def safe_seed(db, table_name, unique_column, records):
-        """
-        Safely seeds a table by checking for existing records first.
-        
-        Args:
-            db: Database instance
-            table_name: Table to seed
-            unique_column: Column to check for uniqueness
-            records: List of record dictionaries to insert
-        """
+        return self.connection_pool[thread_id]["connection"]
+    
+    def safe_seed(self, table_name, unique_column, records):
+        if not self.enabled:
+            raise DatabaseError("Database operations are disabled")
+            
         for record in records:
             # Skip if record with this unique value already exists
             if unique_column in record:
-                existing = db.fetchone(
+                existing = self.fetchone(
                     f"SELECT 1 FROM {table_name} WHERE {unique_column} = ?", 
                     (record[unique_column],)
                 )
@@ -134,7 +126,7 @@ class Database(SafeSingleton):
             query = f"INSERT INTO {table_name} ({columns}) VALUES ({placeholders})"
             
             try:
-                db.execute(query, list(record.values()))
+                self.execute(query, list(record.values()))
             except Exception as e:
                 # Log the error but continue with other records
                 logger.warning(f"Failed to insert record in {table_name}: {e}")
@@ -144,27 +136,51 @@ class Database(SafeSingleton):
             raise DatabaseError("Database operations are disabled")
             
         try:
-            conn = self._get_connection()
-            if params is None:
-                return conn.execute(query)
-            return conn.execute(query, params)
+            thread_id = threading.get_ident()
+            conn_info = self.connection_pool.get(thread_id)
+            
+            if not conn_info:
+                conn_info = self.connection_pool[thread_id] = {
+                    "connection": self._get_connection(),
+                    "lock": threading.Lock(),
+                    "in_transaction": False
+                }
+            
+            with conn_info["lock"]:
+                if params is None:
+                    return conn_info["connection"].execute(query)
+                return conn_info["connection"].execute(query, params)
         except sqlite3.IntegrityError as e:
             # For integrity errors, log and reraise but with more context
             error_msg = f"Integrity constraint failed: {e}"
             logger.warning(error_msg)
             raise DatabaseError(error_msg, {"query": query})
         except sqlite3.Error as e:
-            raise DatabaseError(f"Error executing query: {e}")
+            error_msg = f"Error executing query: {e}"
+            logger.error(error_msg)
+            raise DatabaseError(error_msg)
     
     def execute_many(self, query: str, params_list: List[Union[Dict[str, Any], List[Any], Tuple[Any, ...]]]) -> sqlite3.Cursor:
         if not self.enabled:
             raise DatabaseError("Database operations are disabled")
             
         try:
-            conn = self._get_connection()
-            return conn.executemany(query, params_list)
+            thread_id = threading.get_ident()
+            conn_info = self.connection_pool.get(thread_id)
+            
+            if not conn_info:
+                conn_info = self.connection_pool[thread_id] = {
+                    "connection": self._get_connection(),
+                    "lock": threading.Lock(),
+                    "in_transaction": False
+                }
+            
+            with conn_info["lock"]:
+                return conn_info["connection"].executemany(query, params_list)
         except sqlite3.Error as e:
-            raise DatabaseError(f"Error executing batch query: {e}")
+            error_msg = f"Error executing batch query: {e}"
+            logger.error(error_msg)
+            raise DatabaseError(error_msg)
     
     def fetchone(self, query: str, params: Union[Dict[str, Any], List[Any], Tuple[Any, ...]] = None) -> Optional[Dict[str, Any]]:
         cursor = self.execute(query, params)
@@ -175,61 +191,90 @@ class Database(SafeSingleton):
         cursor = self.execute(query, params)
         return [dict(row) for row in cursor.fetchall()]
     
+    def begin_transaction(self) -> None:
+        if not self.enabled:
+            raise DatabaseError("Database operations are disabled")
+            
+        thread_id = threading.get_ident()
+        conn_info = self.connection_pool.get(thread_id)
+        
+        if not conn_info:
+            conn_info = self.connection_pool[thread_id] = {
+                "connection": self._get_connection(),
+                "lock": threading.Lock(),
+                "in_transaction": False
+            }
+        
+        with conn_info["lock"]:
+            if not conn_info["in_transaction"]:
+                self.execute("BEGIN TRANSACTION")
+                conn_info["in_transaction"] = True
+    
     def commit(self) -> None:
         if not self.enabled:
             return
             
-        try:
-            thread_id = threading.get_ident()
-            if thread_id in self._connections:
-                self._connections[thread_id].commit()
-        except sqlite3.Error as e:
-            raise DatabaseError(f"Error committing transaction: {e}")
+        thread_id = threading.get_ident()
+        conn_info = self.connection_pool.get(thread_id)
+        
+        if conn_info and conn_info["in_transaction"]:
+            with conn_info["lock"]:
+                try:
+                    conn_info["connection"].execute("COMMIT")
+                    conn_info["in_transaction"] = False
+                except sqlite3.Error as e:
+                    error_msg = f"Error committing transaction: {e}"
+                    logger.error(error_msg)
+                    raise DatabaseError(error_msg)
     
     def rollback(self) -> None:
         if not self.enabled:
             return
             
-        try:
-            thread_id = threading.get_ident()
-            if thread_id in self._connections:
-                self._connections[thread_id].rollback()
-        except sqlite3.Error as e:
-            raise DatabaseError(f"Error rolling back transaction: {e}")
-    
-    def begin_transaction(self) -> None:
-        if not self.enabled:
-            raise DatabaseError("Database operations are disabled")
-            
-        try:
-            self.execute("BEGIN TRANSACTION")
-        except sqlite3.Error as e:
-            raise DatabaseError(f"Error beginning transaction: {e}")
+        thread_id = threading.get_ident()
+        conn_info = self.connection_pool.get(thread_id)
+        
+        if conn_info and conn_info["in_transaction"]:
+            with conn_info["lock"]:
+                try:
+                    conn_info["connection"].execute("ROLLBACK")
+                    conn_info["in_transaction"] = False
+                except sqlite3.Error as e:
+                    error_msg = f"Error rolling back transaction: {e}"
+                    logger.error(error_msg)
+                    # Don't raise here, just log the error
     
     def close(self) -> None:
         if not self.enabled:
             return
             
         thread_id = threading.get_ident()
-        if thread_id in self._connections:
-            try:
-                self._connections[thread_id].close()
-                del self._connections[thread_id]
-                logger.debug(f"Closed database connection for thread {thread_id}")
-            except sqlite3.Error as e:
-                logger.error(f"Error closing database connection: {e}")
+        with self.connection_pool_lock:
+            if thread_id in self.connection_pool:
+                try:
+                    conn_info = self.connection_pool[thread_id]
+                    if conn_info["in_transaction"]:
+                        conn_info["connection"].execute("ROLLBACK")
+                    conn_info["connection"].close()
+                    del self.connection_pool[thread_id]
+                    logger.debug(f"Closed database connection for thread {thread_id}")
+                except sqlite3.Error as e:
+                    logger.error(f"Error closing database connection: {e}")
     
     def close_all(self) -> None:
         if not self.enabled:
             return
             
-        for thread_id, conn in list(self._connections.items()):
-            try:
-                conn.close()
-                del self._connections[thread_id]
-                logger.debug(f"Closed database connection for thread {thread_id}")
-            except sqlite3.Error as e:
-                logger.error(f"Error closing database connection for thread {thread_id}: {e}")
+        with self.connection_pool_lock:
+            for thread_id, conn_info in list(self.connection_pool.items()):
+                try:
+                    if conn_info["in_transaction"]:
+                        conn_info["connection"].execute("ROLLBACK")
+                    conn_info["connection"].close()
+                    logger.debug(f"Closed database connection for thread {thread_id}")
+                except sqlite3.Error as e:
+                    logger.error(f"Error closing database connection for thread {thread_id}: {e}")
+            self.connection_pool.clear()
     
     def get_last_inserted_id(self) -> int:
         if not self.enabled:
@@ -261,7 +306,7 @@ class Database(SafeSingleton):
             backup_path = os.path.join(backup_dir, f"db_backup_{timestamp}.db")
         
         try:
-            # Close all connections first
+            # Close all connections first to ensure a clean backup
             self.close_all()
             
             # Copy the database file
@@ -270,7 +315,9 @@ class Database(SafeSingleton):
             
             return backup_path
         except Exception as e:
-            raise DatabaseError(f"Error backing up database: {e}")
+            error_msg = f"Error backing up database: {e}"
+            logger.error(error_msg)
+            raise DatabaseError(error_msg)
 
 # Singleton instance
 db = Database()
