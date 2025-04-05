@@ -11,11 +11,11 @@ betsy_bot/
 │
 ├── 📄 core/
 │   ├── 📄 __init__.py
-│   ├── 📄 app.py             # Application bootstrapping
-│   ├── 👉 config.py          # Configuration management
+│   ├── 📄 app.py
+│   ├── ✅ config.py
 │   ├── 📄 event_bus.py       # Central publish-subscribe event system
-│   ├── 📄 errors.py          # Error handling
-│   └── 📄 logging.py
+│   ├── 👉 errors.py
+│   └── ✅ logging.py
 │
 ├── 📄 subscribers/           # Components that listen for events
 │   ├── 📄 __init__.py
@@ -42,6 +42,8 @@ betsy_bot/
 │   ├── 📄 validator.py       # Validates and transforms data
 │   ├── 📄 formatter.py       # Formats output messages
 │   └── 📄 command_parser.py  # Parses raw messages into command events
+│
+├── 📄 logs/
 │
 ├── 📄 models/                # Data models used by events
 │   ├── 📄 __init__.py
@@ -94,6 +96,11 @@ betsy_bot/
 ├── 📄 migrations/            # Database management
 │   ├── ✅ schema.sql         # Database schema
 │   └── 📄 seed.sql           # Initial data
+│
+├── 📄 tests/
+│   ├── 📄 __init____.py
+│   ├── ✅ test_config.py
+│   └── ✅ test_logging.py
 │
 ├── ✅ .env                   # Example environment variables
 ├── ✅ requirements.txt       # Dependencies
