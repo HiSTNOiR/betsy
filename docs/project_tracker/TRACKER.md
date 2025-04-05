@@ -12,7 +12,7 @@ betsy_bot/
 ├── 📄 core/
 │   ├── 📄 __init__.py
 │   ├── 📄 app.py             # Application bootstrapping
-│   ├── 📄 config.py          # Configuration management
+│   ├── 👉 config.py          # Configuration management
 │   ├── 📄 event_bus.py       # Central publish-subscribe event system
 │   ├── 📄 errors.py          # Error handling
 │   └── 📄 logging.py
