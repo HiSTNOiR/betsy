@@ -78,8 +78,8 @@ betsy_bot/
 ├── 📄 subscribers/         # React to events
 │   ├── 📄 __init__.py
 │   ├── 📄 base.py
-│   ├── 📄 obs_controller.py
-│   └── 📄 twitch_sender.py     # Sends messages to Twitch
+│   ├── 📄 obs_handler.py
+│   └── 📄 twitch_handler.py     # Sends messages to Twitch
 │
 ├── 📄 tests/
 │   ├── 📄 __init____.py
