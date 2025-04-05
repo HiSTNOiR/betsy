@@ -95,7 +95,6 @@ betsy_bot/
 │   ├── ✅ schema.sql         # Database schema
 │   └── 📄 seed.sql           # Initial data
 │
-├── 📄 config.json            # Default configuration
 ├── ✅ .env                   # Example environment variables
 ├── ✅ requirements.txt       # Dependencies
 └── 📄 main.py                # Entry point
