@@ -256,8 +256,9 @@ CREATE TABLE IF NOT EXISTS environment_effects (
 CREATE TABLE IF NOT EXISTS domt_cards (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT UNIQUE NOT NULL,
-    source TEXT NOT NULL, -- Image source reference
+    source TEXT NOT NULL, -- OBS source reference
     description TEXT NOT NULL,
+    description_english TEXT, -- Explains what the streamer needs to do
     is_drawn BOOLEAN NOT NULL DEFAULT 0, -- Whether the card has been drawn in the current deck
     is_retainable BOOLEAN NOT NULL DEFAULT 0, -- Whether the card can be kept by a user
     action_sequence_id INTEGER,

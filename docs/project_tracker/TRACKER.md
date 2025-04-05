@@ -17,6 +17,12 @@ betsy_bot/
 │   ├── ✅ errors.py
 │   └── ✅ logging.py
 │
+├── 📄 data/
+│   ├── 📄 __init__.py
+│   ├── ✅ bot.db
+│   ├── ✅ database.py
+│   └── ✅ database_manager.py
+│
 ├── 📄 subscribers/           # Components that listen for events
 │   ├── 📄 __init__.py
 │   ├── 📄 command_handler.py # Processes command events
@@ -95,11 +101,12 @@ betsy_bot/
 │
 ├── 📄 migrations/            # Database management
 │   ├── ✅ schema.sql         # Database schema
-│   └── 📄 seed.sql           # Initial data
+│   └── 👉 seed.sql           # Initial data
 │
 ├── 📄 tests/
 │   ├── 📄 __init____.py
 │   ├── ✅ test_config.py
+│   ├── ✅ test_database.py
 │   ├── ✅ test_errors.py
 │   └── ✅ test_logging.py
 │

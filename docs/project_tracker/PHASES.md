@@ -31,6 +31,18 @@ This document outlines the recommended sequence of development phases for the Tw
 
 **Goal**: Establish database connectivity, schema, and core data operations.
 
+### Tasks:
+
+1. ✅ Establish the schema
+2. ✅ Initialise the SQLite database
+   - Handle database connection
+   - Initialise the database using the `data/schema.sql`
+   - Provide basic database operations
+   - Include proper error handling and logging
+   - Following the publish-subscribe architecture
+3. 👉 Seed the database with initial data
+   - DOMT, duel environments, shop inventory
+
 ## Phase 2: Platform Connectivity
 
 **Goal**: Establish connections to Twitch and OBS.
