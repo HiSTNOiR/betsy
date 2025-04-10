@@ -35,17 +35,17 @@ class BetsyBot:
     def __new__(cls, *args, **kwargs):
         if cls._instance is None:
             cls._instance = super(BetsyBot, cls).__new__(cls)
-            cls._instance._initialized = False
+            cls._instance._initialised = False
         return cls._instance
 
     def __init__(self):
-        if self._initialized:
+        if self._initialised:
             return
 
         self.running = False
         self.setup_signal_handlers()
         self.register_events()
-        self._initialized = True
+        self._initialised = True
 
     def setup_signal_handlers(self):
         signal.signal(signal.SIGINT, self.handle_shutdown)
