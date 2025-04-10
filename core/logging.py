@@ -40,6 +40,14 @@ class LoggingManager:
 
             os.makedirs(self.log_dir, exist_ok=True)
 
+            # Handle UTF-8 encoding for console output in Windows
+            if self.console_output:
+                import sys
+                if sys.platform == 'win32':
+                    import codecs
+                    sys.stdout.reconfigure(encoding='utf-8')
+                    sys.stderr.reconfigure(encoding='utf-8')
+
         except (ConfigurationError, OSError) as e:
             print(f"Error configuring logging: {e}", file=sys.stderr)
             # Set fallback values
@@ -69,15 +77,17 @@ class LoggingManager:
         file_handler = logging.handlers.RotatingFileHandler(
             file_path,
             maxBytes=self.max_bytes,
-            backupCount=self.backup_count
+            backupCount=self.backup_count,
+            encoding='utf-8'  # Ensure UTF-8 encoding for file output
         )
-        file_handler.setFormatter(logging.Formatter(self.log_format))
+        formatter = logging.Formatter(self.log_format)
+        file_handler.setFormatter(formatter)
         logger.addHandler(file_handler)
 
         # Console handler if enabled
         if self.console_output:
             console_handler = logging.StreamHandler(sys.stdout)
-            console_handler.setFormatter(logging.Formatter(self.log_format))
+            console_handler.setFormatter(formatter)
             logger.addHandler(console_handler)
 
         self._loggers[name] = logger

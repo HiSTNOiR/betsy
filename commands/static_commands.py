@@ -1,7 +1,13 @@
+"""
+Commands not in the database
+"""
+
 from typing import Dict, Any
+from datetime import datetime
 
 from commands.base import BaseCommand
-from utils.user_permissions import has_permission
+from db.database import db
+from commands.dynamic_commands import DynamicCommand
 
 
 # ! delete meh ================================================================
@@ -28,12 +34,11 @@ class CommandsCommand(BaseCommand):
 
     def handle(self, data: Dict[str, Any]) -> None:
         from commands.registry import command_registry
-        from utils.user_permissions import get_user_permissions, has_permission
+        from utils.user_permissions import has_permission
 
         user = data.get("user", {})
         channel = data.get("channel")
 
-        # Filter commands by permission
         available_commands = []
         for cmd_name, cmd in command_registry.get_all_commands().items():
             if has_permission(user, cmd.permission):
@@ -53,11 +58,5 @@ class QuitCommand(BaseCommand):
 
     def handle(self, data: Dict[str, Any]) -> None:
         channel = data.get("channel")
-
         self.send_message(channel, "Shutting down ...ᶠᵘᶜᵏ ʸᵒᵘ ᵛᵉʳʸ ᵐᵘᶜʰ")
-
         self.event_bus.publish("bot_shutdown")
-
-# addcmd, addcommand, cmdadd, commandadd, cmd+
-# delcmd, remcmd, deletecmd, removecmd, delcommand, remcommand, deletecommand, removecommand, cmddel, cmdrem, cmddelete, cmdremove, commanddelete, commandremove, cmd-
-# modcmd, modifycmd, modcommand, modifycommand, cmdmod, cmdmodify, commandmod, commandmodify, cmd~

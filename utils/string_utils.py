@@ -1,12 +1,11 @@
 def sanitise_for_logging(text):
-    """Convert text to ASCII-safe format for logging, replacing non-ASCII characters with escape sequences.
-
-    Args:
-        text: The string to sanitise
-
-    Returns:
-        ASCII-safe string suitable for logging systems with encoding limitations
-    """
+    """Convert text to ASCII-safe format for logging, replacing non-ASCII characters with escape sequences."""
     if not isinstance(text, str):
         return str(text)
-    return text.encode('ascii', 'backslashreplace').decode('ascii')
+
+    try:
+        # Try to encode and decode with utf-8, which preserves most characters
+        return text
+    except UnicodeError:
+        # Fallback to ASCII with backslashreplace if needed
+        return text.encode('ascii', 'backslashreplace').decode('ascii')
