@@ -1,0 +1,11 @@
+{
+	"printWidth": 100,
+	"tabWidth": 4,
+	"useTabs": true,
+	"semi": false,
+	"singleQuote": false,
+	"trailingComma": "es5",
+	"htmlWhitespaceSensitivity": "strict",
+	"attributesInline": true,
+	"endOfLine": "lf"
+}
