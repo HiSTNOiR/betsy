@@ -10,8 +10,8 @@ from core.logging import get_logger
 from core.errors import handle_error, BetsyError
 from event_bus.bus import event_bus
 from event_bus.registry import event_registry
-from publishers.twitch_reader import twitch_reader
-from subscribers.twitch_handler import twitch_handler
+from publishers.twitch_pub import twitch_pub
+from subscribers.twitch_sub import twitch_sub
 from processors.command_parser import command_parser
 # Import command registry (which auto-loads commands)
 from commands.registry import command_registry
@@ -72,7 +72,7 @@ class BetsyBot:
 
             # Subscribe to events
             logger.info("Setting up event subscriptions...")
-            twitch_handler.subscribe()
+            twitch_sub.subscribe()
 
             # Subscribe to shutdown event
             event_bus.subscribe("bot_shutdown", lambda _: self.shutdown())
@@ -89,19 +89,19 @@ class BetsyBot:
             # Start Twitch connection
             if config.get_boolean('TWITCH_ENABLED', True):
                 logger.info("Registering Twitch event callbacks...")
-                twitch_reader.register_event_callback("ready",
-                                                      lambda data: event_registry.create_and_publish_event("twitch_ready", data))
-                twitch_reader.register_message_callback(
+                twitch_pub.register_event_callback("ready",
+                                                   lambda data: event_registry.create_and_publish_event("twitch_ready", data))
+                twitch_pub.register_message_callback(
                     self._handle_twitch_message)
-                twitch_reader.register_event_callback("join",
-                                                      lambda data: event_registry.create_and_publish_event("twitch_join", data))
-                twitch_reader.register_event_callback("part",
-                                                      lambda data: event_registry.create_and_publish_event("twitch_part", data))
-                twitch_reader.register_event_callback("subscription",
-                                                      lambda data: event_registry.create_and_publish_event("twitch_subscription", data))
+                twitch_pub.register_event_callback("join",
+                                                   lambda data: event_registry.create_and_publish_event("twitch_join", data))
+                twitch_pub.register_event_callback("part",
+                                                   lambda data: event_registry.create_and_publish_event("twitch_part", data))
+                twitch_pub.register_event_callback("subscription",
+                                                   lambda data: event_registry.create_and_publish_event("twitch_subscription", data))
 
                 logger.info("Connecting to Twitch...")
-                twitch_reader._connect()
+                twitch_pub._connect()
                 logger.info("Twitch connection initiated")
 
             logger.info("Bot startup complete, entering main loop")
@@ -144,10 +144,10 @@ class BetsyBot:
         self.running = False
 
         # Disconnect from Twitch
-        if twitch_reader.is_connected():
+        if twitch_pub.is_connected():
             logger.info("Disconnecting from Twitch...")
             try:
-                twitch_reader._disconnect()
+                twitch_pub._disconnect()
             except Exception as e:
                 logger.error(f"Error during Twitch disconnection: {str(e)}")
 

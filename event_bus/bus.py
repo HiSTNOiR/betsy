@@ -1,3 +1,7 @@
+"""
+Heart of the pub-sub architecture
+"""
+
 import threading
 from typing import Dict, List, Callable, Any
 

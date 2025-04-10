@@ -12,10 +12,10 @@ from core.config import config, ConfigurationError
 from core.logging import get_logger
 from core.errors import NetworkError, TwitchError, handle_error
 
-logger = get_logger("twitch_reader")
+logger = get_logger("twitch_pub")
 
 
-class TwitchReader(PlatformConnection, metaclass=SingletonMeta):
+class TwitchConnector(PlatformConnection, metaclass=SingletonMeta):
     def __init__(self):
         super().__init__()
         self.token = config.get('TMI_TOKEN')
@@ -225,4 +225,4 @@ class TwitchReader(PlatformConnection, metaclass=SingletonMeta):
 
 
 # Singleton instance
-twitch_reader = TwitchReader()
+twitch_pub = TwitchConnector()

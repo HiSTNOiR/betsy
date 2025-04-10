@@ -1,15 +1,14 @@
 from typing import Dict, Any, Optional
 
 from utils.user_service import enrich_user_data
-from core.logging import get_logger
 from core.errors import handle_error
 from commands.registry import command_registry
+from processors.base import BaseProcessor
 
-logger = get_logger("command_parser")
 
-
-class CommandParser:
+class CommandParser(BaseProcessor):
     def __init__(self):
+        super().__init__()
         self.prefix = "!"
 
     def set_prefix(self, prefix):
@@ -45,15 +44,23 @@ class CommandParser:
             handle_error(e, {"message_data": message_data})
             return None
 
-    def process_command(self, command_data: Dict[str, Any]):
-        try:
-            # Ensure user data is enriched with stuff from db (like the bot_admin rank)
-            if "user" in command_data:
-                command_data["user"] = enrich_user_data(command_data["user"])
+    def _validate(self, data: Dict[str, Any]) -> None:
+        if not data:
+            raise ValueError("Command data cannot be None or empty")
+        if "command" not in data:
+            raise ValueError(
+                "Missing required 'command' field in command data")
 
-            command_registry.handle_command(command_data)
-        except Exception as e:
-            handle_error(e, {"command_data": command_data})
+    def _process(self, command_data: Dict[str, Any]) -> None:
+        # Ensure user data is enriched with stuff from db (like the bot_admin rank)
+        if "user" in command_data:
+            command_data["user"] = enrich_user_data(command_data["user"])
+
+        command_registry.handle_command(command_data)
+
+    # Public method that leverages the base class processing
+    def process_command(self, command_data: Dict[str, Any]) -> None:
+        self.process(command_data)
 
 
 # Singleton instance

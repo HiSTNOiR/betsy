@@ -4,12 +4,12 @@ from event_bus.bus import event_bus
 from core.logging import get_logger
 from core.errors import handle_error, NetworkError
 from core.config import config
-from publishers.twitch_reader import twitch_reader
+from publishers.twitch_pub import twitch_pub
 
-logger = get_logger("twitch_handler")
+logger = get_logger("twitch_sub")
 
 
-class TwitchHandler:
+class TwitchEventHandler:
     def __init__(self, event_bus):
         self.event_bus = event_bus
         self.channel = config.get('CHANNEL', '')
@@ -85,7 +85,7 @@ class TwitchHandler:
                     "Cannot send message: missing channel or content")
                 return
 
-            result = twitch_reader.send_message(channel, content)
+            result = twitch_pub.send_message(channel, content)
             if not result:
                 logger.warning(f"Failed to send message to {channel}")
         except Exception as e:
@@ -94,4 +94,4 @@ class TwitchHandler:
 
 
 # Singleton instance
-twitch_handler = TwitchHandler(event_bus)
+twitch_sub = TwitchEventHandler(event_bus)
