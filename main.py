@@ -23,6 +23,11 @@ from events.twitch import (
     TwitchJoinEvent,
     TwitchPartEvent,
     TwitchSubscriptionEvent,
+    TwitchBitsEvent,
+    TwitchFollowEvent,
+    TwitchRaidEvent,
+    TwitchSubscriptionGiftEvent,
+    TwitchChannelPointRedemptionEvent,
     SendTwitchMessageEvent
 )
 
@@ -59,6 +64,13 @@ class BetsyBot:
         event_registry.register_event("twitch_part", TwitchPartEvent)
         event_registry.register_event(
             "twitch_subscription", TwitchSubscriptionEvent)
+        event_registry.register_event("twitch_bits", TwitchBitsEvent)
+        event_registry.register_event("twitch_follow", TwitchFollowEvent)
+        event_registry.register_event("twitch_raid", TwitchRaidEvent)
+        event_registry.register_event(
+            "twitch_subscription_gift", TwitchSubscriptionGiftEvent)
+        event_registry.register_event(
+            "twitch_channel_point_redemption", TwitchChannelPointRedemptionEvent)
         event_registry.register_event(
             "send_twitch_message", SendTwitchMessageEvent)
 
@@ -99,12 +111,20 @@ class BetsyBot:
                                                    lambda data: event_registry.create_and_publish_event("twitch_part", data))
                 twitch_pub.register_event_callback("subscription",
                                                    lambda data: event_registry.create_and_publish_event("twitch_subscription", data))
+                twitch_pub.register_event_callback("subscription_gift",
+                                                   lambda data: event_registry.create_and_publish_event("twitch_subscription_gift", data))
+                twitch_pub.register_event_callback("bits",
+                                                   lambda data: event_registry.create_and_publish_event("twitch_bits", data))
+                twitch_pub.register_event_callback("follow",
+                                                   lambda data: event_registry.create_and_publish_event("twitch_follow", data))
+                twitch_pub.register_event_callback("raid",
+                                                   lambda data: event_registry.create_and_publish_event("twitch_raid", data))
+                twitch_pub.register_event_callback("channel_point_redemption",
+                                                   lambda data: event_registry.create_and_publish_event("twitch_channel_point_redemption", data))
 
                 logger.info("Connecting to Twitch...")
                 twitch_pub._connect()
                 logger.info("Twitch connection initiated")
-
-            logger.info("Bot startup complete, entering main loop")
 
             # Keep the main thread alive
             while self.running:

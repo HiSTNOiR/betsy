@@ -17,7 +17,7 @@ For versions 0.1 to 1.1
     - ✅ [Twitch] connect to chat
     - ✅ [Twitch] set up static commands system
     - ✅ [Twitch] set up dynamic commands system
-    - [Twitch] set up event handling (bits/rewards/subs/follows/raid/host)
+    - 👉 [Twitch] set up event handling (bits/rewards/subs/follows/raid/host)
     - [Twitch] set up XP system (messages/events^)
     - [Twitch] create throttling/rate limiting (message queues, command cooldowns)
     - [OBS] connect to OBS

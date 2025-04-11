@@ -1,6 +1,7 @@
 import threading
 import time
 import asyncio
+
 from twitchio.ext import commands
 
 from typing import Dict, Any, Callable, List, Optional
@@ -92,6 +93,122 @@ class TwitchConnector(PlatformConnection, metaclass=SingletonMeta):
                             message_data["author"])
 
                         self.parent.trigger_message(message_data)
+
+                    async def event_subscription(self, event):
+                        subscription_data = {
+                            "user": {
+                                "id": event.user.id,
+                                "name": event.user.name,
+                                "display_name": event.user.display_name
+                            },
+                            "channel": event.channel.name,
+                            "sub_plan": event.sub_plan,
+                            "message": event.message,
+                            "is_gift": event.is_gift,
+                            "months": event.cumulative_months,
+                            "timestamp": time.time()
+                        }
+                        self.parent.trigger_event(
+                            "subscription", subscription_data)
+
+                    async def event_subscription_gift(self, event):
+                        recipients = []
+                        if hasattr(event, "recipients") and event.recipients:
+                            recipients = [{
+                                "id": user.id,
+                                "name": user.name,
+                                "display_name": user.display_name
+                            } for user in event.recipients]
+
+                        gift_data = {
+                            "gifter": {
+                                "id": event.user.id,
+                                "name": event.user.name,
+                                "display_name": event.user.display_name
+                            },
+                            "channel": event.channel.name,
+                            "count": event.count,
+                            "sub_plan": event.sub_plan,
+                            "recipients": recipients,
+                            "timestamp": time.time()
+                        }
+                        self.parent.trigger_event(
+                            "subscription_gift", gift_data)
+
+                    async def event_bits(self, event):
+                        bits_data = {
+                            "user": {
+                                "id": event.user.id,
+                                "name": event.user.name,
+                                "display_name": event.user.display_name
+                            },
+                            "bits_used": event.bits_used,
+                            "total_bits": event.total_bits,
+                            "message": event.message,
+                            "channel": event.channel.name,
+                            "timestamp": time.time()
+                        }
+                        self.parent.trigger_event("bits", bits_data)
+
+                    async def event_follow(self, event):
+                        follow_data = {
+                            "user": {
+                                "id": event.user.id,
+                                "name": event.user.name,
+                                "display_name": event.user.display_name
+                            },
+                            "channel": event.channel.name,
+                            "timestamp": time.time()
+                        }
+                        self.parent.trigger_event("follow", follow_data)
+
+                    async def event_raid(self, event):
+                        raid_data = {
+                            "raider": {
+                                "id": event.raider.id,
+                                "name": event.raider.name,
+                                "display_name": event.raider.display_name
+                            },
+                            "channel": event.channel.name,
+                            "viewer_count": event.viewer_count,
+                            "timestamp": time.time()
+                        }
+                        self.parent.trigger_event("raid", raid_data)
+
+                    async def event_channel_points_custom_reward_redemption(self, event):
+                        redemption_data = {
+                            "user": {
+                                "id": event.user.id,
+                                "name": event.user.name,
+                                "display_name": event.user.display_name
+                            },
+                            "channel": event.channel.name,
+                            "reward": {
+                                "id": event.reward.id,
+                                "title": event.reward.title,
+                                "cost": event.reward.cost,
+                                "prompt": event.reward.prompt
+                            },
+                            "input": event.input,
+                            "status": event.status,
+                            "timestamp": time.time()
+                        }
+                        self.parent.trigger_event(
+                            "channel_point_redemption", redemption_data)
+
+                    async def event_join(self, user, channel):
+                        join_data = {
+                            "user": user.name,
+                            "channel": channel.name
+                        }
+                        self.parent.trigger_event("join", join_data)
+
+                    async def event_part(self, user, channel):
+                        part_data = {
+                            "user": user.name,
+                            "channel": channel.name
+                        }
+                        self.parent.trigger_event("part", part_data)
 
                 # Create the bot instance
                 self.bot = Bot(self)
