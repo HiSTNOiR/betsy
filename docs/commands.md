@@ -1,5 +1,7 @@
 # Twitch !commands
 
+All available Betsy commands, organised by chatter access level.
+
 ## Everyone
 | COMMAND | DESCRIPTION | ALIAS |
 | --- | --- | --- |

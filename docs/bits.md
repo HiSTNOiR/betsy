@@ -1,3 +1,5 @@
 # Twitch Biddies
 
-_Not yet implemented_
+| BITS | DESCRIPTION |
+| --- | --- |
+| xxx | _Not yet implemented_ |
