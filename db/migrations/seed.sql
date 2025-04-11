@@ -308,15 +308,9 @@ INSERT INTO stream (count, total_duration_minutes, avg_duration_minutes, last_st
 VALUES (0, 0, 0, NULL);
 
 -- Create a default command for help
-INSERT INTO commands (name, description, response, permission_level, cooldown_seconds, total_uses, date_added)
+INSERT INTO commands (name, description, response, permission_level, restricted_to_user_id, cooldown_seconds, total_uses, date_added)
 VALUES 
-('help', 'Shows available commands', 'Available commands: !help, !duel, !accept, !upgrade, !modify, !buy, !points', 'viewer', 5, 0, datetime('now')),
-('duel', 'Challenge another user to a duel', '@{user} has challenged @{target} to a duel for {amount} points! Type !accept to battle!', 'viewer', 10, 0, datetime('now')),
-('accept', 'Accept a duel challenge', 'The duel between @{challenger} and @{target} has begun!', 'viewer', 0, 0, datetime('now')),
-('upgrade', 'Upgrade your weapon or armour', 'Usage: !upgrade [weapon|armour]', 'viewer', 5, 0, datetime('now')),
-('modify', 'Apply a mod to your weapon or armour', 'Usage: !modify [mod name]', 'viewer', 5, 0, datetime('now')),
-('buy', 'Purchase an item from the shop', 'Usage: !buy [item name]', 'viewer', 5, 0, datetime('now')),
-('points', 'Check your points balance', '@{user} has {points} points.', 'viewer', 5, 0, datetime('now'));
+('pinky', "It's time to take over the world!", 'Usage: !pinky', null, 1, 5, 0, datetime('now')),
 
 -- Create an admin user
 INSERT INTO users (twitch_user_id, twitch_username, rank, points, date_added, last_seen, weapon_id, weapon_durability, weapon_mod_id, armour_id, armour_durability, armour_mod_id)

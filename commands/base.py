@@ -35,6 +35,10 @@ class BaseCommand:
         raise NotImplementedError("Command must implement handle method")
 
     def check_permission(self, user: Dict[str, Any]) -> bool:
+        if hasattr(self, 'restricted_to_user_id') and self.restricted_to_user_id:
+            if user.get('id') != self.restricted_to_user_id:
+                return False
+
         from utils.user_permissions import has_permission
         return has_permission(user, self.permission)
 

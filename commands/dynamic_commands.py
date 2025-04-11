@@ -10,12 +10,14 @@ from db.database import db
 
 
 class DynamicCommand(BaseCommand):
-    def __init__(self, name: str, response: str, permission: str = "viewer", aliases: Optional[List[str]] = None):
+    def __init__(self, name: str, response: str, permission: str = "viewer",
+                 aliases: Optional[List[str]] = None, restricted_to_user_id: Optional[str] = None):
         self.name = name
         self.description = f"Custom command: {name}"
         self.permission = permission
         self.aliases = aliases or []
         self.response_template = response
+        self.restricted_to_user_id = restricted_to_user_id
         super().__init__()
 
         self.__name__ = f"DynamicCommand_{name}"

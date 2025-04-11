@@ -144,10 +144,12 @@ CREATE TABLE IF NOT EXISTS commands (
     response TEXT, -- Response text to send to chat
     action_sequence_id INTEGER, -- Optional link to action sequence
     permission_level TEXT CHECK (permission_level IN ('viewer', 'vip', 'subscriber', 'moderator', 'broadcaster', 'bot_admin')) DEFAULT 'viewer',
+    restricted_to_user_id INTEGER DEFAULT NULL,
     cooldown_seconds INTEGER DEFAULT 3,
     total_uses INTEGER NOT NULL DEFAULT 0,
     date_added TEXT NOT NULL,
     FOREIGN KEY (action_sequence_id) REFERENCES action_sequences(id) ON DELETE SET NULL,
+    FOREIGN KEY (restricted_to_user_id) REFERENCES users(id) ON DELETE SET NULL,
     UNIQUE (name),
     UNIQUE (alias_1),
     UNIQUE (alias_2)

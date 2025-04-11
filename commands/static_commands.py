@@ -60,3 +60,5 @@ class QuitCommand(BaseCommand):
         channel = data.get("channel")
         self.send_message(channel, "Shutting down ...ᶠᵘᶜᵏ ʸᵒᵘ ᵛᵉʳʸ ᵐᵘᶜʰ")
         self.event_bus.publish("bot_shutdown")
+
+# TODO add commands: !points !hug !gamble !com+ !com- !com~
