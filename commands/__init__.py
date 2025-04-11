@@ -38,31 +38,52 @@ def load_dynamic_commands():
     from commands.dynamic_commands import DynamicCommand
 
     try:
-        commands = db.fetchall(
-            "SELECT * FROM commands WHERE response IS NOT NULL")
-        for cmd in commands:
-            try:
-                aliases = []
-                if cmd.get("alias_1"):
-                    aliases.append(cmd["alias_1"])
-                if cmd.get("alias_2"):
-                    aliases.append(cmd["alias_2"])
+        rows = db.fetchall("SELECT * FROM commands WHERE response IS NOT NULL")
 
-                dynamic_cmd = DynamicCommand(
-                    name=cmd["name"],
-                    response=cmd["response"],
-                    permission=cmd.get("permission_level", "viewer"),
-                    aliases=aliases
-                )
-                dynamic_cmd.cooldown = cmd.get("cooldown_seconds", 3)
-                dynamic_cmd.action_sequence_id = cmd.get("action_sequence_id")
-                dynamic_cmd.restricted_to_user_id = cmd.get(
-                    "restricted_to_user_id")
+        for row in rows:
+            try:
+
+                # ! WHY YOU NO LOG??????
+                logger.debug(f"Processing row: {row}")  # ! debug
+
+                if not row or 'name' not in row:
+                    continue
+
+                name = row['name']
+                response = row['response'] if row['response'] else ""
+
+                aliases = []
+                if row.get('alias_1'):
+                    aliases.append(row['alias_1'])
+                if row.get('alias_2'):
+                    aliases.append(row['alias_2'])
+
+                # Modify how we create the dynamic command
+                dynamic_cmd = type(f'DynamicCommand_{name}', (DynamicCommand,), {
+                    'name': name,
+                    'aliases': aliases,
+                    'description': f"Custom command: {name}",
+                    'response_template': response,
+                    'permission': row.get('permission_level', 'viewer')
+                })()
+
+                # Set additional properties
+                dynamic_cmd.cooldown = row.get('cooldown_seconds', 3)
+                dynamic_cmd.action_sequence_id = row.get('action_sequence_id')
+                dynamic_cmd.restricted_to_user_id = row.get(
+                    'restricted_to_user_id')
+
+                # ! WHY YOU NO LOG??????
+                logger.debug(
+                    f"Created dynamic command: {dynamic_cmd}")  # ! debug
+                logger.debug(f"Command name: {dynamic_cmd.name}")  # ! debug
 
                 command_registry.register_command(dynamic_cmd)
+
             except Exception as e:
                 logger.error(
-                    f"Error loading dynamic command {cmd.get('name')}: {e}")
+                    f"Error loading dynamic command {row.get('name', 'unknown')}: {e}")
+
     except Exception as e:
         logger.error(f"Error loading dynamic commands: {e}")
 

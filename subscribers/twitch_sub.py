@@ -47,9 +47,9 @@ class TwitchEventHandler:
             logger.info(f"Twitch bot ready: {bot_user}")
 
             # Optional: Send a startup message to channel
-            if self.channel:
-                self._send_message(
-                    {"channel": self.channel, "content": f"I'm live, bitches!"})
+            # if self.channel:
+            #     self._send_message(
+            #         {"channel": self.channel, "content": f"I'm live, bitches!"})
         except Exception as e:
             handle_error(e, {"event": "twitch_ready", "data": data})
 

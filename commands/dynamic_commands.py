@@ -6,20 +6,26 @@ from db.database import db
 
 
 class DynamicCommand(BaseCommand):
-    def __init__(self, name: str, response: str, permission: str = "viewer", aliases: Optional[List[str]] = None):
-        self.name = name
-        self.description = f"Custom command: {name}"
+    def __init__(self, name=None, response="", permission="viewer", aliases=None):
+        super().__init__()
+
+        self.name = name or ""
+        self.description = f"Custom command: {self.name}"
         self.permission = permission
         self.aliases = aliases or []
         self.response_template = response
-        self.cooldown = 3  # Default cooldown in seconds
+        self.cooldown = 3
         self.action_sequence_id = None
         self.restricted_to_user_id = None
-        super().__init__()
 
-        self.__name__ = f"DynamicCommand_{name}"
+        self.__name__ = f"DynamicCommand_{self.name}"
 
     def handle(self, data: Dict[str, Any]) -> None:
+        if not self.name:
+            self.logger.warning(
+                "Attempted to use a dynamic command with no name")
+            return
+
         user = data.get("user", {})
         channel = data.get("channel")
         args = data.get("args", "")
@@ -30,7 +36,6 @@ class DynamicCommand(BaseCommand):
 
         self.send_message(channel, response)
 
-        # Trigger any associated action sequence
         if self.action_sequence_id:
             self._trigger_action_sequence(self.action_sequence_id, data)
 

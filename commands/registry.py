@@ -15,14 +15,50 @@ class CommandRegistry:
         self.commands: Dict[str, BaseCommand] = {}
         self.command_aliases: Dict[str, str] = {}
 
-    def register_command(self, command_class: Type[BaseCommand]) -> None:
+    # def register_command(self, command_class: Type[BaseCommand]) -> None:
+    #     try:
+    #         command_instance = command_class()
+    #         name = command_instance.name.lower()
+
+    #         if not name:
+    #             logger.warning(
+    #                 f"Command {command_class.__name__} has no name specified, skipping")
+    #             return
+
+    #         self.commands[name] = command_instance
+    #         logger.info(f"Registered command: {name}")
+
+    #         # Register aliases
+    #         for alias in command_instance.aliases:
+    #             alias = alias.lower()
+    #             if alias in self.command_aliases or alias in self.commands:
+    #                 logger.warning(
+    #                     f"Command alias '{alias}' conflicts with existing command, skipping")
+    #                 continue
+    #             self.command_aliases[alias] = name
+    #             logger.info(f"Registered alias '{alias}' for command '{name}'")
+    #     except Exception as e:
+    #         logger.error(
+    #             f"Error registering command {command_class.__name__}: {e}")
+    def register_command(self, command_class_or_instance):
         try:
-            command_instance = command_class()
+            # If it's a class, instantiate it
+            if isinstance(command_class_or_instance, type):
+                command_instance = command_class_or_instance()
+            else:
+                command_instance = command_class_or_instance
+
+                # ! WHY YOU NO LOG??????
+            # ! Debug logging
+            logger.debug(f"Attempting to register command: {command_instance}")
+            logger.debug(f"Command name: {command_instance.name}")
+            logger.debug(f"Command class: {command_instance.__class__}")
+
             name = command_instance.name.lower()
 
             if not name:
                 logger.warning(
-                    f"Command {command_class.__name__} has no name specified, skipping")
+                    f"Command {command_class_or_instance.__class__.__name__} has no name specified, skipping")
                 return
 
             self.commands[name] = command_instance
@@ -36,10 +72,13 @@ class CommandRegistry:
                         f"Command alias '{alias}' conflicts with existing command, skipping")
                     continue
                 self.command_aliases[alias] = name
-                logger.info(f"Registered alias '{alias}' for command '{name}'")
+                logger.info(
+                    f"Registered alias '{alias}' for command '{name}'")
         except Exception as e:
             logger.error(
-                f"Error registering command {command_class.__name__}: {e}")
+                f"Error registering command {command_class_or_instance}: {e}")
+            import traceback
+            traceback.print_exc()
 
     def get_command(self, name: str) -> BaseCommand:
         name = name.lower()
