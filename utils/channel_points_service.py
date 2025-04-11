@@ -31,8 +31,25 @@ class ChannelPointsService:
             logger.info(
                 f"Processing redemption: {username} redeemed '{reward_title}' (ID: {reward_id})")
 
-            # Record the redemption in our database
+            # Check if the reward exists in our database
             from utils.reward_service import reward_service
+            reward_in_db = reward_service.get_reward(reward_id)
+
+            # If reward doesn't exist in DB, register it first
+            if not reward_in_db:
+                logger.info(
+                    f"Registering unknown reward: {reward_title} (ID: {reward_id})")
+                reward_data = {
+                    "reward_id": reward_id,
+                    "name": reward_title,
+                    "description": reward.get("prompt", ""),
+                    "cost": reward.get("cost", 0),
+                    "is_enabled": True,
+                    "handler_type": "default"
+                }
+                reward_service.register_reward(reward_data)
+
+            # Now record the redemption (should work since reward exists)
             reward_service.record_redemption(redemption_data)
 
             # Check for registered handler

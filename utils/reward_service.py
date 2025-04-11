@@ -233,8 +233,10 @@ class RewardService:
         try:
             user = redemption_data.get("user", {})
             user_id = user.get("id", "")
+            username = user.get("name", "unknown")
             reward = redemption_data.get("reward", {})
             reward_id = reward.get("id", "")
+            reward_title = reward.get("title", "Unknown Reward")
             user_input = redemption_data.get("input", "")
 
             if not user_id or not reward_id:
@@ -244,19 +246,38 @@ class RewardService:
 
             current_time = datetime.now().isoformat()
 
-            db.execute(
-                "INSERT INTO reward_redemptions (reward_id, user_id, redeemed_at, user_input) VALUES (?, ?, ?, ?)",
-                (reward_id, user_id, current_time, user_input)
-            )
+            # Check if the user exists in our database
+            user_exists = db.fetchone(
+                "SELECT 1 FROM users WHERE twitch_user_id = ?", (user_id,))
 
-            db.execute(
-                "UPDATE twitch_rewards SET total_uses = total_uses + 1 WHERE reward_id = ?",
-                (reward_id,)
-            )
+            # If user doesn't exist, create them
+            if not user_exists:
+                logger.info(
+                    f"Creating new user record for {username} (ID: {user_id})")
+                db.execute(
+                    "INSERT INTO users (twitch_user_id, twitch_username, rank, points, date_added, last_seen) VALUES (?, ?, ?, ?, ?, ?)",
+                    (user_id, username, "viewer", 0, current_time, current_time)
+                )
 
-            logger.info(
-                f"Recorded redemption of {reward.get('title', 'Unknown')} by {user.get('name', 'unknown')}")
-            return True
+            # Now record the redemption
+            try:
+                db.execute(
+                    "INSERT INTO reward_redemptions (reward_id, user_id, redeemed_at, user_input) VALUES (?, ?, ?, ?)",
+                    (reward_id, user_id, current_time, user_input)
+                )
+
+                db.execute(
+                    "UPDATE twitch_rewards SET total_uses = total_uses + 1 WHERE reward_id = ?",
+                    (reward_id,)
+                )
+
+                logger.info(
+                    f"Recorded redemption of {reward_title} by {username}")
+                return True
+            except Exception as e:
+                logger.error(f"Error inserting redemption record: {e}")
+                return False
+
         except Exception as e:
             handle_error(e, {"context": "record_redemption",
                          "redemption_data": redemption_data})
