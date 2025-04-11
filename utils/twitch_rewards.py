@@ -70,3 +70,34 @@ def sync_rewards_with_db() -> bool:
     except Exception as e:
         handle_error(e)
         return False
+
+
+def update_reward_title(reward_id: str, title: str) -> None:
+    """Store or update a reward title in the database for future reference"""
+    try:
+        from db.database import db
+
+        existing = db.fetchone(
+            "SELECT name FROM twitch_rewards WHERE reward_id = ?",
+            (reward_id,)
+        )
+
+        if existing:
+            if existing['name'] == 'Unknown Reward' or not existing['name']:
+                db.execute(
+                    "UPDATE twitch_rewards SET name = ? WHERE reward_id = ?",
+                    (title, reward_id)
+                )
+                logger.info(
+                    f"Updated reward title for {reward_id} to '{title}'")
+        else:
+            current_time = datetime.now().isoformat()
+            db.execute(
+                "INSERT INTO twitch_rewards (reward_id, name, total_uses, date_added) VALUES (?, ?, 1, ?)",
+                (reward_id, title, current_time)
+            )
+            logger.info(
+                f"Registered new reward {title} (ID: {reward_id}) in database")
+
+    except Exception as e:
+        logger.error(f"Error updating reward title: {e}")

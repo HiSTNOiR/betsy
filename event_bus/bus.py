@@ -36,7 +36,6 @@ class EventBus:
                 callbacks = self._subscribers[event_type].copy()
 
         if callbacks:
-            logger.debug(f"Publishing event: {event_type}")
             for callback in callbacks:
                 try:
                     callback(data)

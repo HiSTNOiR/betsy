@@ -261,6 +261,7 @@ class TwitchEventHandler:
 
             logger.info(
                 f"Channel Point Redemption: {username} redeemed '{reward_title}' in {channel}")
+
             if user_input:
                 logger.info(f"Redemption input: {user_input}")
 

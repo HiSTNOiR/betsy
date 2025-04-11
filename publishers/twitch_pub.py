@@ -73,6 +73,13 @@ class TwitchConnector(PlatformConnection, metaclass=SingletonMeta):
                         logger.info(
                             f"[{message.author.name}]: {message.content}")
 
+                        # Check if this message is actually a channel point redemption
+                        # This extracts the custom-reward-id from the message tags if present
+                        custom_reward_id = None
+                        if hasattr(message, 'tags') and message.tags:
+                            custom_reward_id = message.tags.get(
+                                'custom-reward-id')
+
                         message_data = {
                             "author": {
                                 "id": message.author.id,
@@ -92,7 +99,33 @@ class TwitchConnector(PlatformConnection, metaclass=SingletonMeta):
                         message_data["author"] = enrich_user_data(
                             message_data["author"])
 
-                        self.parent.trigger_message(message_data)
+                        # Check if this is a channel point redemption
+                        if custom_reward_id:
+                            logger.info(
+                                f"🟪 DETECTED CHANNEL POINT REDEMPTION - Reward ID: {custom_reward_id}")
+
+                            # Create the channel point redemption event data
+                            redemption_data = {
+                                "user": message_data["author"],
+                                "channel": message_data["channel"],
+                                "reward": {
+                                    "id": custom_reward_id,
+                                    "title": "Unknown Reward",  # We don't have the title from just the message
+                                    "cost": 0,  # We don't have the cost from just the message
+                                    "prompt": ""
+                                },
+                                "input": message_data["content"],
+                                "status": "fulfilled",
+                                "timestamp": message_data["timestamp"]
+                            }
+
+                            # Trigger both the message event and the channel point redemption event
+                            self.parent.trigger_message(message_data)
+                            self.parent.trigger_event(
+                                "channel_point_redemption", redemption_data)
+                        else:
+                            # Regular message, just trigger the message event
+                            self.parent.trigger_message(message_data)
 
                     async def event_subscription(self, event):
                         subscription_data = {
@@ -175,26 +208,48 @@ class TwitchConnector(PlatformConnection, metaclass=SingletonMeta):
                         }
                         self.parent.trigger_event("raid", raid_data)
 
-                    async def event_channel_points_custom_reward_redemption(self, event):
-                        redemption_data = {
-                            "user": {
-                                "id": event.user.id,
-                                "name": event.user.name,
-                                "display_name": event.user.display_name
-                            },
-                            "channel": event.channel.name,
-                            "reward": {
-                                "id": event.reward.id,
-                                "title": event.reward.title,
-                                "cost": event.reward.cost,
-                                "prompt": event.reward.prompt
-                            },
-                            "input": event.input,
-                            "status": event.status,
-                            "timestamp": time.time()
-                        }
-                        self.parent.trigger_event(
-                            "channel_point_redemption", redemption_data)
+                    async def event_channel_points_custom_reward_redemption_add(self, data):
+                        # This is the specific TwitchIO event name for channel point redemptions
+                        logger.info(
+                            f"CHANNEL POINT REDEMPTION DETECTED: {data}")
+
+                        try:
+                            channel_name = data.broadcaster.name if hasattr(
+                                data, 'broadcaster') and hasattr(data.broadcaster, 'name') else "unknown"
+                            user_name = data.user.name if hasattr(
+                                data, 'user') and hasattr(data.user, 'name') else "unknown"
+                            reward_title = data.reward.title if hasattr(
+                                data, 'reward') and hasattr(data.reward, 'title') else "unknown"
+                            reward_id = data.reward.id if hasattr(
+                                data, 'reward') and hasattr(data.reward, 'id') else "unknown"
+
+                            logger.info(
+                                f"FORMATTED: User {user_name} redeemed {reward_title} (ID: {reward_id}) in channel {channel_name}")
+
+                            # Format in the expected structure and trigger the event
+                            event_data = {
+                                "user": {
+                                    "id": data.user.id if hasattr(data, 'user') and hasattr(data.user, 'id') else "unknown",
+                                    "name": user_name,
+                                    "display_name": data.user.display_name if hasattr(data, 'user') and hasattr(data.user, 'display_name') else user_name
+                                },
+                                "channel": channel_name,
+                                "reward": {
+                                    "id": reward_id,
+                                    "title": reward_title,
+                                    "cost": data.reward.cost if hasattr(data, 'reward') and hasattr(data.reward, 'cost') else 0,
+                                    "prompt": data.reward.prompt if hasattr(data, 'reward') and hasattr(data.reward, 'prompt') else ""
+                                },
+                                "input": data.input if hasattr(data, 'input') else "",
+                                "status": "fulfilled",
+                                "timestamp": time.time()
+                            }
+
+                            self.parent.trigger_event(
+                                "channel_point_redemption", event_data)
+                        except Exception as e:
+                            logger.error(
+                                f"Error processing channel point event: {e}")
 
                     async def event_join(self, user, channel):
                         join_data = {
