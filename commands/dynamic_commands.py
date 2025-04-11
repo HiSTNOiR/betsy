@@ -1,7 +1,3 @@
-"""
-Commands stored in the database
-"""
-
 from typing import Dict, Any, List, Optional
 from datetime import datetime
 
@@ -16,6 +12,9 @@ class DynamicCommand(BaseCommand):
         self.permission = permission
         self.aliases = aliases or []
         self.response_template = response
+        self.cooldown = 3  # Default cooldown in seconds
+        self.action_sequence_id = None
+        self.restricted_to_user_id = None
         super().__init__()
 
         self.__name__ = f"DynamicCommand_{name}"
@@ -31,15 +30,13 @@ class DynamicCommand(BaseCommand):
 
         self.send_message(channel, response)
 
+        # Trigger any associated action sequence
+        if self.action_sequence_id:
+            self._trigger_action_sequence(self.action_sequence_id, data)
+
         try:
             db.execute(
                 "UPDATE commands SET total_uses = total_uses + 1 WHERE name = ?", (self.name,))
         except Exception as e:
             self.logger.error(
                 f"Error updating usage count for {self.name}: {e}")
-
-    def update_response(self, new_response: str) -> None:
-        self.response_template = new_response
-
-    def update_permission(self, new_permission: str) -> None:
-        self.permission = new_permission

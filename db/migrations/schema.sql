@@ -142,7 +142,7 @@ CREATE TABLE IF NOT EXISTS commands (
     alias_2 TEXT, 
     description TEXT,
     response TEXT, -- Response text to send to chat
-    action_sequence_id INTEGER, -- Optional link to action sequence
+    action_sequence_id INTEGER, -- OBS action sequence
     permission_level TEXT CHECK (permission_level IN ('viewer', 'vip', 'subscriber', 'moderator', 'broadcaster', 'bot_admin')) DEFAULT 'viewer',
     restricted_to_user_id INTEGER DEFAULT NULL,
     cooldown_seconds INTEGER DEFAULT 3,

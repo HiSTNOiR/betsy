@@ -317,6 +317,7 @@ INSERT INTO users (twitch_user_id, twitch_username, rank, points, date_added, la
 VALUES ('11111111', 'bob', 'untouchable', 1000000000000000000, datetime('now'), datetime('now'), 10, 10, NULL, 10, 10, NULL);
 
 -- Create custom commands (after users table so user-commands can be linked)
+-- TODO hook into OBS: show-then-hide source
 INSERT INTO commands (name, description, response, permission_level, restricted_to_user_id, cooldown_seconds, total_uses, date_added)
 VALUES 
 ('pinky', "It's time to take over the world!", 'Usage: !pinky', null, (SELECT id FROM users WHERE twitch_username = 'histnoir'), 5, 0, datetime('now'));
