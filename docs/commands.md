@@ -1,7 +1,3 @@
-# Twitch !commands
-
-All available Betsy commands, organised by chatter access level.
-
 ## Everyone
 
 `!commands` Lists the available commands.
