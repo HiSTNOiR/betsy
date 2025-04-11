@@ -1,0 +1,56 @@
+name: Post commands to Discord
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'docs/commands.md'
+  workflow_dispatch: # Allows manual triggering
+
+jobs:
+  post-to-discord:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Install dependencies
+        run: npm install axios
+
+      - name: Post commands.md to Discord
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs');
+            const axios = require('axios');
+            
+            // Read the commands.md file
+            const commandsContent = fs.readFileSync('docs/commands.md', 'utf8');
+            
+            // Function to send content to Discord
+            async function sendToDiscord(content) {
+              // Split content if it exceeds Discord's 2000 character limit
+              const chunks = [];
+              let remainingContent = content;
+              while (remainingContent.length > 0) {
+                chunks.push(remainingContent.slice(0, 1900));
+                remainingContent = remainingContent.slice(1900);
+              }
+              
+              for (const chunk of chunks) {
+                await axios.post(process.env.DISCORD_COMMANDS_WEBHOOK_URL, {
+                  content: chunk
+                });
+              }
+            }
+            
+            // Send to Discord
+            await sendToDiscord(commandsContent);
+            console.log('Successfully posted commands.md to Discord');
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_COMMANDS_WEBHOOK_URL }}
