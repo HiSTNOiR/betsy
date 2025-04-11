@@ -32,6 +32,7 @@ class DynamicCommand(BaseCommand):
 
         response = self.response_template
         response = response.replace("{user}", user.get("name", "User"))
+        # TODO for !hug, this needs to check if the user is in chatters
         response = response.replace("{args}", args)
 
         self.send_message(channel, response)

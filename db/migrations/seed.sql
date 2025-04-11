@@ -321,3 +321,7 @@ VALUES ('11111111', 'bob', 'untouchable', 1000000000000000000, datetime('now'), 
 INSERT INTO commands (name, description, response, permission_level, restricted_to_user_id, cooldown_seconds, total_uses, date_added)
 VALUES 
 ('pinky', "madmann225's command", null, null, (SELECT id FROM users WHERE twitch_username = 'histnoir'), 5, 0, datetime('now'));
+
+INSERT INTO commands (name, description, response, permission_level, cooldown_seconds, total_uses, date_added)
+VALUES 
+('hug', 'Give someone a hug', '@{user} gives @{args} a warm hug', 'viewer', 5, 0, datetime('now'));
