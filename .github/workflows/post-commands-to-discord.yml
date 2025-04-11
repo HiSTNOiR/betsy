@@ -53,4 +53,4 @@ jobs:
             await sendToDiscord(commandsContent);
             console.log('Successfully posted commands.md to Discord');
         env:
-          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_COMMANDS_WEBHOOK_URL }}
+          DISCORD_COMMANDS_WEBHOOK_URL: ${{ secrets.DISCORD_COMMANDS_WEBHOOK_URL }}

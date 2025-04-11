@@ -53,4 +53,4 @@ jobs:
             await sendToDiscord(todoContent);
             console.log('Successfully posted todo.md to Discord');
         env:
-          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_TODO_WEBHOOK_URL }}
+          DISCORD_TODO_WEBHOOK_URL: ${{ secrets.DISCORD_TODO_WEBHOOK_URL }}

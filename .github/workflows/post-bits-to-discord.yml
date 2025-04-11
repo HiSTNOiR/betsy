@@ -53,4 +53,4 @@ jobs:
             await sendToDiscord(bitsContent);
             console.log('Successfully posted bits.md to Discord');
         env:
-          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_BITS_WEBHOOK_URL }}
+          DISCORD_BITS_WEBHOOK_URL: ${{ secrets.DISCORD_BITS_WEBHOOK_URL }}
