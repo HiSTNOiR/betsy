@@ -1,10 +1,10 @@
-name: Post Todo to Discord
+name: Post bits to Discord
 
 on:
   push:
     branches: [ main ]
     paths:
-      - 'docs/todo.md'
+      - 'docs/bits.md'
   workflow_dispatch: # Allows manual triggering
 
 jobs:
@@ -22,15 +22,15 @@ jobs:
       - name: Install dependencies
         run: npm install axios
 
-      - name: Post todo.md to Discord
+      - name: Post bits.md to Discord
         uses: actions/github-script@v6
         with:
           script: |
             const fs = require('fs');
             const axios = require('axios');
             
-            // Read the todo.md file
-            const todoContent = fs.readFileSync('docs/todo.md', 'utf8');
+            // Read the bits.md file
+            const bitsContent = fs.readFileSync('docs/bits.md', 'utf8');
             
             // Function to send content to Discord
             async function sendToDiscord(content) {
@@ -43,14 +43,14 @@ jobs:
               }
               
               for (const chunk of chunks) {
-                await axios.post(process.env.DISCORD_TODO_WEBHOOK_URL, {
+                await axios.post(process.env.DISCORD_BITS_WEBHOOK_URL, {
                   content: chunk
                 });
               }
             }
             
             // Send to Discord
-            await sendToDiscord(todoContent);
-            console.log('Successfully posted todo.md to Discord');
+            await sendToDiscord(bitsContent);
+            console.log('Successfully posted bits.md to Discord');
         env:
-          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_TODO_WEBHOOK_URL }}
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_BITS_WEBHOOK_URL }}
