@@ -1,5 +1,31 @@
 # Betsy To Do
 
-1. Stuff
-2. Things
-3. Rejoice
+For versions 0.1 to 1.1
+
+> **KEY**  
+> ✅ done  
+> 👉 I am here  
+
+1. ✅ **Pre-Phase**
+    - ✅ choose language and architecture
+2. ✅ **Phase 0**
+    - ✅ create core config module
+    - ✅ set up custom logging and error handling
+3. ✅ **Phase 1**
+    - ✅ design database
+    - ✅ create schema and seed files
+- 👉 **Phase 2: Twitch and OBS**
+    - ✅ [Twitch] connect to chat
+    - ✅ [Twitch] set up static commands system
+    - 👉 [Twitch] set up dynamic commands system
+    - [Twitch] set up event handling (bits/rewards/subs/follows/raid/host)
+    - [Twitch] set up XP system (messages/events^)
+    - [Twitch] create throttling/rate limiting (message queues, command cooldowns)
+    - [OBS] connect to OBS
+    - [OBS] set up scene/source/filter management
+    - [OBS] set up OBS actions (single/sequenced/simultaneous/animations etc)
+- **Phase 3: Shop system**
+- **Phase 4: Inventory system**
+- **Phase 5: DOMT system**
+- **Phase 6: Duel system** (_Version 1.0_)
+- **Phase 7: Easter eggs** (_Version 1.1_)
