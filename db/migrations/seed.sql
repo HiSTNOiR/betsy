@@ -307,10 +307,10 @@ INSERT INTO domt_cards (name, source, description, description_english, is_retai
 INSERT INTO stream (count, total_duration_minutes, avg_duration_minutes, last_stream_date)
 VALUES (0, 0, 0, NULL);
 
--- Create a default command for help
+-- Create custom commands
 INSERT INTO commands (name, description, response, permission_level, restricted_to_user_id, cooldown_seconds, total_uses, date_added)
 VALUES 
-('pinky', "It's time to take over the world!", 'Usage: !pinky', null, 1, 5, 0, datetime('now')),
+('pinky', "It's time to take over the world!", 'Usage: !pinky', null, 1, 5, 0, datetime('now'));
 
 -- Create an admin user
 INSERT INTO users (twitch_user_id, twitch_username, rank, points, date_added, last_seen, weapon_id, weapon_durability, weapon_mod_id, armour_id, armour_durability, armour_mod_id)
