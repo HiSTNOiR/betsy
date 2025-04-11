@@ -12,6 +12,7 @@ from event_bus.bus import event_bus
 from event_bus.registry import event_registry
 from publishers.twitch_pub import twitch_pub
 from subscribers.twitch_sub import twitch_sub
+from utils.channel_points_service import channel_points_service
 from processors.command_parser import command_parser
 # Import command registry (which auto-loads commands)
 from commands.registry import command_registry
@@ -203,6 +204,33 @@ class BetsyBot:
                 logger.info("Created bot admin user 'bob'")
         except Exception as e:
             handle_error(e, {"context": "ensure_bot_admin_exists"})
+
+    def setup_channel_point_handlers():
+        # Example custom handler for a specific reward
+        def handle_special_reward(redemption_data):
+            user = redemption_data.get("user", {}).get("name", "unknown")
+            input_text = redemption_data.get("input", "")
+
+            # Do something special with this redemption
+            logger.info(
+                f"Special handling for redemption from {user} with input: {input_text}")
+
+            # Maybe send a custom message
+            event_bus.publish("send_twitch_message", {
+                "channel": config.get('CHANNEL'),
+                "content": f"Thanks @{user} for your special redemption with message: {input_text}"
+            })
+
+            return True
+
+        # Register for specific reward IDs (you'd get these from your Twitch dashboard)
+        channel_points_service.register_handler(
+            "1234-5678-90ab-cdef", handle_special_reward)
+
+        # You can add more handlers for different rewards
+
+    # Call this during application startup
+    setup_channel_point_handlers()
 
 
 if __name__ == "__main__":

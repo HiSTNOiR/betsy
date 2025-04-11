@@ -256,46 +256,13 @@ class TwitchEventHandler:
             channel = data.get("channel", "unknown")
             reward = data.get("reward", {})
             reward_title = reward.get("title", "unknown")
-            reward_id = reward.get("id", "")
-            user_input = data.get("input", "")
 
             logger.info(
                 f"Channel Point Redemption: {username} redeemed '{reward_title}' in {channel}")
 
-            if user_input:
-                logger.info(f"Redemption input: {user_input}")
-
-            # Check if we need to trigger any actions based on the reward
-            from db.database import db
-            try:
-                reward_action = db.fetchone(
-                    "SELECT action_sequence_id FROM twitch_rewards WHERE reward_id = ?",
-                    (reward_id,)
-                )
-
-                if reward_action and reward_action.get('action_sequence_id'):
-                    logger.info(
-                        f"Found action sequence {reward_action['action_sequence_id']} for reward {reward_title}")
-                    # Update the reward usage counter
-                    db.execute(
-                        "UPDATE twitch_rewards SET total_uses = total_uses + 1 WHERE reward_id = ?",
-                        (reward_id,)
-                    )
-
-                    # TODO: Trigger the action sequence when OBS integration is implemented
-                    self.event_bus.publish("trigger_action_sequence", {
-                        "action_sequence_id": reward_action['action_sequence_id'],
-                        "source": "channel_point",
-                        "user": username,
-                        "data": {
-                            "reward_title": reward_title,
-                            "reward_id": reward_id,
-                            "user_input": user_input
-                        }
-                    })
-
-            except Exception as db_error:
-                logger.error(f"Error checking reward actions: {db_error}")
+            # Use the channel points service to handle the redemption
+            from utils.channel_points_service import channel_points_service
+            channel_points_service.handle_redemption(data)
 
         except Exception as e:
             handle_error(
