@@ -4,10 +4,7 @@ on:
   push:
     branches: [ main ]
     paths:
-      - 'todo.md'
-  schedule:
-    # Also run once a day at 9 AM UTC
-    - cron: '0 9 * * *'
+      - 'docs/todo.md'
   workflow_dispatch: # Allows manual triggering
 
 jobs:
@@ -33,7 +30,7 @@ jobs:
             const axios = require('axios');
             
             // Read the todo.md file
-            const todoContent = fs.readFileSync('todo.md', 'utf8');
+            const todoContent = fs.readFileSync('docs/todo.md', 'utf8');
             
             // Function to send content to Discord
             async function sendToDiscord(content) {
@@ -46,7 +43,7 @@ jobs:
               }
               
               for (const chunk of chunks) {
-                await axios.post(process.env.DISCORD_WEBHOOK_URL, {
+                await axios.post(process.env.DISCORD_TODO_WEBHOOK_URL, {
                   content: chunk
                 });
               }
@@ -56,4 +53,4 @@ jobs:
             await sendToDiscord(todoContent);
             console.log('Successfully posted todo.md to Discord');
         env:
-          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_TODO_WEBHOOK_URL }}
