@@ -15,12 +15,10 @@ class ChannelPointsService:
         self._registered_handlers = {}
 
     def register_handler(self, reward_id: str, handler_func):
-        """Register a function to handle a specific reward ID"""
         self._registered_handlers[reward_id] = handler_func
         logger.info(f"Registered handler for reward ID: {reward_id}")
 
     def handle_redemption(self, redemption_data: Dict[str, Any]) -> bool:
-        """Process a channel point redemption"""
         try:
             # Extract key data
             user = redemption_data.get("user", {})
@@ -33,8 +31,9 @@ class ChannelPointsService:
             logger.info(
                 f"Processing redemption: {username} redeemed '{reward_title}' (ID: {reward_id})")
 
-            # Update or store reward information
-            self._update_reward_info(reward_id, reward_title)
+            # Record the redemption in our database
+            from utils.reward_service import reward_service
+            reward_service.record_redemption(redemption_data)
 
             # Check for registered handler
             if reward_id in self._registered_handlers:
@@ -46,7 +45,6 @@ class ChannelPointsService:
             if action_sequence_id:
                 logger.info(
                     f"Found action sequence {action_sequence_id} for reward {reward_title}")
-                self._increment_usage_count(reward_id)
 
                 # Trigger the action sequence
                 self.event_bus.publish("trigger_action_sequence", {
@@ -68,36 +66,7 @@ class ChannelPointsService:
             handle_error(e, {"redemption_data": redemption_data})
             return False
 
-    def _update_reward_info(self, reward_id: str, title: str) -> None:
-        """Store or update a reward title in the database"""
-        try:
-            existing = db.fetchone(
-                "SELECT name FROM twitch_rewards WHERE reward_id = ?",
-                (reward_id,)
-            )
-
-            if existing:
-                if existing['name'] == 'Unknown Reward' or not existing['name']:
-                    db.execute(
-                        "UPDATE twitch_rewards SET name = ? WHERE reward_id = ?",
-                        (title, reward_id)
-                    )
-                    logger.info(
-                        f"Updated reward title for {reward_id} to '{title}'")
-            else:
-                current_time = datetime.now().isoformat()
-                db.execute(
-                    "INSERT INTO twitch_rewards (reward_id, name, total_uses, date_added) VALUES (?, ?, 1, ?)",
-                    (reward_id, title, current_time)
-                )
-                logger.info(
-                    f"Registered new reward {title} (ID: {reward_id}) in database")
-
-        except Exception as e:
-            logger.error(f"Error updating reward info: {e}")
-
     def _get_action_sequence_id(self, reward_id: str) -> Optional[int]:
-        """Get the action sequence ID associated with a reward"""
         try:
             reward_action = db.fetchone(
                 "SELECT action_sequence_id FROM twitch_rewards WHERE reward_id = ?",
@@ -111,16 +80,6 @@ class ChannelPointsService:
         except Exception as e:
             logger.error(f"Error getting action sequence ID: {e}")
             return None
-
-    def _increment_usage_count(self, reward_id: str) -> None:
-        """Increment the usage count for a reward"""
-        try:
-            db.execute(
-                "UPDATE twitch_rewards SET total_uses = total_uses + 1 WHERE reward_id = ?",
-                (reward_id,)
-            )
-        except Exception as e:
-            logger.error(f"Error incrementing usage count: {e}")
 
 
 # Singleton instance

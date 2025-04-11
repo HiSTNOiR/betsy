@@ -4,6 +4,8 @@ import sys
 import threading
 import time
 import asyncio
+import json
+
 
 from core.config import config
 from core.logging import get_logger
@@ -13,6 +15,7 @@ from event_bus.registry import event_registry
 from publishers.twitch_pub import twitch_pub
 from subscribers.twitch_sub import twitch_sub
 from utils.channel_points_service import channel_points_service
+from utils.reward_service import reward_service
 from processors.command_parser import command_parser
 # Import command registry (which auto-loads commands)
 from commands.registry import command_registry
@@ -82,6 +85,12 @@ class BetsyBot:
 
             # Set up command parser
             command_parser.set_prefix(config.get('BOT_PREFIX', '!'))
+
+            # Set up channel point handlers
+            self.setup_channel_point_handlers()
+
+            # Set up rewards
+            self.setup_rewards()
 
             # Subscribe to events
             logger.info("Setting up event subscriptions...")
@@ -205,7 +214,7 @@ class BetsyBot:
         except Exception as e:
             handle_error(e, {"context": "ensure_bot_admin_exists"})
 
-    def setup_channel_point_handlers():
+    def setup_channel_point_handlers(self):
         # Example custom handler for a specific reward
         def handle_special_reward(redemption_data):
             user = redemption_data.get("user", {}).get("name", "unknown")
@@ -223,14 +232,41 @@ class BetsyBot:
 
             return True
 
-        # Register for specific reward IDs (you'd get these from your Twitch dashboard)
+        # Register for specific reward IDs
         channel_points_service.register_handler(
             "1234-5678-90ab-cdef", handle_special_reward)
 
-        # You can add more handlers for different rewards
+        # TODO add more handlers for different rewards
 
-    # Call this during application startup
-    setup_channel_point_handlers()
+    def setup_rewards(self):
+        try:
+            # Load rewards from the service
+            rewards = reward_service.get_all_rewards()
+
+            for reward in rewards:
+                reward_id = reward["reward_id"]
+                handler_type = reward.get("handler_type", "default")
+
+                if handler_type != "default":
+                    handler_config = None
+                    if reward.get("handler_config"):
+                        try:
+                            handler_config = json.loads(
+                                reward["handler_config"])
+                        except json.JSONDecodeError:
+                            logger.warning(
+                                f"Invalid JSON in handler_config for reward {reward_id}")
+                            pass
+
+                    reward_service.register_handler(
+                        reward_id, handler_type, handler_config)
+
+            logger.info(f"Initialized {len(rewards)} channel point rewards")
+        except ImportError as e:
+            logger.error(f"Failed to import reward modules: {e}")
+        except Exception as e:
+            logger.error(f"Failed to setup rewards: {e}")
+            handle_error(BetsyError(f"Error setting up rewards: {str(e)}"))
 
 
 if __name__ == "__main__":

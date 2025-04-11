@@ -170,11 +170,46 @@ CREATE TABLE IF NOT EXISTS twitch_bits (
 CREATE TABLE IF NOT EXISTS twitch_rewards (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     reward_id TEXT UNIQUE NOT NULL, -- Twitch ID for the reward
-    name TEXT,
+    name TEXT NOT NULL,
+    description TEXT,
+    cost INTEGER DEFAULT 0,
+    is_enabled BOOLEAN DEFAULT 1,
+    background_color TEXT,
+    is_user_input_required BOOLEAN DEFAULT 0,
+    user_input_prompt TEXT,
+    max_per_stream INTEGER DEFAULT NULL,
+    max_per_user_per_stream INTEGER DEFAULT NULL,
+    global_cooldown_seconds INTEGER DEFAULT NULL,
     action_sequence_id INTEGER,
+    handler_type TEXT DEFAULT 'default', -- 'default', 'custom', 'command', etc.
+    handler_config TEXT, -- JSON string with handler configuration
+    auto_fulfill BOOLEAN DEFAULT 1,
     total_uses INTEGER NOT NULL DEFAULT 0,
     date_added TEXT NOT NULL,
+    last_updated TEXT,
     FOREIGN KEY (action_sequence_id) REFERENCES action_sequences(id) ON DELETE SET NULL
+);
+
+-- Reward redemption history
+CREATE TABLE IF NOT EXISTS reward_redemptions (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    reward_id TEXT NOT NULL,
+    user_id TEXT NOT NULL, 
+    redeemed_at TEXT NOT NULL,
+    status TEXT DEFAULT 'fulfilled', -- 'fulfilled', 'cancelled', 'pending'
+    user_input TEXT,
+    FOREIGN KEY (reward_id) REFERENCES twitch_rewards(reward_id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(twitch_user_id) ON DELETE CASCADE
+);
+
+-- Reward handler configurations
+CREATE TABLE IF NOT EXISTS reward_handlers (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    handler_name TEXT UNIQUE NOT NULL,
+    handler_description TEXT,
+    enabled BOOLEAN DEFAULT 1,
+    config_schema TEXT, -- JSON schema for the handler configuration
+    date_added TEXT NOT NULL
 );
 
 -- Armour
