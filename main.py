@@ -91,6 +91,13 @@ class BetsyBot:
 
             # Set up rewards
             self.setup_rewards()
+            from utils.reward_sync import reward_sync
+            # Get all channel rewards when bot starts
+            if config.get_boolean('TWITCH_ENABLED', True):
+                logger.info("Initial sync of Twitch rewards...")
+                added, updated, failed = reward_sync.sync_all_rewards()
+                logger.info(
+                    f"Rewards sync complete: {added} added, {updated} updated, {failed} failed")
 
             # Subscribe to events
             logger.info("Setting up event subscriptions...")
@@ -231,12 +238,6 @@ class BetsyBot:
             })
 
             return True
-
-        # Register for specific reward IDs
-        channel_points_service.register_handler(
-            "1234-5678-90ab-cdef", handle_special_reward)
-
-        # TODO add more handlers for different rewards
 
     def setup_rewards(self):
         try:

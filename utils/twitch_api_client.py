@@ -1,5 +1,6 @@
 import requests
 import time
+
 from typing import Dict, Any, Optional, List
 from datetime import datetime
 
@@ -13,44 +14,46 @@ logger = get_logger("twitch_api")
 class TwitchAPIClient:
     def __init__(self):
         self.client_id = config.get('CLIENT_ID')
-        self.client_secret = config.get('CLIENT_SECRET')
         self.broadcaster_token = None
         self.token_expires_at = 0
 
-    def _ensure_token(self):
-        current_time = time.time()
-
-        if self.broadcaster_token and current_time < self.token_expires_at - 60:
-            return
-
+    def _validate_token_scope(self):
         try:
-            # Get a new token
-            response = requests.post(
-                "https://id.twitch.tv/oauth2/token",
-                data={
-                    "client_id": self.client_id,
-                    "client_secret": self.client_secret,
-                    "grant_type": "client_credentials",
-                    "scope": "channel:read:redemptions channel:manage:redemptions"
-                }
+            response = requests.get(
+                "https://id.twitch.tv/oauth2/validate",
+                headers={"Authorization": f"OAuth {self.broadcaster_token}"}
             )
 
-            if response.status_code != 200:
-                raise TwitchError(
-                    f"Failed to get access token: {response.text}")
+            if response.status_code == 200:
+                token_info = response.json()
+                logger.info(f"Token scopes: {token_info.get('scopes', [])}")
 
-            data = response.json()
-            self.broadcaster_token = data["access_token"]
-            self.token_expires_at = current_time + data["expires_in"]
+                required_scopes = [
+                    "channel:read:redemptions",
+                    "channel:manage:redemptions"
+                ]
+                missing_scopes = [
+                    scope for scope in required_scopes
+                    if scope not in token_info.get('scopes', [])
+                ]
 
-            logger.info("Acquired new Twitch API token")
+                if missing_scopes:
+                    logger.warning(f"Missing scopes: {missing_scopes}")
+                    return False
+                return True
+            else:
+                logger.error(f"Token validation failed: {response.text}")
+                return False
         except Exception as e:
-            handle_error(NetworkError(f"Failed to get Twitch token: {str(e)}"))
-            raise
+            logger.error(f"Token validation error: {e}")
+            return False
 
     def get_channel_rewards(self, broadcaster_id: str) -> List[Dict[str, Any]]:
         try:
-            self._ensure_token()
+
+            if not self._validate_token_scope():
+                raise TwitchError(
+                    "Insufficient token scopes (required = channel:read:redemptions, channel:manage:redemptions)")
 
             url = f"https://api.twitch.tv/helix/channel_points/custom_rewards"
             headers = {
@@ -76,7 +79,6 @@ class TwitchAPIClient:
 
     def create_custom_reward(self, broadcaster_id: str, reward_data: Dict[str, Any]) -> Optional[Dict[str, Any]]:
         try:
-            self._ensure_token()
 
             url = f"https://api.twitch.tv/helix/channel_points/custom_rewards"
             headers = {
@@ -148,7 +150,6 @@ class TwitchAPIClient:
 
     def update_custom_reward(self, broadcaster_id: str, reward_id: str, update_data: Dict[str, Any]) -> Optional[Dict[str, Any]]:
         try:
-            self._ensure_token()
 
             url = f"https://api.twitch.tv/helix/channel_points/custom_rewards"
             headers = {
@@ -225,7 +226,6 @@ class TwitchAPIClient:
 
     def delete_custom_reward(self, broadcaster_id: str, reward_id: str) -> bool:
         try:
-            self._ensure_token()
 
             url = f"https://api.twitch.tv/helix/channel_points/custom_rewards"
             headers = {
@@ -251,7 +251,6 @@ class TwitchAPIClient:
 
     def update_redemption_status(self, broadcaster_id: str, reward_id: str, redemption_id: str, status: str) -> bool:
         try:
-            self._ensure_token()
 
             url = f"https://api.twitch.tv/helix/channel_points/custom_rewards/redemptions"
             headers = {
