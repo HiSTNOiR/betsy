@@ -36,7 +36,16 @@ class BaseCommand:
 
     def check_permission(self, user: Dict[str, Any]) -> bool:
         if hasattr(self, 'restricted_to_user_id') and self.restricted_to_user_id:
-            if user.get('id') != self.restricted_to_user_id:
+            # Get the user's database ID from their Twitch ID
+            from db.database import db
+            twitch_user_id = user.get('id')
+            if twitch_user_id:
+                db_user = db.fetchone(
+                    "SELECT id FROM users WHERE twitch_user_id = ?",
+                    (twitch_user_id,)
+                )
+                if db_user and str(db_user['id']) == str(self.restricted_to_user_id):
+                    return True
                 return False
 
         from utils.user_permissions import has_permission
