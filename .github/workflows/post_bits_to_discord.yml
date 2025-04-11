@@ -1,0 +1,56 @@
+name: Post bits to Discord
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'docs/bits.md'
+  workflow_dispatch: # Allows manual triggering
+
+jobs:
+  post-to-discord:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Install dependencies
+        run: npm install axios
+
+      - name: Post bits.md to Discord
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs');
+            const axios = require('axios');
+            
+            // Read the bits.md file
+            const bitsContent = fs.readFileSync('docs/bits.md', 'utf8');
+            
+            // Function to send content to Discord
+            async function sendToDiscord(content) {
+              // Split content if it exceeds Discord's 2000 character limit
+              const chunks = [];
+              let remainingContent = content;
+              while (remainingContent.length > 0) {
+                chunks.push(remainingContent.slice(0, 1900));
+                remainingContent = remainingContent.slice(1900);
+              }
+              
+              for (const chunk of chunks) {
+                await axios.post(process.env.DISCORD_BITS_WEBHOOK_URL, {
+                  content: chunk
+                });
+              }
+            }
+            
+            // Send to Discord
+            await sendToDiscord(bitsContent);
+            console.log('Successfully posted bits.md to Discord');
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_BITS_WEBHOOK_URL }}
