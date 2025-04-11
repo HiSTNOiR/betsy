@@ -6,8 +6,7 @@ For versions 0.1 to 1.1
 > ✅ done  
 > 👉 I am here  
 
-1. ✅ **Pre-Phase**
-    - ✅ choose language and architecture
+1. ✅ **Pre-Phase:** Research and choose language and architecture
 2. ✅ **Phase 0: Core**
     - ✅ create core config module
     - ✅ set up custom logging and error handling
