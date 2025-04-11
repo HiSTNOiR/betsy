@@ -14,7 +14,7 @@ For versions 0.1 to 1.1
 3. ✅ **Phase 1**
     - ✅ design database
     - ✅ create schema and seed files
-- 👉 **Phase 2: Twitch and OBS**
+4. 👉 **Phase 2: Twitch and OBS**
     - ✅ [Twitch] connect to chat
     - ✅ [Twitch] set up static commands system
     - 👉 [Twitch] set up dynamic commands system
@@ -24,8 +24,8 @@ For versions 0.1 to 1.1
     - [OBS] connect to OBS
     - [OBS] set up scene/source/filter management
     - [OBS] set up OBS actions (single/sequenced/simultaneous/animations etc)
-- **Phase 3: Shop system**
-- **Phase 4: Inventory system**
-- **Phase 5: DOMT system**
-- **Phase 6: Duel system** (_Version 1.0_)
-- **Phase 7: Easter eggs** (_Version 1.1_)
+5. **Phase 3: Shop system**
+6. **Phase 4: Inventory system**
+7. **Phase 5: DOMT system**
+8. **Phase 6: Duel system** (_Version 1.0_)
+9. **Phase 7: Easter eggs** (_Version 1.1_)
