@@ -42,10 +42,6 @@ def load_dynamic_commands():
 
         for row in rows:
             try:
-
-                # ! WHY YOU NO LOG??????
-                logger.debug(f"Processing row: {row}")  # ! debug
-
                 if not row or 'name' not in row:
                     continue
 
@@ -58,14 +54,13 @@ def load_dynamic_commands():
                 if row.get('alias_2'):
                     aliases.append(row['alias_2'])
 
-                # Modify how we create the dynamic command
-                dynamic_cmd = type(f'DynamicCommand_{name}', (DynamicCommand,), {
-                    'name': name,
-                    'aliases': aliases,
-                    'description': f"Custom command: {name}",
-                    'response_template': response,
-                    'permission': row.get('permission_level', 'viewer')
-                })()
+                # Create the dynamic command directly as an instance
+                dynamic_cmd = DynamicCommand(
+                    name=name,
+                    response=response,
+                    permission=row.get('permission_level', 'viewer'),
+                    aliases=aliases
+                )
 
                 # Set additional properties
                 dynamic_cmd.cooldown = row.get('cooldown_seconds', 3)
@@ -73,16 +68,15 @@ def load_dynamic_commands():
                 dynamic_cmd.restricted_to_user_id = row.get(
                     'restricted_to_user_id')
 
-                # ! WHY YOU NO LOG??????
-                logger.debug(
-                    f"Created dynamic command: {dynamic_cmd}")  # ! debug
-                logger.debug(f"Command name: {dynamic_cmd.name}")  # ! debug
-
+                logger.debug(f"Created dynamic command: {dynamic_cmd.name}")
                 command_registry.register_command(dynamic_cmd)
 
             except Exception as e:
                 logger.error(
                     f"Error loading dynamic command {row.get('name', 'unknown')}: {e}")
+
+    except Exception as e:
+        logger.error(f"Error loading dynamic commands: {e}")
 
     except Exception as e:
         logger.error(f"Error loading dynamic commands: {e}")
