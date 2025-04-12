@@ -235,10 +235,6 @@ class TwitchConnector(PlatformConnection, metaclass=SingletonMeta):
                                 "timestamp": time.time()
                             }
 
-                            # Log the redemption
-                            logger.info(
-                                f"Channel point redemption: {user_data['name']} redeemed {reward_data['title']} (ID: {reward_data['id']})")
-
                             # Trigger the event
                             self.parent.trigger_event(
                                 "channel_point_redemption", redemption_data)

@@ -1,9 +1,7 @@
-from typing import Dict, Any, Optional, List
-from datetime import datetime
+from typing import Dict, Any, Optional, Callable
 
 from core.logging import get_logger
-from core.errors import handle_error, TwitchError
-from db.database import db
+from core.errors import handle_error
 from event_bus.bus import event_bus
 
 logger = get_logger("channel_points_service")
@@ -13,91 +11,102 @@ class ChannelPointsService:
     def __init__(self, event_bus):
         self.event_bus = event_bus
         self._registered_handlers = {}
+        self._reward_service = None
 
-    def register_handler(self, reward_id: str, handler_func):
+    def initialize(self, reward_service):
+        self._reward_service = reward_service
+        reward_service.set_handler_factory(self._register_reward_handler)
+
+    def _register_reward_handler(self, reward_id: str, handler_type: str, handler_config: Optional[Dict[str, Any]] = None):
+        if handler_type == "default":
+            self.register_handler(reward_id, self._default_handler)
+        elif handler_type == "custom":
+            self.register_handler(
+                reward_id, self._create_custom_handler(handler_config))
+
+    def _default_handler(self, redemption_data: Dict[str, Any]) -> bool:
+        reward_id = redemption_data.get("reward", {}).get("id", "")
+        reward = self._reward_service.get_reward(reward_id)
+        action_sequence_id = reward.get("action_sequence_id")
+
+        if action_sequence_id:
+            self.event_bus.publish("trigger_action_sequence", {
+                "action_sequence_id": action_sequence_id,
+                "source": "channel_point",
+                "user": redemption_data.get("user", {}).get("name", "unknown"),
+                "data": redemption_data
+            })
+            return True
+        return False
+
+    def _create_custom_handler(self, handler_config: Optional[Dict[str, Any]]) -> Callable:
+        def custom_handler(redemption_data: Dict[str, Any]) -> bool:
+            try:
+                config = handler_config or {}
+
+                if "message_template" in config:
+                    self._send_custom_message(redemption_data, config)
+
+                if "action_sequence_id" in config:
+                    self.event_bus.publish("trigger_action_sequence", {
+                        "action_sequence_id": config["action_sequence_id"],
+                        "source": "channel_point",
+                        "user": redemption_data.get("user", {}).get("name", "unknown"),
+                        "data": redemption_data
+                    })
+
+                return True
+            except Exception as e:
+                logger.error(f"Custom handler error: {e}")
+                return False
+        return custom_handler
+
+    def _send_custom_message(self, redemption_data: Dict[str, Any], config: Dict[str, Any]):
+        user = redemption_data.get("user", {})
+        reward = redemption_data.get("reward", {})
+
+        message = config["message_template"]
+        message = message.replace("{username}", user.get("name", "unknown"))
+        message = message.replace(
+            "{reward}", reward.get("title", "Unknown Reward"))
+
+        self.event_bus.publish("send_twitch_message", {
+            "channel": redemption_data.get("channel", ""),
+            "content": message
+        })
+
+    def register_handler(self, reward_id: str, handler_func: Callable):
         self._registered_handlers[reward_id] = handler_func
         logger.info(f"Registered handler for reward ID: {reward_id}")
 
     def handle_redemption(self, redemption_data: Dict[str, Any]) -> bool:
         try:
-            # Extract key data
-            user = redemption_data.get("user", {})
-            username = user.get("name", "unknown")
             reward = redemption_data.get("reward", {})
             reward_id = reward.get("id", "")
-            reward_title = reward.get("title", "Unknown Reward")
-            user_input = redemption_data.get("input", "")
 
-            logger.info(
-                f"Processing redemption: {username} redeemed '{reward_title}' (ID: {reward_id})")
+            self._ensure_reward_exists(reward)
 
-            # Check if the reward exists in our database
-            from utils.reward_service import reward_service
-            reward_in_db = reward_service.get_reward(reward_id)
+            if not self._reward_service.record_redemption(redemption_data):
+                return False
 
-            # If reward doesn't exist in DB, register it first
-            if not reward_in_db:
-                logger.info(
-                    f"Registering unknown reward: {reward_title} (ID: {reward_id})")
-                reward_data = {
-                    "reward_id": reward_id,
-                    "name": reward_title,
-                    "description": reward.get("prompt", ""),
-                    "cost": reward.get("cost", 0),
-                    "is_enabled": True,
-                    "handler_type": "default"
-                }
-                reward_service.register_reward(reward_data)
-
-            # Now record the redemption (should work since reward exists)
-            reward_service.record_redemption(redemption_data)
-
-            # Check for registered handler
-            if reward_id in self._registered_handlers:
-                logger.info(f"Found custom handler for reward ID: {reward_id}")
-                return self._registered_handlers[reward_id](redemption_data)
-
-            # Check for action sequence in database
-            action_sequence_id = self._get_action_sequence_id(reward_id)
-            if action_sequence_id:
-                logger.info(
-                    f"Found action sequence {action_sequence_id} for reward {reward_title}")
-
-                # Trigger the action sequence
-                self.event_bus.publish("trigger_action_sequence", {
-                    "action_sequence_id": action_sequence_id,
-                    "source": "channel_point",
-                    "user": username,
-                    "data": {
-                        "reward_title": reward_title,
-                        "reward_id": reward_id,
-                        "user_input": user_input
-                    }
-                })
-                return True
-
-            logger.info(f"No handler found for reward ID: {reward_id}")
-            return False
+            handler = self._registered_handlers.get(reward_id)
+            return handler(redemption_data) if handler else False
 
         except Exception as e:
             handle_error(e, {"redemption_data": redemption_data})
             return False
 
-    def _get_action_sequence_id(self, reward_id: str) -> Optional[int]:
-        try:
-            reward_action = db.fetchone(
-                "SELECT action_sequence_id FROM twitch_rewards WHERE reward_id = ?",
-                (reward_id,)
-            )
-
-            if reward_action and reward_action.get('action_sequence_id'):
-                return reward_action['action_sequence_id']
-            return None
-
-        except Exception as e:
-            logger.error(f"Error getting action sequence ID: {e}")
-            return None
+    def _ensure_reward_exists(self, reward: Dict[str, Any]):
+        if not self._reward_service.get_reward(reward.get("id", "")):
+            reward_data = {
+                "reward_id": reward.get("id", ""),
+                "name": reward.get("title", "Unknown Reward"),
+                "description": reward.get("prompt", ""),
+                "cost": reward.get("cost", 0),
+                "is_enabled": True,
+                "handler_type": "default"
+            }
+            self._reward_service.register_reward(reward_data)
 
 
-# Singleton instance
 channel_points_service = ChannelPointsService(event_bus)

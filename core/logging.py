@@ -42,7 +42,6 @@ class LoggingManager:
 
             # Handle UTF-8 encoding for console output in Windows
             if self.console_output:
-                import sys
                 if sys.platform == 'win32':
                     import codecs
                     sys.stdout.reconfigure(encoding='utf-8')
