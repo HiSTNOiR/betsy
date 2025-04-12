@@ -8,6 +8,8 @@ BOT_PREFIX=!
 CHANNEL=channel_here
 
 # Twitch API credentials
+# Get token from https://twitchtokengenerator.com (redemptions 'read' & 'manage' scope required)
+BROADCASTER_TOKEN=token_here
 # Get token from https://dev.twitch.tv/console/apps
 TMI_TOKEN=oauth:oauth_here
 # Get id from https://twitchtokengenerator.com

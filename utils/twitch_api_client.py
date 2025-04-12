@@ -1,5 +1,6 @@
 import requests
 import time
+import json
 
 from typing import Dict, Any, Optional, List
 from datetime import datetime
@@ -14,38 +15,65 @@ logger = get_logger("twitch_api")
 class TwitchAPIClient:
     def __init__(self):
         self.client_id = config.get('CLIENT_ID')
-        self.broadcaster_token = None
+        self.broadcaster_token = config.get('BROADCASTER_TOKEN')
         self.token_expires_at = 0
 
     def _validate_token_scope(self):
         try:
+            # Partially mask token
+            logger.info(
+                f"Validating token: Client ID = {self.client_id}, Token = {self.broadcaster_token[:10]}...")
+
+            if not self.broadcaster_token:
+                logger.error("No broadcaster token provided")
+                return False
+
             response = requests.get(
                 "https://id.twitch.tv/oauth2/validate",
                 headers={"Authorization": f"OAuth {self.broadcaster_token}"}
             )
 
+            logger.info(
+                f"Token validation response status: {response.status_code}")
+
             if response.status_code == 200:
                 token_info = response.json()
+
+                # Log full token information for debugging
+                logger.debug(
+                    f"Full token info: {json.dumps(token_info, indent=2)}")
+
                 logger.info(f"Token scopes: {token_info.get('scopes', [])}")
 
                 required_scopes = [
                     "channel:read:redemptions",
                     "channel:manage:redemptions"
                 ]
+
+                # Check for missing scopes
                 missing_scopes = [
                     scope for scope in required_scopes
                     if scope not in token_info.get('scopes', [])
                 ]
 
                 if missing_scopes:
-                    logger.warning(f"Missing scopes: {missing_scopes}")
+                    logger.error(f"Missing required scopes: {missing_scopes}")
                     return False
+
+                logger.info("Token validation successful")
                 return True
             else:
-                logger.error(f"Token validation failed: {response.text}")
+                logger.error(
+                    f"Token validation failed: Status {response.status_code}, Response: {response.text}")
                 return False
+        except requests.RequestException as e:
+            logger.error(f"Network error during token validation: {e}")
+            return False
+        except json.JSONDecodeError as e:
+            logger.error(f"Failed to parse token validation response: {e}")
+            return False
         except Exception as e:
-            logger.error(f"Token validation error: {e}")
+            logger.error(f"Unexpected error during token validation: {e}")
             return False
 
     def get_channel_rewards(self, broadcaster_id: str) -> List[Dict[str, Any]]:
